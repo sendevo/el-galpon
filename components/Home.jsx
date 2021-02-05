@@ -11,7 +11,7 @@ export default class Home extends Component {
         <ImageBackground source={background} style={styles.background}>
           <Image source={logo} style={styles.logo} />
           <Text style={styles.title}>El Galpón</Text>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('Storage')}}>
+          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('StorageList')}}>
             <Text>Depósitos</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Categories')*/}}>
