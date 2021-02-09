@@ -14,10 +14,8 @@ export default class StorageList extends Component {
         storageList: []
     }
 
-    constructor(props, context){
-        super(props);
-
-        context.db.getTable("Storage") // Descargar lista de depositos
+    componentDidMount(){
+        this.context.db.getTable("storage")
         .then((res =>{
             this.setState({storageList:res});
         }));
@@ -25,7 +23,7 @@ export default class StorageList extends Component {
 
     render (){
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.container}>                
                 <Text style={globalStyles.screenTitle}>Depósitos</Text>
                 <View>
                     {

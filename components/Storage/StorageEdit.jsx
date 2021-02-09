@@ -20,46 +20,62 @@ export default class StorageEdit extends Component {
 
     state = {
         id: null,
-        name: "Sin nombre",
+        name: "",
         lat: 0,
         long: 0
     }
 
-    componentDidMount(){
-        const st = this.props?.route?.params?.storage;
+    constructor(props){
+        super(props);
+
+        const st = props?.route?.params?.storage;
         if(st != undefined){ // Caso edicion de deposito existente
-            // TODO: consultar lista de productos almacenados en deposito actual
-            this.setState({
+            this.state = {
                 id: st?.id,
                 name: st?.name,
-                lat: st?.long,
-                long: st?.lat
-            });
+                lat: st?.lat,
+                long: st?.long
+            };
         }else{ // Caso creacion nuevo deposito -> usar ubicacion actual
             (async () => {
                 let { status } = await Location.requestPermissionsAsync();
                 if (status !== 'granted') {
-                    // TODO: mostrar toast
                     console.log('Permiso a ubicacion denegado');         
                 }else{
                     let location = await Location.getCurrentPositionAsync({});
-                    this.setState({
-                        lat: location?.coords?.latitude,
-                        long: location?.coords?.longitude
-                    });
+                    this.state.lat = location?.coords?.latitude;
+                    this.state.long = location?.coords?.longitude;
                 } 
             })();
         }
     }
 
-    saveStorage(){
-        // TODO: actualizar datos en db
-        if(this.state.id){
-            console.log("Actualizando deposito");
-        }else{
-            console.log("Creando nuevo deposito");
+    saveStorage(){ // Actaulizar datos en DB
+        const instance = this;
+        if(this.state.id){ // Si se tiene id -> actualizar en db            
+            this.context.db.update("storage", this.state.id, {
+                name: this.state.name,
+                lat: this.state.lat,
+                long: this.state.long
+            })
+            .then(function(res){
+                console.log("Registro modificado."); // TODO: reemplazar por toast
+                instance.props.navigation.navigate('StorageList');
+            })
+            .catch(function(e){
+                console.log("Error actualizando registro"); // TODO: reemplazar por toast
+            });
+        }else{ // Si no tiene id -> crear nueva entrada            
+            let newStorage = (({name, lat, long}) => ({name, lat, long}))(this.state);
+            this.context.db.insert("storage",newStorage)
+            .then(function(res){
+                console.log("Nuevo registro creado."); // TODO: reemplazar por toast
+                instance.props.navigation.navigate('StorageList');
+            })
+            .catch(function(e){
+                console.log("Error creando registro"); // TODO: reemplazar por toast
+            });
         }
-        console.log(this.state);
     }
 
     render (){
@@ -72,21 +88,15 @@ export default class StorageEdit extends Component {
                 style={styles.textInput}
                 placeholder={"Ingrese nombre"}
                 maxLength={20}
-                onChangeText={t=>this.setState({name:t || "Sin nombre"})}
+                onChangeText={t=>this.setState({name:t})}
                 onBlur={Keyboard.dismiss}
                 />
             <Text style={styles.section}>Ubicación:</Text>
             <MapView
                 style={mapStyle.map}
-                region={{
-                    latitude: this.state.lat || -38,
-                    longitude: this.state.long || -62,
-                    latitudeDelta: 0.2,
-                    longitudeDelta: 0.2,
-                }}
                 initialRegion={{
-                    latitude: this.state.lat || -38,
-                    longitude: this.state.long || -62,
+                    latitude: this.state.lat,
+                    longitude: this.state.long,
                     latitudeDelta: 0.2,
                     longitudeDelta: 0.2,
                 }}>
@@ -94,13 +104,13 @@ export default class StorageEdit extends Component {
                         draggable                     
                         title = {this.state.name}
                         coordinate={{ 
-                            latitude : this.state.lat || -38 , 
-                            longitude : this.state.long || -62 
+                            latitude : this.state.lat, 
+                            longitude : this.state.long 
                         }}
-                        onDragEnd={e => this.setState({
-                            lat: e.nativeEvent.coordinate.latitude,
-                            long: e.nativeEvent.coordinate.longitude
-                        })} />
+                        onDragEnd={e => {
+                            this.state.lat = e.nativeEvent.coordinate.latitude;
+                            this.state.long = e.nativeEvent.coordinate.longitude;
+                        }} />
             </MapView>
             <Text style={styles.section}>Contenido:</Text>
 

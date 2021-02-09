@@ -44,17 +44,19 @@ class Database {
 
     async execute(statement, params=[]) { // Wrapper
         return new Promise((resolve, reject) => {
-            if(!this.production) console.log("Executing statement: ", statement);
+            if(!this.production) console.log("Executing statement: ", statement, " with params: ", params);
             this.db.transaction((tx)=>{
                 tx.executeSql(
                     statement, 
                     params, 
-                    (_, result) => {resolve(result);},
+                    (_, result) => {console.log("Execute success"); resolve(result);},
                     (_, error) => {console.log("Execute error"); reject(error);}
                 );
             });
         });
     }
+
+    /// ESCRITURA
 
     async insert(table, data) { // Insertar dato a tabla
         const cols = Object.keys(this.schema[table].columns); // Nombres de las columnas
@@ -66,23 +68,38 @@ class Database {
         data.modified = Date.now();
 
         // Object.keys garantiza orden de atributos?
-        let attrs = [];
+        let values = [];
         for(let c in cols)
-            attrs.push(cols[c] in data ? data[cols[c]] : null)
+            values.push(cols[c] in data ? data[cols[c]] : null)
             
-        return this.execute(statement, attrs);
+        return this.execute(statement, values);
     }
+
+    async update(table, id, data) { // Actualizar columnas
+        const cols = Object.keys(this.schema[table].columns);
+        
+        // Generar lista de pares columna=valor separados por coma
+        let values = []
+        for(let v in data){
+            if(cols.includes(v)){
+                let val = data[v];
+                if(typeof val == "string")
+                    val = "'"+val+"'";
+                values.push(v + " = " + val);
+            }else{
+                console.log("Error de variable: "+v);
+            }
+        }
+
+        // Generar comando SQL
+        const statement = "UPDATE " + table + " SET " + values.join(',') + " WHERE id = ?";
+        return this.execute(statement, [id]);
+    }
+
+    // ELIMINACION
 
     async deleteById(table, id){
         return this.execute("DELETE FROM " + table + " WHERE id = ?;",[id]);
-    }
-
-    async getTable(table) { // Obtener todas las filas de la tabla 
-        return new Promise((resolve, reject) => {
-            this.execute("SELECT * FROM "+table+";")
-            .then( ({rows:{_array}}) => {resolve(_array);} )
-            .catch(e => reject(e));
-        });
     }
 
     async dropTables(){ // Borrar todas las tablas
@@ -92,6 +109,17 @@ class Database {
         
         return Promise.all(job);
     }
+
+    // CONSULTA
+
+    async getTable(table) { // Obtener todas las filas de la tabla 
+        return new Promise((resolve, reject) => {
+            this.execute("SELECT * FROM "+table+";")
+            .then( ({rows:{_array}}) => {resolve(_array);} )
+            .catch(e => reject(e));
+        });
+    }
+    
 }
 
 export default Database;
