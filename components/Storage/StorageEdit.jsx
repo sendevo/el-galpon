@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React from 'react';
 import { SafeAreaView, 
     StyleSheet, 
     Keyboard, 
@@ -21,7 +21,7 @@ const mapStyle = StyleSheet.create({
     }
 });
 
-export default class StorageEdit extends Component {
+export default class StorageEdit extends React.Component {
 
     static contextType = GlobalContext
 
@@ -49,9 +49,11 @@ export default class StorageEdit extends Component {
                 if (status !== 'granted') {
                     console.log('Permiso a ubicacion denegado');         
                 }else{
-                    let location = await Location.getCurrentPositionAsync({});
-                    this.state.lat = location?.coords?.latitude;
-                    this.state.long = location?.coords?.longitude;
+                    let location = await Location.getLastKnownPositionAsync({});
+                    this.setState({ // Al ser operacion asincrona, hay que actualizar
+                        lat: location?.coords?.latitude,
+                        long: location?.coords?.longitude
+                    });
                 } 
             })();
         }
@@ -67,7 +69,7 @@ export default class StorageEdit extends Component {
             return;
         }
         
-        const instance = this;
+        const navigate = this.props.navigation.navigate; // Para usar dentro de 'then'
         if(this.state.id){ // Si se tiene id -> actualizar en db
             this.context.db.update("storage", this.state.id, {
                 name: this.state.name,
@@ -76,7 +78,7 @@ export default class StorageEdit extends Component {
             })
             .then(function(res){
                 console.log("Registro modificado."); // TODO: reemplazar por toast
-                instance.props.navigation.navigate('StorageList',{});
+                navigate('StorageList',{});
             })
             .catch(function(e){
                 console.log("Error actualizando registro"); // TODO: reemplazar por toast
@@ -86,7 +88,7 @@ export default class StorageEdit extends Component {
             this.context.db.insert("storage",newStorage)
             .then(function(res){
                 console.log("Nuevo registro creado."); // TODO: reemplazar por toast
-                instance.props.navigation.navigate('StorageList',{});
+                navigate('StorageList',{});
             })
             .catch(function(e){
                 console.log("Error creando registro"); // TODO: reemplazar por toast

@@ -1,11 +1,11 @@
-import React, { Component }  from 'react';
+import React from 'react';
 import { SafeAreaView, FlatList, TouchableOpacity, Text, View } from 'react-native';
 import globalStyles from '../globals';
 import styles from './storageList';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
 import B from '../Misc';
-
+import moment from 'moment';
 
 const CardItem = ({ item, onPress, onLongPress }) => (
     <TouchableOpacity 
@@ -15,13 +15,13 @@ const CardItem = ({ item, onPress, onLongPress }) => (
             <Text style={styles.storageName}>{item.name}</Text>
             <Text><B>Lat:</B> {item.lat.toFixed(4)}</Text>
             <Text><B>Long:</B> {item.long.toFixed(4)}</Text>
-            <Text><B>Creado:</B> {item.created}</Text>
-            <Text><B>Modificado:</B> {item.modified}</Text>
+            <Text><B>Creado:</B> {moment(item.created).format("DD/MM/YYYY HH:mm")}</Text>
+            <Text><B>Modificado:</B> {moment(item.modified).format("DD/MM/YYYY HH:mm")}</Text>
     </TouchableOpacity>
 );
 
 
-export default class StorageList extends Component {
+export default class StorageList extends React.Component {
 
     static contextType = GlobalContext
 
@@ -29,17 +29,23 @@ export default class StorageList extends Component {
         storageList: []
     }
 
-    componentDidMount() {
-        // Actualizar lista cuando la vista tiene foco
-        this._unsubscribe = this.props.navigation.addListener('focus', () => {
-            this.context.db.getTable("storage")
-            .then((res =>{
-                this.setState({storageList:res});
-            }));    
-        });
+    constructor(props){ // Solo para hacer el binding del actualizador
+        super(props);
+        this.updateList = this.updateList.bind(this);
     }
 
-    componentWillUnmount() {
+    updateList() { // Descarga lista de items de la DB y actualiza vista
+        this.context.db.getTable("storage")
+        .then((res =>{
+            this.setState({storageList:res});
+        }));    
+    }
+
+    componentDidMount() { // Actualizar lista cuando la vista tiene foco (dispara luego de crear)
+        this._unsubscribe = this.props.navigation.addListener('focus', this.updateList);
+    }
+
+    componentWillUnmount() { // Desuscribir del listener
         this._unsubscribe();
     }
 
@@ -50,10 +56,7 @@ export default class StorageList extends Component {
                 onPress={()=>this.props.navigation.navigate('StorageEdit', {storage:item})}
                 onLongPress={()=>{
                     this.context.db.deleteById('storage', item.id);
-                    this.context.db.getTable("storage")
-                    .then((res =>{
-                        this.setState({storageList:res});
-                    }));    
+                    this.updateList();
                 }}/>
         );
 

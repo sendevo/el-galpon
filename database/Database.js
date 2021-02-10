@@ -2,9 +2,8 @@ import * as SQLite from 'expo-sqlite';
 
 class Database {
     
-    constructor(name='database.db', schema={}, production=true) { 
+    constructor(name='database.db', schema={}) { 
         this.schema = schema; 
-        this.production = production; // false -> verbose
         this.db = SQLite.openDatabase(name); 
         this.ready = false;
     }
@@ -44,7 +43,7 @@ class Database {
 
     async execute(statement, params=[]) { // Wrapper
         return new Promise((resolve, reject) => {
-            if(!this.production) console.log("Executing statement: ", statement, " with params: ", params);
+            console.log("Executing statement: ", statement, " with params: ", params);
             this.db.transaction((tx)=>{
                 tx.executeSql(
                     statement, 

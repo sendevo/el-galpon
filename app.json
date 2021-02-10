@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "stock-app",
-    "slug": "stock-app",
+    "name": "El Galpón",
+    "slug": "inta-galpon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.inta.elgalpon",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
