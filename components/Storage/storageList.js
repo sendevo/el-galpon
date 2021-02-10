@@ -8,12 +8,13 @@ const styles = StyleSheet.create({
   },
   storageCard: {
     backgroundColor: 'rgb(200,200,200)',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 20,
     margin:5
   },
   storageName: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontSize: 20
   }
 });  
 

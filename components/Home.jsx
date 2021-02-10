@@ -1,11 +1,11 @@
 import React, { Component }  from 'react';
 import { Image, ImageBackground, TouchableOpacity, Text, View } from 'react-native';
-import styles from '../style/home';
+import styles from './home';
 import background from '../assets/background/galpon1.png';
 import logo from '../assets/logo.png';
 
 export default class Home extends Component {
-  render (){
+  render() {
     return (
       <View style={styles.container}>
         <ImageBackground source={background} style={styles.background}>

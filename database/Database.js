@@ -2,14 +2,14 @@ import * as SQLite from 'expo-sqlite';
 
 class Database {
     
-    constructor(name='database.db', schema={}, production=true){ 
+    constructor(name='database.db', schema={}, production=true) { 
         this.schema = schema; 
         this.production = production; // false -> verbose
         this.db = SQLite.openDatabase(name); 
         this.ready = false;
     }
 
-    async init(){ // Crear todas las tablas si no existen
+    async init() { // Crear todas las tablas si no existen
         return new Promise( (resolve, reject) => {
             
             /// TODO: control de versiones de la db ///
@@ -60,18 +60,19 @@ class Database {
 
     async insert(table, data) { // Insertar dato a tabla
         const cols = Object.keys(this.schema[table].columns); // Nombres de las columnas
-        const qmarks = Array(cols.length).fill("?").join(); // Lista de signos "?" para parametros
-        const statement = "INSERT INTO " + table + " (" + cols.join(",") + ") VALUES (" + qmarks + ");"
-
         // Estampas de tiempo
         data.created = Date.now();
         data.modified = Date.now();
+        cols.push("created", "modified");
+        
+        const qmarks = Array(cols.length).fill("?").join(); // Lista de signos "?" para parametros
+        const statement = "INSERT INTO " + table + " (" + cols.join(",") + ") VALUES (" + qmarks + ");"
 
         // Object.keys garantiza orden de atributos?
         let values = [];
         for(let c in cols)
-            values.push(cols[c] in data ? data[cols[c]] : null)
-            
+            values.push(cols[c] in data ? data[cols[c]] : null);
+
         return this.execute(statement, values);
     }
 
@@ -91,6 +92,9 @@ class Database {
             }
         }
 
+        // Agregar estampa de tiempo de modificacion del campo
+        values.push("modified = "+Date.now());
+
         // Generar comando SQL
         const statement = "UPDATE " + table + " SET " + values.join(',') + " WHERE id = ?";
         return this.execute(statement, [id]);
@@ -98,11 +102,11 @@ class Database {
 
     // ELIMINACION
 
-    async deleteById(table, id){
+    async deleteById(table, id) {
         return this.execute("DELETE FROM " + table + " WHERE id = ?;",[id]);
     }
 
-    async dropTables(){ // Borrar todas las tablas
+    async dropTables() { // Borrar todas las tablas
         let job = [];
         for(let t in this.schema)
             job.push(this.execute("DROP TABLE " + t + ";"))

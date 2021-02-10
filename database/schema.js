@@ -1,6 +1,8 @@
-const schema = { // Tablas y sus columnas
-    "storage": {        
-        columns:{
+// Schema para DB SQLite
+// A todas las tablas se les agrega los campos id, created y modified por defecto
+const schema = {
+    "storage": { // Nombre de la tabla
+        columns:{ // Lista de columnas y tipos
             "name": "TEXT",
             "lat": "REAL",
             "long": "REAL"

@@ -1,9 +1,16 @@
 import React, { Component }  from 'react';
-import { SafeAreaView, StyleSheet, Keyboard, TextInput, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { SafeAreaView, 
+    StyleSheet, 
+    Keyboard, 
+    TextInput, 
+    Text, 
+    Dimensions, 
+    TouchableOpacity,
+    ToastAndroid } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
-import styles from '../../style/storageEdit';
-import globalStyles from '../../style/globals';
+import styles from './storageEdit';
+import globalStyles from '../globals';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
 
@@ -25,7 +32,7 @@ export default class StorageEdit extends Component {
         long: 0
     }
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         const st = props?.route?.params?.storage;
@@ -50,9 +57,18 @@ export default class StorageEdit extends Component {
         }
     }
 
-    saveStorage(){ // Actaulizar datos en DB
+    saveStorage() { // Actualizar datos en DB
+        if(this.state.name == "" || this.state.name == undefined){
+            ToastAndroid.showWithGravity(
+                'Debe ingresar un nombre para este depósito',
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER
+            );
+            return;
+        }
+        
         const instance = this;
-        if(this.state.id){ // Si se tiene id -> actualizar en db            
+        if(this.state.id){ // Si se tiene id -> actualizar en db
             this.context.db.update("storage", this.state.id, {
                 name: this.state.name,
                 lat: this.state.lat,
@@ -60,7 +76,7 @@ export default class StorageEdit extends Component {
             })
             .then(function(res){
                 console.log("Registro modificado."); // TODO: reemplazar por toast
-                instance.props.navigation.navigate('StorageList');
+                instance.props.navigation.navigate('StorageList',{});
             })
             .catch(function(e){
                 console.log("Error actualizando registro"); // TODO: reemplazar por toast
@@ -70,7 +86,7 @@ export default class StorageEdit extends Component {
             this.context.db.insert("storage",newStorage)
             .then(function(res){
                 console.log("Nuevo registro creado."); // TODO: reemplazar por toast
-                instance.props.navigation.navigate('StorageList');
+                instance.props.navigation.navigate('StorageList',{});
             })
             .catch(function(e){
                 console.log("Error creando registro"); // TODO: reemplazar por toast
@@ -78,7 +94,7 @@ export default class StorageEdit extends Component {
         }
     }
 
-    render (){
+    render() {
         return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Detalles de depósito</Text>
