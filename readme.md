@@ -53,3 +53,9 @@ Identificador de instalación (para versionado y demás)
 import Constants from 'expo-constants';
 const id = Constants.installationId;
 ```
+
+Almacenamiento persistente para metadatos
+
+```js
+import AsyncStorage from '@react-native-community/async-storage';
+```

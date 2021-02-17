@@ -1,4 +1,4 @@
-// Schema para DB SQLite
+// Esquema para DB SQLite
 // A todas las tablas se les agrega los campos id, created y modified por defecto
 const schema = {
     "storage": { // Nombre de la tabla

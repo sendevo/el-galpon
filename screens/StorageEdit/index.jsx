@@ -9,8 +9,8 @@ import { SafeAreaView,
     ToastAndroid } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
-import styles from './storageEdit';
-import globalStyles from '../globals';
+import styles from './style';
+import globalStyles from '../style';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
 
@@ -21,41 +21,55 @@ const mapStyle = StyleSheet.create({
     }
 });
 
+const bsasCoords = {
+    lat: -34.6037232,
+    long: -58.3815931
+};
+
 export default class StorageEdit extends React.Component {
 
     static contextType = GlobalContext
 
     state = {
-        id: null,
-        name: "",
-        lat: 0,
-        long: 0
+        id: null, // ID del deposito (si es nuevo, queda null)
+        name: "", // Nombre no debe ser vacio para guardar
+        lat: bsasCoords.lat, // Valor defecto
+        long: bsasCoords.long, // Valor defecto
+        itemList: [] // Lista de items que estan en este deposito (se descargan aca)
     }
 
-    constructor(props) {
-        super(props);
-
-        const st = props?.route?.params?.storage;
+    componentDidMount() {
+        const st = this.props?.route?.params?.storage;
         if(st != undefined){ // Caso edicion de deposito existente
-            this.state = {
-                id: st?.id,
-                name: st?.name,
-                lat: st?.lat,
-                long: st?.long
-            };
+            // TODO: descargar lista de items que estan en este deposito
+            this.setState(st);
         }else{ // Caso creacion nuevo deposito -> usar ubicacion actual
-            (async () => {
-                let { status } = await Location.requestPermissionsAsync();
-                if (status !== 'granted') {
-                    console.log('Permiso a ubicacion denegado');         
-                }else{
-                    let location = await Location.getLastKnownPositionAsync({});
-                    this.setState({ // Al ser operacion asincrona, hay que actualizar
-                        lat: location?.coords?.latitude,
-                        long: location?.coords?.longitude
-                    });
-                } 
-            })();
+            try{
+                Location.requestPermissionsAsync()
+                .then(res => {
+                    if(res.granted){
+                        Location.getLastKnownPositionAsync({})
+                        .then(location => {
+                            if(location)
+                                this.setState({ // Al ser operacion asincrona, hay que actualizar
+                                    lat: location?.coords?.latitude,
+                                    long: location?.coords?.longitude
+                                });
+                        })
+                        .catch(loc_err => {
+                            console.log(loc_err);
+                            alert('No se pudo obtener la ubicación actual.');        
+                        })
+                    }
+                })
+                .catch(perm_err => {
+                    console.log(perm_err);
+                    alert('No ha otorgado permisos de ubicación a esta aplicación.');
+                });
+            }catch(e){
+                console.log(e);
+                alert('En este momento la aplicación no puede acceder a su ubicación actual.');
+            }
         }
     }
 
@@ -97,6 +111,13 @@ export default class StorageEdit extends React.Component {
     }
 
     render() {
+        const region = {
+            latitude: this.state.lat,
+            longitude: this.state.long,
+            latitudeDelta: 0.2,
+            longitudeDelta: 0.2
+        };
+
         return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Detalles de depósito</Text>
@@ -112,18 +133,14 @@ export default class StorageEdit extends React.Component {
             <Text style={styles.section}>Ubicación:</Text>
             <MapView
                 style={mapStyle.map}
-                initialRegion={{
-                    latitude: this.state.lat,
-                    longitude: this.state.long,
-                    latitudeDelta: 0.2,
-                    longitudeDelta: 0.2,
-                }}>
+                region={region}
+                initialRegion={region}>
                     <MapView.Marker   
                         draggable                     
                         title = {this.state.name}
                         coordinate={{ 
                             latitude : this.state.lat, 
-                            longitude : this.state.long 
+                            longitude : this.state.long
                         }}
                         onDragEnd={e => {
                             this.state.lat = e.nativeEvent.coordinate.latitude;

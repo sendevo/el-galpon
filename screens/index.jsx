@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, ImageBackground, TouchableOpacity, Text, View } from 'react-native';
-import styles from './home';
+import styles from './style';
 import background from '../assets/background/galpon1.png';
 import logo from '../assets/logo.png';
 
@@ -14,7 +14,7 @@ export default class Home extends React.Component {
           <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('StorageList')}}>
             <Text>Depósitos</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Categories')*/}}>
+          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('CategoryList')}}>
             <Text>Categorías</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Products')*/}}>

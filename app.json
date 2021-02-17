@@ -22,6 +22,11 @@
     "android": {
       "package": "com.inta.elgalpon",
       "versionCode": 1,
+      "config":{
+        "googleMaps":{
+          "apiKey": "xxx"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

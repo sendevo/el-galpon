@@ -1,32 +1,16 @@
 import React from 'react';
 import { SafeAreaView, FlatList, TouchableOpacity, Text, View } from 'react-native';
-import globalStyles from '../globals';
-import styles from './storageList';
+import globalStyles from '../style';
+import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
-import B from '../Misc';
-import moment from 'moment';
 
-const CardItem = ({ item, onPress, onLongPress }) => (
-    <TouchableOpacity 
-        style={styles.storageCard} 
-        onPress={onPress}
-        onLongPress={onLongPress}>
-            <Text style={styles.storageName}>{item.name}</Text>
-            <Text><B>Lat:</B> {item.lat.toFixed(4)}</Text>
-            <Text><B>Long:</B> {item.long.toFixed(4)}</Text>
-            <Text><B>Creado:</B> {moment(item.created).format("DD/MM/YYYY HH:mm")}</Text>
-            <Text><B>Modificado:</B> {moment(item.modified).format("DD/MM/YYYY HH:mm")}</Text>
-    </TouchableOpacity>
-);
-
-
-export default class StorageList extends React.Component {
+export default class CategoryList extends React.Component {
 
     static contextType = GlobalContext
 
     state = {
-        storageList: []
+        categoryList: []
     }
 
     constructor(props){ // Solo para hacer el binding del actualizador
@@ -35,9 +19,9 @@ export default class StorageList extends React.Component {
     }
 
     updateList() { // Descarga lista de items de la DB y actualiza vista
-        this.context.db.getTable("storage")
+        this.context.db.getTable("categories")
         .then((res =>{
-            this.setState({storageList:res});
+            this.setState({categoryList:res});
         }));    
     }
 
@@ -53,24 +37,24 @@ export default class StorageList extends React.Component {
         const renderCard = ({item}) => (
             <CardItem 
                 item={item} 
-                onPress={()=>this.props.navigation.navigate('StorageEdit', {storage:item})}
+                onPress={()=>this.props.navigation.navigate('CategoryEdit', {storage:item})}
                 onLongPress={()=>{
-                    this.context.db.deleteById('storage', item.id);
+                    this.context.db.deleteById('category', item.id);
                     this.updateList();
                 }}/>
         );
 
         return (
             <SafeAreaView style={styles.container}>                
-                <Text style={globalStyles.screenTitle}>Depósitos</Text>
+                <Text style={globalStyles.screenTitle}>Categorías</Text>
                 <View>
                     {
-                        this.state.storageList.length == 0 ?
-                        <Text>Aún no hay depósitos</Text>
+                        this.state.categoryList.length == 0 ?
+                        <Text>Aún no hay categorías</Text>
                         :
                         <FlatList
-                            data = {this.state.storageList}
-                            extraData = {this.state.storageList}
+                            data = {this.state.categoryList}
+                            extraData = {this.state.categoryList}
                             keyExtractor = {el => el.id.toString()}
                             renderItem = {renderCard}
                         />            
@@ -79,9 +63,7 @@ export default class StorageList extends React.Component {
                 
                 <TouchableOpacity 
                     style={globalStyles.floatingButton}
-                    onPress={()=>{
-                        this.props.navigation.navigate('StorageEdit')
-                    }}
+                    onPress={()=>{this.props.navigation.navigate('CategoryEdit')}}
                 >
                     <Ionicons name="add" size={32} color="white" />
                 </TouchableOpacity>
