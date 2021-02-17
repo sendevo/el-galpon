@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
     padding: 20,
     margin:5
   },
+  flatlist:{
+    paddingBottom: 200
+  },
   storageName: {
       fontWeight: 'bold',
       fontSize: 20

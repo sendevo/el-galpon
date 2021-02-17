@@ -5,14 +5,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center'
+  },  
+  flatlist:{
+    paddingBottom: 200
   },
-  storageCard: {
-    backgroundColor: 'rgb(200,200,200)',
+  categoryCard: {
+    backgroundColor: 'rgb(220,220,220)',
     borderRadius: 10,
     padding: 20,
     margin:5
   },
-  storageName: {
+  categoryName: {
       fontWeight: 'bold',
       fontSize: 20
   }

@@ -17,11 +17,11 @@ export default class Home extends React.Component {
           <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('CategoryList')}}>
             <Text>Categorías</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Products')*/}}>
+          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('ProductList')}}>
             <Text>Productos</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Items')*/}}>
-            <Text>Items</Text>
+          <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('ItemList')*/}}>
+            <Text>Inventario</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Operations')*/}}>
             <Text>Movimientos</Text>

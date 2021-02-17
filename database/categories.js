@@ -1,15 +1,15 @@
-// Lista de categorias (no editable por el usuario)
+// Lista de categorias de productos (no editable por el usuario)
 // Tener cuidado al modificar esta lista, el sistema debe asumir id de categoria incorrecto
 const categories = [
     {
         id: 1, // El id es necesario por si se modifican categorias
         name: "Herramientas", // Nombre y detalles se pueden modificar siempre y cuando apunten a lo mismo
-        desc: "Utensillos y herramientas de trabajo, palas, llaves, masa, etc."
+        desc: "Utensillos y herramientas de trabajo: palas, llaves, martillo, etc."
     },
     {
         id: 2,
         name: "Materiales de construcción",
-        desc: "Materiales varios para infraestructura, galpones, silos, molinos, aguadas, etc."
+        desc: "Materiales varios para infraestructura agrícola: galpones, silos, molinos, aguadas, etc."
     },
     {
         id: 3,
@@ -61,4 +61,6 @@ const categories = [
         name: "Insumos veterinarios",
         desc: "Vacunas, antiparasitarios, medicamentos varios, etc."
     }
-]
+];
+
+export default categories;

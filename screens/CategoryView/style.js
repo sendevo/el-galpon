@@ -2,25 +2,25 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({  
   container: {
-    flex: 1
+    flex: 1,
+    margin:10
   },
   title:{
     fontWeight: 'bold',
     fontSize: 25,
-    margin: 25
+    marginTop: 25
+  },  
+  description:{
+    fontSize: 16,
+    padding: 10
   },
-  textInput:{
-    borderColor: '#CCCCCC',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    height: 50,
-    fontSize: 25,
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginBottom:20
+  subtitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginTop: 10
   },
-  section:{
-    margin:10
+  listitem:{
+    fontSize: 12
   }
 });  
 

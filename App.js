@@ -6,7 +6,7 @@ import Home from './screens/index';
 import StorageList from './screens/StorageList/index';
 import StorageEdit from './screens/StorageEdit/index';
 import CategoryList from './screens/CategoryList/index';
-import CategoryEdit from './screens/CategoryView/index';
+import CategoryView from './screens/CategoryView/index';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +19,7 @@ export default function App() {
           <Stack.Screen name="StorageList" component={StorageList} options={{headerShown: false}} />
           <Stack.Screen name="StorageEdit" component={StorageEdit} options={{headerShown: false}} />
           <Stack.Screen name="CategoryList" component={CategoryList} options={{headerShown: false}} />
-          <Stack.Screen name="CategoryEdit" component={CategoryEdit} options={{headerShown: false}} />
+          <Stack.Screen name="CategoryView" component={CategoryView} options={{headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalProvider>

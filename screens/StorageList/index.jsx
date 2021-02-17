@@ -69,6 +69,7 @@ export default class StorageList extends React.Component {
                         <Text>Aún no hay depósitos</Text>
                         :
                         <FlatList
+                            contentContainerStyle={styles.flatlist}
                             data = {this.state.storageList}
                             extraData = {this.state.storageList}
                             keyExtractor = {el => el.id.toString()}
