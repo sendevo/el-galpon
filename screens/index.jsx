@@ -1,33 +1,36 @@
 import React from 'react';
-import { Image, ImageBackground, TouchableOpacity, Text, View } from 'react-native';
+import { Image, ScrollView, ImageBackground, TouchableOpacity, Text, View } from 'react-native';
 import styles from './style';
 import background from '../assets/background/galpon1.png';
 import logo from '../assets/logo.png';
 
-export default class Home extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <ImageBackground source={background} style={styles.background}>
-          <Image source={logo} style={styles.logo} />
-          <Text style={styles.title}>El Galpón</Text>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('StorageList')}}>
-            <Text>Depósitos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('CategoryList')}}>
-            <Text>Categorías</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{this.props.navigation.navigate('ProductList')}}>
-            <Text>Productos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('ItemList')*/}}>
-            <Text>Inventario</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} onPress={()=>{/*this.props.navigation.navigate('Operations')*/}}>
-            <Text>Movimientos</Text>
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-    );
-  }
-};
+const Home = (props) => (
+  <View style={styles.container}>
+    <ImageBackground source={background} style={styles.background}>
+      <Image source={logo} style={styles.logo} />
+      <Text style={styles.title}>El Galpón</Text>
+      <ScrollView>
+        <TouchableOpacity style={styles.buttons} onPress={()=>{props.navigation.navigate('StorageList')}}>
+          <Text style={styles.buttonText}>Depósitos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttons} onPress={()=>{props.navigation.navigate('CategoryList')}}>
+          <Text style={styles.buttonText}>Categorías</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttons} onPress={()=>{/*props.navigation.navigate('ProductList')*/}}>
+          <Text style={styles.buttonText}>Productos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttons} onPress={()=>{/*props.navigation.navigate('ItemList')*/}}>
+          <Text style={styles.buttonText}>Inventario</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttons} onPress={()=>{/*props.navigation.navigate('Operations')*/}}>
+          <Text style={styles.buttonText}>Movimientos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttons, {marginTop:15}]} onPress={()=>{props.navigation.navigate('Help')}}>
+          <Text style={styles.buttonText}>Información y ayuda</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ImageBackground>
+  </View>
+);
+
+export default Home;

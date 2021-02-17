@@ -14,6 +14,7 @@ const globalStyles = StyleSheet.create({
     opacity:0.8
   },  
   logo: {
+    marginTop: 100,
     width: 100,
     height: 100,
     resizeMode: 'stretch',
@@ -30,8 +31,12 @@ const globalStyles = StyleSheet.create({
     borderRadius: 5,
     padding: 15,
     marginTop: 5,
-    width: 300,
+    width: 250,
     alignItems: 'center'
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    fontSize: 18
   },
   screenTitle: {
     margin:30,

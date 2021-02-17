@@ -1,25 +1,25 @@
 // Esquema para DB SQLite
 // A todas las tablas se les agrega los campos id, created y modified por defecto
 const schema = {
-    "storage": { // Nombre de la tabla
+    storage: { // Nombre de la tabla
         columns:{ // Lista de columnas y tipos
             "name": "TEXT",
             "lat": "REAL",
             "long": "REAL"
         }        
     },
-    "products": {        
+    products: {        
         columns:{
             "name": "TEXT", 
             "description": "TEXT",
-            "categ_id": "INTEGER",
+            "cat_id": "INTEGER",
             "quantity": "REAL", 
-            "quantity_unit": "INTEGER",
+            "unit_id": "INTEGER",
             "toxicity_lvl": "INTEGER",
-            "ref_price": "REAL"
+            "price": "REAL"
         }
     },
-    "items": {
+    items: {
         columns:{
             "product_id": "INTEGER",
             "storage_id": "INTEGER",
@@ -30,7 +30,7 @@ const schema = {
             "notes": "TEXT"
         }
     },
-    "operations": {
+    operations: {
         columns:{
             "from_storage_id": "INTEGER",
             "to_storage_id": "INTEGER",
