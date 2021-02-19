@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+// CategoryView
 const styles = StyleSheet.create({  
   container: {
     flex: 1,

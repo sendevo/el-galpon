@@ -4,22 +4,7 @@ import globalStyles from '../style';
 import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
-import B from '../misc';
-import moment from 'moment';
-
-const CardItem = ({ item, onPress, onLongPress }) => (
-    <TouchableOpacity 
-        style={styles.storageCard} 
-        onPress={onPress}
-        onLongPress={onLongPress}>
-            <Text style={styles.storageName}>{item.name}</Text>
-            <Text><B>Lat:</B> {item.lat.toFixed(4)}</Text>
-            <Text><B>Long:</B> {item.long.toFixed(4)}</Text>
-            <Text><B>Creado:</B> {moment(item.created).format("DD/MM/YYYY HH:mm")}</Text>
-            <Text><B>Modificado:</B> {moment(item.modified).format("DD/MM/YYYY HH:mm")}</Text>
-    </TouchableOpacity>
-);
-
+import { StorageCard } from '../../components/Cards/index';
 
 export default class StorageList extends React.Component {
 
@@ -36,9 +21,9 @@ export default class StorageList extends React.Component {
 
     updateList() { // Descarga lista de items de la DB y actualiza vista
         this.context.db.getTable("storage")
-        .then((res =>{
+        .then(res =>{
             this.setState({storageList:res});
-        }));    
+        });    
     }
 
     componentDidMount() { // Actualizar lista cuando la vista tiene foco (dispara luego de crear)
@@ -51,7 +36,7 @@ export default class StorageList extends React.Component {
 
     render() {
         const renderCard = ({item}) => (
-            <CardItem 
+            <StorageCard 
                 item={item} 
                 onPress={()=>this.props.navigation.navigate('StorageEdit', {storage:item})}
                 onLongPress={()=>{

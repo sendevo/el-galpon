@@ -7,6 +7,8 @@ import StorageList from './screens/StorageList/index';
 import StorageEdit from './screens/StorageEdit/index';
 import CategoryList from './screens/CategoryList/index';
 import CategoryView from './screens/CategoryView/index';
+import ProductList from './screens/ProductList/index';
+import ProductEdit from './screens/ProductEdit/index';
 import HelpScreen from './screens/Help';
 
 const Stack = createStackNavigator();
@@ -21,6 +23,8 @@ export default function App() {
           <Stack.Screen name="StorageEdit" component={StorageEdit} options={{headerShown: false}} />
           <Stack.Screen name="CategoryList" component={CategoryList} options={{headerShown: false}} />
           <Stack.Screen name="CategoryView" component={CategoryView} options={{headerShown: false}} />
+          <Stack.Screen name="ProductList" component={ProductList} options={{headerShown: false}} />
+          <Stack.Screen name="ProductEdit" component={ProductEdit} options={{headerShown: false}} />
           <Stack.Screen name="Help" component={HelpScreen} options={{headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>

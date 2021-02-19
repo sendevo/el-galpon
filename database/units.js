@@ -42,12 +42,6 @@ const units = [
         short: 'kg',
         long: 'kilogramo',
         type: 'peso'
-    },
-    {
-        id: 8,
-        short: '',
-        long: '',
-        type: ''
     }
 ];
 

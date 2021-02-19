@@ -84,27 +84,23 @@ export default class StorageEdit extends React.Component {
         }
         
         const navigate = this.props.navigation.navigate; // Para usar dentro de 'then'
+        const newStorage = (({name, lat, long}) => ({name, lat, long}))(this.state);
         if(this.state.id){ // Si se tiene id -> actualizar en db
-            this.context.db.update("storage", this.state.id, {
-                name: this.state.name,
-                lat: this.state.lat,
-                long: this.state.long
-            })
-            .then(function(res){
+            this.context.db.update("storage", this.state.id, newStorage)
+            .then(res => {
                 console.log("Registro modificado."); // TODO: reemplazar por toast
                 navigate('StorageList',{});
             })
-            .catch(function(e){
+            .catch(e => {
                 console.log("Error actualizando registro"); // TODO: reemplazar por toast
             });
         }else{ // Si no tiene id -> crear nueva entrada            
-            let newStorage = (({name, lat, long}) => ({name, lat, long}))(this.state);
-            this.context.db.insert("storage",newStorage)
-            .then(function(res){
+            this.context.db.insert("storage", newStorage)
+            .then(res => {
                 console.log("Nuevo registro creado."); // TODO: reemplazar por toast
-                navigate('StorageList',{});
+                navigate('StorageList');
             })
-            .catch(function(e){
+            .catch(e => {
                 console.log("Error creando registro"); // TODO: reemplazar por toast
             });
         }
@@ -119,43 +115,42 @@ export default class StorageEdit extends React.Component {
         };
 
         return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Detalles de depósito</Text>
-            <Text style={styles.section}>Nombre:</Text>
-            <TextInput
-                value={this.state.name}
-                style={styles.textInput}
-                placeholder={"Ingrese nombre"}
-                maxLength={20}
-                onChangeText={t=>this.setState({name:t})}
-                onBlur={Keyboard.dismiss}
-                />
-            <Text style={styles.section}>Ubicación:</Text>
-            <MapView
-                style={mapStyle.map}
-                region={region}
-                initialRegion={region}>
-                    <MapView.Marker   
-                        draggable                     
-                        title = {this.state.name}
-                        coordinate={{ 
-                            latitude : this.state.lat, 
-                            longitude : this.state.long
-                        }}
-                        onDragEnd={e => {
-                            this.state.lat = e.nativeEvent.coordinate.latitude;
-                            this.state.long = e.nativeEvent.coordinate.longitude;
-                        }} />
-            </MapView>
-            <Text style={styles.section}>Contenido:</Text>
+            <SafeAreaView style={styles.container}>
+                <Text style={styles.title}>Detalles de depósito</Text>
+                <Text style={styles.section}>Nombre:</Text>
+                <TextInput
+                    value={this.state.name}
+                    style={styles.textInput}
+                    placeholder={"Ingrese nombre"}
+                    maxLength={20}
+                    onChangeText={t=>this.setState({name:t})}
+                    onBlur={Keyboard.dismiss}
+                    />
+                <Text style={styles.section}>Ubicación:</Text>
+                <MapView
+                    style={mapStyle.map}
+                    region={region}
+                    initialRegion={region}>
+                        <MapView.Marker   
+                            draggable                     
+                            title = {this.state.name}
+                            coordinate={{ 
+                                latitude : this.state.lat, 
+                                longitude : this.state.long
+                            }}
+                            onDragEnd={e => {
+                                this.state.lat = e.nativeEvent.coordinate.latitude;
+                                this.state.long = e.nativeEvent.coordinate.longitude;
+                            }} />
+                </MapView>
+                <Text style={styles.section}>Contenido:</Text>
 
-            <TouchableOpacity 
+                <TouchableOpacity 
                     style={globalStyles.floatingButton}
-                    onPress={()=>{this.saveStorage();}}
-                >
-                    <Ionicons name="save" size={32} color="white" />
-                </TouchableOpacity>
-        </SafeAreaView>
+                    onPress={()=>{this.saveStorage();}}>
+                        <Ionicons name="save" size={32} color="white" />
+                    </TouchableOpacity>
+            </SafeAreaView>
         );
     }
 };

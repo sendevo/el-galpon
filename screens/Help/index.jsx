@@ -22,4 +22,3 @@ const HelpMenu = () => (
 );
 
 export default HelpMenu; 
-

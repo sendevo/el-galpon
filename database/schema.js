@@ -8,14 +8,15 @@ const schema = {
             "long": "REAL"
         }        
     },
-    products: {        
+    products: {         
         columns:{
             "name": "TEXT", 
             "description": "TEXT",
             "cat_id": "INTEGER",
+            "subcat_id": "INTEGER",
             "quantity": "REAL", 
             "unit_id": "INTEGER",
-            "toxicity_lvl": "INTEGER",
+            "toxicity": "TEXT",
             "price": "REAL"
         }
     },

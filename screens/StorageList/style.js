@@ -1,23 +1,14 @@
 import { StyleSheet } from 'react-native';
 
+// StorageList
 const styles = StyleSheet.create({  
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center'
   },
-  storageCard: {
-    backgroundColor: 'rgb(200,200,200)',
-    borderRadius: 10,
-    padding: 20,
-    margin:5
-  },
   flatlist:{
     paddingBottom: 200
-  },
-  storageName: {
-      fontWeight: 'bold',
-      fontSize: 20
   }
 });  
 
