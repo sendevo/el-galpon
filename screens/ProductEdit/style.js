@@ -3,7 +3,8 @@ import { StyleSheet } from 'react-native';
 // ProductEdit
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        marginBottom: 10
     },
     title: {
         fontWeight: 'bold',
@@ -43,6 +44,13 @@ const styles = StyleSheet.create({
     section: {
         margin: 10,
         fontWeight: 'bold'
+    },
+    inventoryButton: {
+        backgroundColor: 'rgb(200,200,200)',
+        borderRadius: 10,
+        padding: 15,
+        margin: 10,
+        alignItems: 'center'
     }
 });
 

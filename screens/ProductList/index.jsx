@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
 import { ProductCard } from '../../components/Cards/index';
 import groupBy from 'lodash/groupBy';
-import categories from '../../database/categories';
 
 export default class ProductList extends React.Component {
     
@@ -25,11 +24,11 @@ export default class ProductList extends React.Component {
         this.context.db.getTable('products')
         .then(res => {
             // Agrupar productos por categoria
-            const grouped = groupBy(res, "cat_id"); 
+            const grouped = groupBy(res, "cat_id");
             let groupedArr = [];
-            for(let c in grouped){
+            for(let c in grouped){ // Convertir a array
                 groupedArr.push({ 
-                    name: categories.find(el => el.id == c).name,
+                    name: this.context.categories.find(el => el.id == c).name,
                     list: grouped[c]
                 });
             }
@@ -77,8 +76,7 @@ export default class ProductList extends React.Component {
                 }
                 <TouchableOpacity 
                     style={globalStyles.floatingButton}
-                    onPress={()=>{this.props.navigation.navigate('ProductEdit')}}
-                >
+                    onPress={()=>{this.props.navigation.navigate('ProductEdit')}}>
                     <Ionicons name="add" size={32} color="white" />
                 </TouchableOpacity>
             </SafeAreaView>
