@@ -5,11 +5,13 @@ import { SafeAreaView,
     Text, 
     Picker,
     TouchableOpacity,
-    ToastAndroid } from 'react-native';
+    ToastAndroid, 
+    View } from 'react-native';
 import styles from './style';
 import globalStyles from '../style';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
+import { ItemCard } from '../../components/Cards/index';
 import units from '../../database/units';
 
 export default class ProductEdit extends React.Component {
@@ -29,10 +31,36 @@ export default class ProductEdit extends React.Component {
         itemList: []
     }
 
-    componentDidMount() {
+    constructor(props) {
+        super(props);
+        this.updateList = this.updateList.bind(this);
         const prod = this.props?.route?.params?.product;
-        if(prod)
-            this.setState(prod);
+        if(prod){
+            this.state = (({id, name, description, cat_id, subcat_id, quantity, unit_id, toxicity, price}) => (
+                {id, name, description, cat_id, subcat_id, quantity, unit_id, toxicity, price}))(prod);
+            
+        }
+    }
+
+    componentWillUnmount() { // Desuscribir del listener
+        this._unsubscribe();
+    }
+
+    componentDidMount() { // Actualizar lista cuando la vista tiene foco (dispara luego de crear)
+        this._unsubscribe = this.props.navigation.addListener('focus', this.updateList);
+    }
+
+    updateList() {
+        // Descargar items de este producto
+        if(this.state.id){
+            const statement = 'SELECT * FROM items WHERE product_id = ?';
+            this.context.db.execute(statement, [this.state.id])
+            .then(({rows:{_array}}) => {
+                if(_array.length > 0)
+                    this.setState({itemList: _array});
+            })
+            .catch(e => console.log(e));        
+        }
     }
 
     async saveProduct() { // Actualizar datos en DB
@@ -55,10 +83,71 @@ export default class ProductEdit extends React.Component {
             return this.context.db.insert("products", newProduct);
     }
 
+    insertItem() { // Agregar items de este producto al inventario
+        const insert = () => {
+            this.context.db.insert('items',{
+                product_id: this.state.id
+            }).then(res => {
+                console.log("Insertar");
+                this.updateList();
+            })
+            .catch(e => console.log(e));
+        };
+
+        if(!this.state.id) // Si el producto no fue guardado, es necesario generar un id
+            this.saveProduct()
+            .then(res=>{
+                this.state.id = res.insertId;
+                insert();
+            })
+            .catch(e=>{
+                console.log(e);
+            });
+        else
+            insert();
+    }
+
     render(){
+        const renderCard = ({item}) => (
+            <ItemCard 
+                item={item} 
+                onPress={()=>this.props.navigation.navigate('ItemEdit', {item: item})}
+                onLongPress={()=>{
+                    this.context.db.deleteById('items', item.id);
+                    this.updateList();
+                }}/>
+        );
+
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView>
+                    <Text style={globalStyles.screenTitle}>Inventario</Text>
+                    {
+                    this.state.itemList?.length > 0 ?
+                        <View>
+                            {
+                                this.state.itemList.map(item => (
+                                    <ItemCard 
+                                        item={item} 
+                                        onPress={()=>this.props.navigation.navigate('ItemEdit', {item: item})}
+                                        onLongPress={()=>{
+                                            this.context.db.deleteById('items', item.id);
+                                            this.updateList();
+                                        }}/>
+                                ))
+                            }
+                        </View>
+                    :
+                        <Text>No hay ítems de este producto en el inventario.</Text>
+                    }
+                    <View style={styles.insertButtonContainer}>
+                        <TouchableOpacity 
+                            style={styles.insertButton}
+                            onPress={()=>{this.insertItem();}}>
+                            <Ionicons name="add" size={20} color="white" />
+                        </TouchableOpacity>
+                    </View>
+
                     <Text style={styles.title}>Detalles de producto</Text>
                     
                     <Text style={styles.section}>Nombre:</Text>
@@ -123,25 +212,6 @@ export default class ProductEdit extends React.Component {
                         placeholder={"Valor"}
                         maxLength={10}
                         onChangeText={t=>this.setState({price:t})}/>
-
-                    
-                    <TouchableOpacity
-                        style={styles.inventoryButton}
-                        onPress={()=>{
-                            if(this.state.id) // Si es nuevo producto, primero se debe guardar para que tenga id
-                                this.saveProduct()
-                                .then(res=>{
-                                    this.state.id = res.insertId;
-                                    navigate('ItemList',{productId: res.insertId});
-                                })
-                                .catch(e=>{
-                                    console.log(e);
-                                });        
-                            else // Si no es nuevo producto, navega directamente al listado con el id
-                                this.props.navigation.navigate('ItemList',{productId: this.state.id})
-                            }}>
-                            <Text>Gestionar ítems</Text>
-                    </TouchableOpacity>
                 </ScrollView>
 
                 <TouchableOpacity 

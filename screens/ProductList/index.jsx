@@ -62,9 +62,9 @@ export default class ProductList extends React.Component {
                     this.state.productCategories.length == 0 ?
                     <Text>Aún no hay productos</Text>
                     :
-                    this.state.productCategories.map(categ => (
-                        <View>
-                            <Text style={styles.categoryName}>{categ.name}</Text>
+                    this.state.productCategories.map((categ, index) => (
+                        <View key={index}>
+                            <Text key={index} style={styles.categoryName}>{categ.name}</Text>
                             <FlatList
                                 contentContainerStyle={styles.flatlist}
                                 data = {categ.list}

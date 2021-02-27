@@ -40,4 +40,16 @@ const productStyles = StyleSheet.create({
     }
 });
 
-export { storageStyles, categoryStyles, productStyles };
+const itemStyles = StyleSheet.create({
+    card: {
+        backgroundColor: 'rgb(220,220,220)',
+        borderRadius: 10,
+        padding: 13,
+        margin: 5
+    },
+    number: {
+        textAlign: 'right'
+    }
+});
+
+export { storageStyles, categoryStyles, productStyles, itemStyles };

@@ -1,5 +1,6 @@
 // Esquema para DB SQLite
 // A todas las tablas se les agrega los campos id, created y modified por defecto
+// TODO: ver tipo de dato necesario para las fotos de deposito, producto o item
 const schema = { // Lista de tablas y columnas
     storage: { // Almacenamiento de productos
         columns:{ // Lista de columnas y tipos

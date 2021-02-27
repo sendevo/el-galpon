@@ -80,11 +80,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 - [ ] Testear inserción de items en edición de nuevo producto (sin guardar).  
 - [ ] Listar items agrupados por producto en detalles de depósito.  
 - [ ] Listar items agrupados por producto en detalles de categoría.   
-- [ ] Herramientas para consultas especiales a la db.  
 - [ ] Completar acciones del menú de ayuda.  
-- [ ] Soporte para actualización del modelo de db.  
 - [ ] Métodos para exportar/importar/sincronizar db.  
----
+- [ ] Soporte para actualización del modelo de db.  
+- [ ] Herramientas para consultas especiales a la db (dashboard?).  
+- [ ] Incorporar fotografía de producto/item/deposito.  
+----  
 - [ ] Refactoring.  
 - [ ] Edición de estilos y diseño UI.  
 

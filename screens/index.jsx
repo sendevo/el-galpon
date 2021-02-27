@@ -18,10 +18,7 @@ const Home = (props) => (
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttons} onPress={()=>{props.navigation.navigate('ProductList')}}>
           <Text style={styles.buttonText}>Productos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttons} onPress={()=>{/*props.navigation.navigate('ItemList')*/}}>
-          <Text style={styles.buttonText}>Inventario</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>        
         <TouchableOpacity style={styles.buttons} onPress={()=>{/*props.navigation.navigate('Operations')*/}}>
           <Text style={styles.buttonText}>Movimientos</Text>
         </TouchableOpacity>

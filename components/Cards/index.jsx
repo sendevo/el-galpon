@@ -1,7 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import moment from 'moment';
-import { storageStyles, categoryStyles, productStyles } from './style';
+import { 
+    storageStyles, 
+    categoryStyles, 
+    productStyles, 
+    itemStyles } from './style';
 import units from '../../database/units';
 
 const B = (props) => <Text style={{fontWeight: 'bold'}}>{props.children}</Text>
@@ -40,4 +44,20 @@ const ProductCard = ({ item, onPress, onLongPress }) => (
     </TouchableOpacity>
 );
 
-export { StorageCard, CategoryCard, ProductCard };
+const ItemCard = ({ item, onPress, onLongPress }) => (
+    <TouchableOpacity 
+        style={itemStyles.card} 
+        key={item.id}
+        onPress={onPress}
+        onLongPress={onLongPress}>            
+            <Text style={itemStyles.number}><B>ID: </B>{item.id}</Text>
+            { item.code ? <Text><B>Código: </B>{item.code}</Text> : null }
+            { item.price ? <Text><B>Precio: $</B>{item.price}</Text> : null }
+            { item.expiration ? <Text><B>Vencimiento: </B>{moment(item.expiration).format("DD/MM/YYYY")}</Text> : null }
+            { item.notes ? <Text>{item.notes}</Text> : null }
+            <Text><B>Creado:</B> {moment(item.created).format("DD/MM/YYYY HH:mm")}</Text>
+            <Text><B>Modificado:</B> {moment(item.modified).format("DD/MM/YYYY HH:mm")}</Text>
+    </TouchableOpacity>
+);
+
+export { StorageCard, CategoryCard, ProductCard, ItemCard };
