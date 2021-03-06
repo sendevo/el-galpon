@@ -47,8 +47,8 @@ const ProductCard = ({ item, onPress, onLongPress }) => (
 const ItemCard = ({ item, onPress, onLongPress }) => (
     <TouchableOpacity 
         style={itemStyles.card} 
-        key={item.id}
         onPress={onPress}
+        key={item.id}
         onLongPress={onLongPress}>            
             <Text style={itemStyles.number}><B>ID: </B>{item.id}</Text>
             { item.code ? <Text><B>Código: </B>{item.code}</Text> : null }

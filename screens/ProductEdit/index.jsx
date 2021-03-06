@@ -18,7 +18,7 @@ export default class ProductEdit extends React.Component {
 
     static contextType = GlobalContext
 
-    state = {
+    state = { // En el constructor se vuelve a definir
         id: null,
         name: "",
         description: "",
@@ -38,7 +38,6 @@ export default class ProductEdit extends React.Component {
         if(prod){
             this.state = (({id, name, description, cat_id, subcat_id, quantity, unit_id, toxicity, price}) => (
                 {id, name, description, cat_id, subcat_id, quantity, unit_id, toxicity, price}))(prod);
-            
         }
     }
 
@@ -52,7 +51,7 @@ export default class ProductEdit extends React.Component {
 
     updateList() {
         // Descargar items de este producto
-        if(this.state.id){
+        if(this.state.id){ // Si el producto ya existe en la db
             const statement = 'SELECT * FROM items WHERE product_id = ?';
             this.context.db.execute(statement, [this.state.id])
             .then(({rows:{_array}}) => {
@@ -108,10 +107,11 @@ export default class ProductEdit extends React.Component {
     }
 
     render(){
-        const renderCard = ({item}) => (
+        const renderCard = ({item, key}) => (
             <ItemCard 
                 item={item} 
-                onPress={()=>this.props.navigation.navigate('ItemEdit', {item: item})}
+                key={key}
+                onPress={()=>this.props.navigation.navigate('ItemEdit', {item: item, product: this.state})}
                 onLongPress={()=>{
                     this.context.db.deleteById('items', item.id);
                     this.updateList();
@@ -125,16 +125,9 @@ export default class ProductEdit extends React.Component {
                     {
                     this.state.itemList?.length > 0 ?
                         <View>
+                            <Text>Cantidad de items: {this.state.itemList.length}</Text>
                             {
-                                this.state.itemList.map(item => (
-                                    <ItemCard 
-                                        item={item} 
-                                        onPress={()=>this.props.navigation.navigate('ItemEdit', {item: item})}
-                                        onLongPress={()=>{
-                                            this.context.db.deleteById('items', item.id);
-                                            this.updateList();
-                                        }}/>
-                                ))
+                                this.state.itemList.map( (item, index) => renderCard({item, index}) )
                             }
                         </View>
                     :

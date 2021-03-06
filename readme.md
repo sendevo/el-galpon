@@ -63,6 +63,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 ## Backlog  
 
+### TODO
 - [x] Pantalla para menu principal.  
 - [x] Pantalla para menu de ayuda.  
 - [x] Testear navegación entre pantallas.  
@@ -75,7 +76,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 - [x] Pantalla para edición de productos.  
 - [x] Testear creación, edición y eliminación de productos.  
 - [x] Pantalla para listado de items de un producto.  
-- [ ] Pantalla para editar item de un producto.  
+- [ ] Formulario de edición de items.  
 - [ ] Testear inserción, edición y eliminación de items de un producto.  
 - [ ] Testear inserción de items en edición de nuevo producto (sin guardar).  
 - [ ] Listar items agrupados por producto en detalles de depósito.  
@@ -88,4 +89,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 ----  
 - [ ] Refactoring.  
 - [ ] Edición de estilos y diseño UI.  
+
+### Fix
+- [ ] Al eliminar elementos, la última tarjeta no se borra (ver qué devuelve la consulta vacía).  
 
