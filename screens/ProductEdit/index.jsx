@@ -83,14 +83,26 @@ export default class ProductEdit extends React.Component {
     }
 
     insertItem() { // Agregar items de este producto al inventario
-        const insert = () => {
-            this.context.db.insert('items',{
-                product_id: this.state.id
-            }).then(res => {
-                console.log("Insertar");
-                this.updateList();
-            })
-            .catch(e => console.log(e));
+        
+        const insert = () => { // Operacion final
+            // Debe existir un deposito por defecto
+            const storage_id = this.context.db.config?.default_storage;
+            if(storage_id)
+                this.context.db.insert('items',{
+                    product_id: this.state.id,
+                    storage_id: storage_id
+                }).then(res => {
+                    console.log("Insertar");
+                    this.updateList();
+                })
+                .catch(e => console.log(e));
+            else{
+                ToastAndroid.showWithGravity(
+                    'Debe seleccionar un depósito por defecto',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER
+                );
+            }
         };
 
         if(!this.state.id) // Si el producto no fue guardado, es necesario generar un id

@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Database {
     
@@ -6,6 +7,7 @@ class Database {
         this.schema = schema; 
         this.db = SQLite.openDatabase(name); 
         this.ready = false;
+        this.config = {}
     }
 
     async init() { // Crear todas las tablas si no existen
@@ -29,18 +31,34 @@ class Database {
                         );`)
                 );
             }
-
-            let that = this;
     
-            Promise.all(job)
-            .then(res => {
-                that.ready = true;
-                return resolve(res);
+            // Cargar config y ejecutar promesa
+            let that = this;
+            AsyncStorage.getItem('@app_config')
+            .then(value=>{
+                that.config = value != null ? JSON.parse(value) : {};
+                Promise.all(job)
+                .then(res => {
+                    that.ready = true;
+                    return resolve(res);
+                })
+                .catch(e => reject(e));
             })
             .catch(e => reject(e));
         });
     }
 
+    async setConfig(key, value) { // Guardar objeto de configuracion
+        const prev = this.config[key];
+        this.config[key] = value;
+        try{
+            await AsyncStorage.setItem('@app_config', JSON.stringify(this.config));
+        } catch(e) {
+            console.log(e);
+            this.config[key] = prev; // En caso de error se restaura
+        }
+    }
+    
     async execute(statement, params=[]) { // Wrapper
         return new Promise((resolve, reject) => {
             console.log("Executing statement: ", statement, " with params: ", params);
@@ -122,7 +140,7 @@ class Database {
             .catch(e => reject(e));
         });
     }
-    
+
 }
 
 export default Database;

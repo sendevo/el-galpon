@@ -1,21 +1,25 @@
 import React from 'react';
-import { SafeAreaView, FlatList, TouchableOpacity, Text, View } from 'react-native';
+import { SafeAreaView, TouchableOpacity, Text, View } from 'react-native';
+import Checkbox from 'expo-checkbox';
 import globalStyles from '../style';
 import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalContext } from '../../GlobalContext';
 import { StorageCard } from '../../components/Cards/index';
+import { update } from 'lodash';
 
 export default class StorageList extends React.Component {
 
     static contextType = GlobalContext
 
     state = {
-        storageList: []
+        storageList: [],
+        default_storage: null,
     }
 
-    constructor(props){ // Solo para hacer el binding del actualizador
+    constructor(props, context){ // Solo para hacer el binding del actualizador
         super(props);
+        this.state.default_storage = context.db.config.default_storage;
         this.updateList = this.updateList.bind(this);
     }
 
@@ -34,17 +38,16 @@ export default class StorageList extends React.Component {
         this._unsubscribe();
     }
 
-    render() {
-        const renderCard = ({item}) => (
-            <StorageCard 
-                item={item} 
-                onPress={()=>this.props.navigation.navigate('StorageEdit', {storage:item})}
-                onLongPress={()=>{
-                    this.context.db.deleteById('storage', item.id);
-                    this.updateList();
-                }}/>
-        );
+    setDefaultStorage(id) {
+        const updateState = () => {this.setState({default_storage: id})};
+        this.context.db.setConfig("default_storage", id)
+        .then(res => {
+            updateState();
+        })
+        .catch(e => console.log(e));
+    }
 
+    render() {
         return (
             <SafeAreaView style={styles.container}>                
                 <Text style={globalStyles.screenTitle}>Depósitos</Text>
@@ -53,13 +56,23 @@ export default class StorageList extends React.Component {
                         this.state.storageList.length == 0 ?
                         <Text>Aún no hay depósitos</Text>
                         :
-                        <FlatList
-                            contentContainerStyle={styles.flatlist}
-                            data = {this.state.storageList}
-                            extraData = {this.state.storageList}
-                            keyExtractor = {el => el.id.toString()}
-                            renderItem = {renderCard}
-                        />            
+                        this.state.storageList.map((item)=>(
+                            <View style={styles.cardContainer}>
+                                <Checkbox
+                                    value={item.id == this.state.default_storage}
+                                    onValueChange={v=>this.setDefaultStorage(item.id)}
+                                />
+
+                                <StorageCard 
+                                    item={item} 
+                                    key={item.id}
+                                    onPress={()=>this.props.navigation.navigate('StorageEdit', {storage:item})}
+                                    onLongPress={()=>{
+                                        this.context.db.deleteById('storage', item.id);
+                                        this.updateList();
+                                    }}/>
+                            </View>
+                        ))
                     }
                 </View>
                 

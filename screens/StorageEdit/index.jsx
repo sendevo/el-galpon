@@ -6,7 +6,8 @@ import { SafeAreaView,
     Text, 
     Dimensions, 
     TouchableOpacity,
-    ToastAndroid } from 'react-native';
+    ToastAndroid, 
+    View} from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from './style';
@@ -126,6 +127,7 @@ export default class StorageEdit extends React.Component {
                     onChangeText={t=>this.setState({name:t})}
                     onBlur={Keyboard.dismiss}
                     />
+
                 <Text style={styles.section}>Ubicación:</Text>
                 <MapView
                     style={mapStyle.map}
@@ -143,6 +145,7 @@ export default class StorageEdit extends React.Component {
                                 this.state.long = e.nativeEvent.coordinate.longitude;
                             }} />
                 </MapView>
+
                 <Text style={styles.section}>Contenido:</Text>
 
                 <TouchableOpacity 

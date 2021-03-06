@@ -7,8 +7,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center'
   },
-  flatlist:{
-    paddingBottom: 200
+  cardContainer:{
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  checkbox:{
+    margin: 8
   }
 });  
 

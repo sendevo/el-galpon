@@ -1,46 +1,37 @@
 # Despliegue
 
 ## Instalación Expo-CLI
+
 ```bash
 $ npm install --global expo-cli
 ```
 
-## Instalar dependencias
-
-Si las versiones de package.json son correctas:
+Instalar dependencias (Listado en package.json)
 
 ```bash
 $ expo install
 ```
 
-Dependencias:
+Checkear path de modulos globales npm en variable de entorno
 
 ```bash
-@react-navigation/native 
-@react-navigation/stack 
-@react-native-community/masked-view 
-react-native-gesture-handler 
-react-native-reanimated 
-react-native-screens 
-expo-sqlite
+export PATH=~/.npm-global/bin:$PATH
 ```
 
+
 ## Iniciar app
+
 ```bash
 $ expo start
 ```
 
 ## Iniciar emulador android (Linux)
+
 ```bash
 cd ~/Android/Sdk/emulator
 ./emulator -avd Pixel_3a_API_30_x86
 ```
 
-
-### Agregar path de modulos globales npm a variable de entorno (Linux)
-```bash
-export PATH=~/.npm-global/bin:$PATH
-```
 
 
 
@@ -54,11 +45,6 @@ import Constants from 'expo-constants';
 const id = Constants.installationId;
 ```
 
-Almacenamiento persistente para metadatos
-
-```js
-import AsyncStorage from '@react-native-community/async-storage';
-```
 
 
 ## Backlog  
@@ -77,6 +63,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 - [x] Testear creación, edición y eliminación de productos.  
 - [x] Pantalla para listado de items de un producto.  
 - [ ] Formulario de edición de items.  
+- [ ] Seleccionar depósito por defecto para nuevos items.  
 - [ ] Testear inserción, edición y eliminación de items de un producto.  
 - [ ] Testear inserción de items en edición de nuevo producto (sin guardar).  
 - [ ] Listar items agrupados por producto en detalles de depósito.  
