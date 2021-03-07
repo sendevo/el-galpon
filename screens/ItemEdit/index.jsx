@@ -40,7 +40,11 @@ export default class ProductEdit extends React.Component {
     componentDidMount() {
         // Descargar detalles de item y producto
         const statement = `
-            SELECT p.name AS product_name, p.price AS product_price, * 
+            SELECT 
+                p.name AS product_name, 
+                p.id AS product_id, 
+                p.price AS product_price,
+                i.* 
             FROM items i
             INNER JOIN products p ON (p.id = i.product_id)
             WHERE i.id = ?
@@ -118,7 +122,7 @@ export default class ProductEdit extends React.Component {
                     <Text style={styles.section}>Precio:</Text>
                     <TextInput
                         style={styles.textInput}
-                        value={this.state.price.toString()}
+                        value={this.state.price?.toString()}
                         keyboardType='numeric'
                         placeholder={"Precio"}
                         maxLength={10}

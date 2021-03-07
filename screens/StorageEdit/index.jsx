@@ -45,7 +45,7 @@ export default class StorageEdit extends React.Component {
         if(st != undefined){ // Caso edicion de deposito existente
             const that = this; // Para referenciar en el callback de la promesa
             const statement = `
-                SELECT p.name AS product_name, * 
+                SELECT p.id AS p_id, p.name AS product_name, i.* 
                 FROM items i
                 INNER JOIN products p ON (p.id = i.product_id)
                 WHERE i.storage_id = ?
@@ -162,10 +162,10 @@ export default class StorageEdit extends React.Component {
                     <Text style={styles.section}>Contenido:</Text>
 
                     {
-                        this.state.itemList.map( item => (
+                        this.state.itemList.map( (item, index) => (
                             <ItemCard 
                                 item={item} 
-                                key={item.id}
+                                key={index}
                                 onPress={()=>this.props.navigation.navigate('ItemEdit', {item_id: item.id})}
                                 />
                         ))
