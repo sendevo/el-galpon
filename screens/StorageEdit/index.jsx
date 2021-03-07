@@ -3,13 +3,14 @@ import { SafeAreaView,
     StyleSheet, 
     Keyboard, 
     TextInput, 
+    ScrollView,
     Text, 
     Dimensions, 
     TouchableOpacity,
-    ToastAndroid, 
-    View} from 'react-native';
+    ToastAndroid } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
+import { ItemCard } from '../../components/Cards/index';
 import styles from './style';
 import globalStyles from '../style';
 import { Ionicons } from '@expo/vector-icons';
@@ -40,10 +41,21 @@ export default class StorageEdit extends React.Component {
     }
 
     componentDidMount() {
-        const st = this.props?.route?.params?.storage;
+        let st = this.props?.route?.params?.storage;
         if(st != undefined){ // Caso edicion de deposito existente
-            // TODO: descargar lista de items que estan en este deposito
-            this.setState(st);
+            const that = this; // Para referenciar en el callback de la promesa
+            const statement = `
+                SELECT p.name AS product_name, * 
+                FROM items i
+                INNER JOIN products p ON (p.id = i.product_id)
+                WHERE i.storage_id = ?
+            `;
+            this.context.db.execute(statement, [st.id])
+            .then(({rows:{_array}}) => {
+                st.itemList = _array;
+                that.setState(st);
+            })
+            .catch(e => console.log(e));   
         }else{ // Caso creacion nuevo deposito -> usar ubicacion actual
             try{
                 Location.requestPermissionsAsync()
@@ -117,42 +129,55 @@ export default class StorageEdit extends React.Component {
 
         return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Detalles de depósito</Text>
-                <Text style={styles.section}>Nombre:</Text>
-                <TextInput
-                    value={this.state.name}
-                    style={styles.textInput}
-                    placeholder={"Ingrese nombre"}
-                    maxLength={20}
-                    onChangeText={t=>this.setState({name:t})}
-                    onBlur={Keyboard.dismiss}
-                    />
+                <ScrollView style={styles.scrollView}>
+                    <Text style={styles.title}>Detalles de depósito</Text>
+                    <Text style={styles.section}>Nombre:</Text>
+                    <TextInput
+                        value={this.state.name}
+                        style={styles.textInput}
+                        placeholder={"Ingrese nombre"}
+                        maxLength={20}
+                        onChangeText={t=>this.setState({name:t})}
+                        onBlur={Keyboard.dismiss}
+                        />
 
-                <Text style={styles.section}>Ubicación:</Text>
-                <MapView
-                    style={mapStyle.map}
-                    region={region}
-                    initialRegion={region}>
-                        <MapView.Marker   
-                            draggable                     
-                            title = {this.state.name}
-                            coordinate={{ 
-                                latitude : this.state.lat, 
-                                longitude : this.state.long
-                            }}
-                            onDragEnd={e => {
-                                this.state.lat = e.nativeEvent.coordinate.latitude;
-                                this.state.long = e.nativeEvent.coordinate.longitude;
-                            }} />
-                </MapView>
+                    <Text style={styles.section}>Ubicación:</Text>
+                    <MapView
+                        style={mapStyle.map}
+                        region={region}
+                        initialRegion={region}>
+                            <MapView.Marker   
+                                draggable                     
+                                title = {this.state.name}
+                                coordinate={{ 
+                                    latitude : this.state.lat, 
+                                    longitude : this.state.long
+                                }}
+                                onDragEnd={e => {
+                                    this.state.lat = e.nativeEvent.coordinate.latitude;
+                                    this.state.long = e.nativeEvent.coordinate.longitude;
+                                }} />
+                    </MapView>
 
-                <Text style={styles.section}>Contenido:</Text>
+                    <Text style={styles.section}>Contenido:</Text>
+
+                    {
+                        this.state.itemList.map( item => (
+                            <ItemCard 
+                                item={item} 
+                                key={item.id}
+                                onPress={()=>this.props.navigation.navigate('ItemEdit', {item_id: item.id})}
+                                />
+                        ))
+                    }
+        
+                </ScrollView>
 
                 <TouchableOpacity 
-                    style={globalStyles.floatingButton}
-                    onPress={()=>{this.saveStorage();}}>
-                        <Ionicons name="save" size={32} color="white" />
-                    </TouchableOpacity>
+                style={globalStyles.floatingButton}
+                onPress={()=>{this.saveStorage();}}>
+                    <Ionicons name="save" size={32} color="white" />
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }

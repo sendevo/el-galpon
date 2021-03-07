@@ -51,6 +51,7 @@ const ItemCard = ({ item, onPress, onLongPress }) => (
         key={item.id}
         onLongPress={onLongPress}>            
             <Text style={itemStyles.number}><B>ID: </B>{item.id}</Text>
+            { item.product_name ? <Text><B>Producto: </B>{item.product_name}</Text> : null }
             { item.code ? <Text><B>Código: </B>{item.code}</Text> : null }
             { item.price ? <Text><B>Precio: $</B>{item.price}</Text> : null }
             { item.expiration ? <Text><B>Vencimiento: </B>{moment(item.expiration).format("DD/MM/YYYY")}</Text> : null }

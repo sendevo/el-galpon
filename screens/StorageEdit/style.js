@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  scrollView: {
+    marginBottom: 25
+  },
   title:{
     fontWeight: 'bold',
     fontSize: 25,
