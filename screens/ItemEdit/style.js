@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
         fontSize: 25,
         margin: 25
     },
+    subtitle: {
+        fontSize: 18,
+        margin: 15
+    },
     textInput: {
         borderColor: '#CCCCCC',
         borderTopWidth: 1,

@@ -62,8 +62,8 @@ const id = Constants.installationId;
 - [x] Pantalla para edición de productos.  
 - [x] Testear creación, edición y eliminación de productos.  
 - [x] Pantalla para listado de items de un producto.  
+- [x] Seleccionar depósito por defecto para nuevos items.  
 - [ ] Formulario de edición de items.  
-- [ ] Seleccionar depósito por defecto para nuevos items.  
 - [ ] Testear inserción, edición y eliminación de items de un producto.  
 - [ ] Testear inserción de items en edición de nuevo producto (sin guardar).  
 - [ ] Listar items agrupados por producto en detalles de depósito.  

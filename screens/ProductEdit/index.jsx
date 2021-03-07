@@ -55,8 +55,7 @@ export default class ProductEdit extends React.Component {
             const statement = 'SELECT * FROM items WHERE product_id = ?';
             this.context.db.execute(statement, [this.state.id])
             .then(({rows:{_array}}) => {
-                if(_array.length > 0)
-                    this.setState({itemList: _array});
+                this.setState({itemList: _array});
             })
             .catch(e => console.log(e));        
         }
@@ -119,17 +118,6 @@ export default class ProductEdit extends React.Component {
     }
 
     render(){
-        const renderCard = ({item, key}) => (
-            <ItemCard 
-                item={item} 
-                key={key}
-                onPress={()=>this.props.navigation.navigate('ItemEdit', {item: item, product: this.state})}
-                onLongPress={()=>{
-                    this.context.db.deleteById('items', item.id);
-                    this.updateList();
-                }}/>
-        );
-
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView>
@@ -139,7 +127,16 @@ export default class ProductEdit extends React.Component {
                         <View>
                             <Text>Cantidad de items: {this.state.itemList.length}</Text>
                             {
-                                this.state.itemList.map( (item, index) => renderCard({item, index}) )
+                                this.state.itemList.map( item => (
+                                    <ItemCard 
+                                        item={item} 
+                                        key={item.id}
+                                        onPress={()=>this.props.navigation.navigate('ItemEdit', {item_id: item.id})}
+                                        onLongPress={()=>{
+                                            this.context.db.deleteById('items', item.id);
+                                            this.updateList();
+                                        }}/>
+                                ))
                             }
                         </View>
                     :

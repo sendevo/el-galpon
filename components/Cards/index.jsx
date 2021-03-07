@@ -60,4 +60,4 @@ const ItemCard = ({ item, onPress, onLongPress }) => (
     </TouchableOpacity>
 );
 
-export { StorageCard, CategoryCard, ProductCard, ItemCard };
+export { B, StorageCard, CategoryCard, ProductCard, ItemCard };
