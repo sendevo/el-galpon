@@ -11,14 +11,19 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginTop: 25
   },  
-  description:{
-    fontSize: 16,
-    padding: 10
-  },
   subtitle: {
     fontWeight: 'bold',
     fontSize: 18,
     marginTop: 10
+  },
+  productName: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 10
+  },  
+  description:{
+    fontSize: 16,
+    padding: 10
   },
   listitem:{
     fontSize: 12

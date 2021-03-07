@@ -152,10 +152,10 @@ export default class ProductEdit extends React.Component {
                 <TouchableOpacity 
                     style={globalStyles.floatingButton}
                     onPress={()=>{
-                        const navigate = this.props.navigation.navigate;
+                        const navigate = this.props.navigation.goBack;
                         this.saveItem()
                         .then(res=>{
-                            navigate('ProductEdit',{productId: this.state.product_id});
+                            navigate();
                         })
                         .catch(e=>{
                             console.log(e);

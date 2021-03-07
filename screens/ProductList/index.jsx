@@ -21,6 +21,7 @@ export default class ProductList extends React.Component {
     }
 
     updateList() {
+        const that = this;
         this.context.db.getTable('products')
         .then(res => {
             // Agrupar productos por categoria
@@ -28,12 +29,13 @@ export default class ProductList extends React.Component {
             let groupedArr = [];
             for(let c in grouped){ // Convertir a array
                 groupedArr.push({ 
-                    name: this.context.categories.find(el => el.id == c).name,
+                    name: that.context.categories.find(el => el.id == c).name,
                     list: grouped[c]
                 });
             }
-            this.setState({productCategories: groupedArr});
-        });
+            that.setState({productCategories: groupedArr});
+        })
+        .catch(e => console.log(e));
     }
 
     componentWillUnmount() { // Desuscribir del listener
