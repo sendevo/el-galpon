@@ -33,6 +33,16 @@ cd ~/Android/Sdk/emulator
 ```
 
 
+## Generar apk
+
+1.- Poner API Key de Google Maps en app.json
+2.- Iniciar sesión en expo.io
+3.- Correr:
+
+```bash
+$ expo build:android
+```
+4.- Descargar apk del link generado
 
 
 

@@ -1,5 +1,9 @@
 import React from 'react';
-import { SafeAreaView, FlatList, TouchableOpacity, Text, View } from 'react-native';
+import { SafeAreaView, 
+    ScrollView, 
+    TouchableOpacity, 
+    Text, 
+    View } from 'react-native';
 import globalStyles from '../style';
 import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
@@ -47,35 +51,34 @@ export default class ProductList extends React.Component {
     }
 
     render(){
-        const renderCard = ({item}) => (
-            <ProductCard 
-                item={item} 
-                onPress={()=>this.props.navigation.navigate('ProductEdit', {product:item})}
-                onLongPress={()=>{
-                    this.context.db.deleteById('products', item.id);
-                    this.updateList();
-                }}/>
-        );
-
+        
         return (
-            <SafeAreaView style={styles.container}>                
-                <Text style={globalStyles.screenTitle}>Productos</Text>
-                {
-                    this.state.productCategories.length == 0 ?
-                    <Text>Aún no hay productos</Text>
-                    :
-                    this.state.productCategories.map((categ, index) => (
-                        <View key={index}>
-                            <Text key={index} style={styles.categoryName}>{categ.name}</Text>
-                            <FlatList
-                                contentContainerStyle={styles.flatlist}
-                                data = {categ.list}
-                                extraData = {categ.list}
-                                keyExtractor = {el => el.id.toString()}
-                                renderItem = {renderCard}/>
-                        </View>
-                    ))
-                }
+            <SafeAreaView style={styles.container}>  
+                <ScrollView>
+                    <Text style={globalStyles.screenTitle}>Productos</Text>
+                    {
+                        this.state.productCategories.length == 0 ?
+                        <Text>Aún no hay productos</Text>
+                        :
+                        this.state.productCategories.map((categ, index) => (
+                            <View key={index}>
+                                <Text key={index} style={styles.categoryName}>{categ.name}</Text>
+                                {
+                                    categ.list.map((product, index2) => (
+                                        <ProductCard 
+                                            item={product} 
+                                            key={index2}
+                                            onPress={()=>this.props.navigation.navigate('ProductEdit', {product:product})}
+                                            onLongPress={()=>{
+                                                this.context.db.deleteById('products', product.id);
+                                                this.updateList();
+                                            }}/>
+                                    ))
+                                }    
+                            </View>
+                        ))
+                    }
+                </ScrollView>
                 <TouchableOpacity 
                     style={globalStyles.floatingButton}
                     onPress={()=>{this.props.navigation.navigate('ProductEdit')}}>
