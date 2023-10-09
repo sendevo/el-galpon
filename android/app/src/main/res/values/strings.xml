@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Presipedia</string>
+    <string name="title_activity_main">Presipedia</string>
+    <string name="package_name">com.sendevo.presipedia</string>
+    <string name="custom_url_scheme">com.sendevo.presipedia</string>
+</resources>
