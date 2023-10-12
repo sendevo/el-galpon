@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Container } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import { FaArrowLeft } from 'react-icons/fa';
 import classes from './style.module.css';
 
@@ -9,10 +9,10 @@ const MainView = ({title, background, children}) => {
     const onGoBack = () => navigate(-1);
 
     return (
-        <>
-            <div className={classes.Background} 
-                style={{background:`linear-gradient(rgba(255,255,255,0.9),rgba(255,255,255,0.5)),url(${background})`}}>
-            </div>
+        <Box>
+            <Box className={classes.Background} 
+                sx={{background:`linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.1)), url(${background})`}}>
+            </Box>
             <Container className={classes.Container}>
                 {title && 
                     <h3 className={classes.Title}>
@@ -27,7 +27,7 @@ const MainView = ({title, background, children}) => {
                 }
                 {children}            
             </Container>
-        </>
+        </Box>
     );
 };
 

@@ -1,0 +1,45 @@
+{ 
+    "header": {
+        "fontSize": 18,
+        "bold": true,
+        "margin": [0, 0, 0, 0] 
+    },
+    "subheader": {
+        "fontSize": 16,
+        "bold": true,
+        "margin": [0, 10, 0, 10]
+    },
+    "section": {
+        "fontSize": 14,
+        "bold": true,
+        "margin": [0, 10, 0, 10]
+    },
+    "subsection": {
+        "fontSize": 14,
+        "bold": false,
+        "margin": [0, 10, 0, 10]
+    },
+    "text": {
+        "fontSize": 12,
+        "bold": false,
+        "margin": [0, 3, 0, 3]
+    },
+    "boldText": {
+        "fontSize": 12,
+        "bold": true,
+        "margin": [0, 3, 0, 3]
+    },
+    "smallText": {
+        "fontSize": 9,
+        "bold": "false"
+    },
+    "linkText": {
+        "color": "blue",
+        "decoration": "underline"
+    },
+    "tableHeader": {
+        "bold": true,
+        "fontSize": 13,
+        "color": "black"
+    }
+}

@@ -1,6 +1,7 @@
-
 import Home from './Home';
+import Products from './Products';
 
 export {
-    Home
+    Home,
+    Products
 };
