@@ -17,6 +17,7 @@ const App = () => (
             <Routes>
                 <Route index element={<Views.Home/>} />
                 <Route path='/products' element={<Views.Products/>}/>
+                <Route path='/about' element={<Views.About/>}/>
                 <Route path="*" element={<Navigate replace to="/" />} />
             </Routes>
         </BrowserRouter>
