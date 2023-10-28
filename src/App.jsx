@@ -1,20 +1,21 @@
-import * as Views from './views';
 import { 
     BrowserRouter, 
     Routes, 
     Route, 
-    Navigate 
+    Navigate
 } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles'; 
 import { CssBaseline, GlobalStyles } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles'; 
+import * as Views from './views';
 import theme, { globalStyles } from './themes';
+
 
 const App = () => (
     <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalStyles styles={globalStyles}/>
         <BrowserRouter>
-            <Routes>
+            <Routes location={location}>
                 <Route index element={<Views.Home/>} />
                 <Route path='/products' element={<Views.Products/>}/>
                 <Route path='/about' element={<Views.About/>}/>

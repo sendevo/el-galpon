@@ -1,11 +1,12 @@
 import moment from "moment";
 
-//// BUILD ////
 export const DEBUG_MODE = false;
 export const AVAILABLE_DEBUG_MODES = ["log", "error", "info", "warn", "table"];
 export const APP_NAME = "El Galpón";
 export const VERSION_CODE = "1";
 export const VERSION_VALUE = "1.0.0";
+export const DB_NAME = "elgalponDB";
+export const DB_VERSION = 1;
 export const BUILD_DATE = 1696264323611; // 2-10-2023 13:32 hs
 export const MONTHS = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 const MONTHS_SHORT = ["Ene.", "Feb.", "Mar", "Abr.", "May", "Jun.", "Jul.", "Ago.", "Sept.", "Oct.", "Nov.", "Dic."];

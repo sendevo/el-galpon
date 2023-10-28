@@ -76,6 +76,11 @@ const View = () => (
                 </Link>
             </Grid>
             <Grid item>
+                <Link to="/stock">
+                    <Button variant="contained" sx={buttonStyle}>Insumos</Button>
+                </Link>
+            </Grid>
+            <Grid item>
                 <Link to="/stores">
                     <Button variant="contained" sx={buttonStyle}>Depósitos</Button>
                 </Link>
@@ -85,7 +90,7 @@ const View = () => (
                     <Button variant="contained" sx={buttonStyle}>Movimientos</Button>
                 </Link>
             </Grid>
-            <Grid item>
+            <Grid item sx={{mt:2}}>
                 <Link to="/about">
                     <Button variant="contained" sx={buttonStyle}>Información y ayuda</Button>
                 </Link>
