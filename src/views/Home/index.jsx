@@ -29,8 +29,14 @@ const mainIconStyle = {
     mt:2
 };
 
+const buttonsContainer = {
+    marginTop:"5%"
+};
+
 const buttonStyle = {
-    width: "50vw",
+    p: 2,
+    lineHeight: "1em",
+    width: "60vw",
     maxWidth: "400px",
     backgroundColor: "rgba(250,250,250,.5)",
     color: "#000000",
@@ -43,8 +49,8 @@ const bottomBox = {
     height: "65px",
     m: 0,
     left: 0,
-    position: "absolute",
     bottom: 0,
+    position: "fixed",
     verticalAlign: "middle",
 	textAlign: "left"
 };
@@ -59,13 +65,13 @@ const logoStyle = {
 const View = () => (
     <MainView background={background}>
         <Box sx={mainIconStyle}>
-            <img src={logo} height="100px" width="100px" alt="logo"/>
+            <img src={logo} height="25%" width="25%" alt="logo"/>
         </Box>
         <Box style={{textAlign: "center", marginTop:"5px"}}>
             <Typography variant="h4" sx={titleStyle}>{APP_NAME}</Typography>
         </Box>
         <Grid 
-            sx={{mt:10}}
+            sx={buttonsContainer}
             container 
             direction="column"
             spacing={1} 
@@ -99,16 +105,10 @@ const View = () => (
         <Box sx={bottomBox}>
             <img 
                 src={leftImage} 
-                style={{
-                    ...logoStyle,
-                    left: "0"
-                }} />
+                style={{...logoStyle,left: "0"}} />
             <img 
                 src={rightImage}
-                style={{
-                    ...logoStyle,
-                    right: "0"
-                }} />
+                style={{...logoStyle,right: "0"}} />
         </Box>
     </MainView>
 );

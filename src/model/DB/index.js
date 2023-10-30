@@ -1,7 +1,30 @@
 import {
     DB_NAME,
     DB_VERSION
-} from "../constants"
+} from "../constants";
+
+const schema = {
+    stores: {
+        options: {keyPath: 'id', autoIncrement: true}
+    },
+    products: {
+        options: {keyPath: 'id', autoIncrement: true}
+    },
+    goods: {
+        options: {keyPath: 'id', autoIncrement: true},
+        indexes: [
+            {name: 'store_id', keyPath: 'store_id', options: {unique: false}},
+            {name: 'product_id', keyPath: 'product_id', options: {unique: false}}
+        ]
+    },
+    operations: {
+        options: {keyPath: 'id', autoIncrement: true},
+        indexes: [
+            { name: 'good_id', keyPath: 'good_id', options: { unique: false } },
+            { name: 'timestamp', keyPath: 'timestamp', options: { unique: false } }
+        ]
+    }
+};
 
 export default class DBService {
     constructor() {
@@ -9,59 +32,71 @@ export default class DBService {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = event => {
             this._db = event.target.result;
-
-            this._db.createObjectStore('stores', {
-                keyPath: 'id',
-                autoIncrement: true
+            Object.keys(schema).forEach( key => {
+                const store = this._db.createObjectStore(key, schema[key].options);
+                if(schema[key].indexes)
+                    schema[key].indexes.forEach(index => store.createIndex(index.name, index.keyPath, index.options));
             });
-            
-            this._db.createObjectStore('products', {
-                keyPath: 'id',
-                autoIncrement: true
-            });
-            
-            this._db
-            .createObjectStore('goods', {
-                keyPath: 'id',
-                autoIncrement: true
-            })
-            .createIndex('store_id', 'store_id', { unique: false })
-            .createIndex('product_id', 'product_id', { unique: false });
         };
 
         request.onsuccess = event => {
             this._db = event.target.result;
             this._db.onerror = err => console.error('Database error: ', err);
+            console.log("DB initilized");
         };
 
         request.onerror = event => console.error('Database error: ', event.target.error);
     }
 
-    // Stores
-    addStore = data => {
+    addItem = (data, section) => {
         return new Promise((resolve, reject) => {
-            const transaction = this._db.transaction(['stores'], 'readwrite');
-            const store = transaction.objectStore('stores');
-            const request = store.add(data);
-            request.onsuccess = () => resolve();
-            request.onerror = event => reject(event.target.error);
+            if(this._db){
+                const transaction = this._db.transaction([section], 'readwrite');
+                const store = transaction.objectStore(section);
+                const request = store.add(data);
+                request.onsuccess = () => resolve();
+                request.onerror = event => reject(event.target.error);
+            }else{
+                reject('DB not initialized.');
+            }
         });
     }
 
-    getStores = () => {
+    getItems = section => {
         return new Promise((resolve, reject) => {
-            const transaction = this._db.transaction(['stores'], 'readonly');
-            const store = transaction.objectStore('stores');
-            const request = store.getAll();
+            if(this._db){
+                const transaction = this._db.transaction([section], 'readonly');
+                const store = transaction.objectStore(section);
+                const request = store.getAll();
+                request.onsuccess = event => resolve(event.target.result);
+                request.onerror = event => reject(event.target.error);
+            }else{
+                reject('DB not initialized');
+            }
+        });
+    }
+
+    // Queries for goods
+
+    getStockOfProduct = goodId => {
+        return new Promise((resolve, reject) => {
+            const transaction = this._db.transaction(['goods'], 'readonly');
+            const store = transaction.objectStore('goods');
+            const index = store.index('product_id');
+            const request = index.getAll(IDBKeyRange.only(goodId));
             request.onsuccess = event => resolve(event.target.result);
             request.onerror = event => reject(event.target.error);
         });
-    }
+    };
 
-    // Products
-
-    // Stock (goods)
-
-    // Movements
-
+    getOperationsForGood = goodId => {
+        return new Promise((resolve, reject) => {
+          const transaction = this._db.transaction(['operations'], 'readonly');
+          const store = transaction.objectStore('operations');
+          const index = store.index('good_id');
+          const request = index.getAll(IDBKeyRange.only(goodId));
+          request.onsuccess = event => resolve(event.target.result);
+          request.onerror = event => reject(event.target.error);
+        });
+    };
 }

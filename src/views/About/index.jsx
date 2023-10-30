@@ -34,9 +34,9 @@ const View = () => (
                     <Typography sx={summaryStyle}>Descripción de la app</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography style={{textAlign: "justify"}}>El Galpón es una aplicación utilitaria para tablets y smartphones que permite calcular los principales parámetros de operación de pulverizadoras hidráulicas tipo mochilas de accionamiento manual.</Typography>
-                    <Typography style={{textAlign: "justify"}}>Al usar la aplicación es posible calcular el volumen pulverizado a partir de la medición de la superficie de mojado y el gasto realizado. Cuenta con un calculador de mezclas para los productos del caldo de pulverización.</Typography>
-                    <Typography style={{textAlign: "justify"}}>La información generada a partir del ingreso de los datos y los cálculos realizados se compila en un reporte que puede ser guardado en formato PDF y compartido mediante correo electrónico y/o WhatsApp.</Typography>
+                    <Typography style={{textAlign: "justify"}}>El Galpón es una aplicación utilitaria para tablets y smartphones que permite gestionar y controlar listas de insumos agropecuarios, depósitos de almacenamiento y movimientos.</Typography>
+                    <Typography style={{textAlign: "justify"}}>Al usar la aplicación es posible definir productos, depósitos, insumos y registrar movimientos, para luego consultar insumos por depósitos, ubicaciones, stock y movimientos de cada insumo.</Typography>
+                    <Typography style={{textAlign: "justify"}}>La información generada a partir del ingreso de los datos y los cálculos realizados se compila en reportes que se pueden exportar en formato de planillas o PDF.</Typography>
                     <Typography style={{textAlign: "justify"}}>Una vez instalada, la utilización de El Galpón no requiere disponibilidad de señal ni acceso a la red. Estos servicios sólo son necesarios si se desea compartir los reportes generados.</Typography>                            
                 </AccordionDetails>
             </Accordion>
@@ -63,8 +63,7 @@ const View = () => (
                     <Typography sx={summaryStyle}>Fuente de información</Typography>
                 </AccordionSummary>
                 <AccordionDetails>          
-                    <Typography style={{textAlign:"justify"}}>La lista de picos con código de color normalizado se basa en los criterios de la norma ISO 10625 (2005) "Equipment for crop protection - Sprayer nozzles - Colour coding for identification"</Typography>
-                    <Typography style={{textAlign:"justify"}}>Las ecuaciones de cálculo fueron tomadas del libro "Pulverizaciones agrícolas terrestres" Onorato, Agustín y Tesouro, Omar. Ediciones, INTA. 2006</Typography>
+                    <Typography style={{textAlign:"justify"}}>Las ecuaciones de cálculo de insumos fueron desarrolladas y validadas por expertos de INTA. Consulte la sección de "Términos y Condiciones" y "Responsabilidades" para obtener más información.</Typography>
                 </AccordionDetails>
             </Accordion>
 
