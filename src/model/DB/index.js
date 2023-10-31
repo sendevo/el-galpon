@@ -2,6 +2,7 @@ import {
     DB_NAME,
     DB_VERSION
 } from "../constants";
+import { debug } from "../utils";
 
 const schema = {
     stores: {
@@ -26,7 +27,7 @@ const schema = {
     }
 };
 
-export default class DBService {
+export default class LocalDatabase {
     constructor() {
         this._db = null;
         const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -42,7 +43,7 @@ export default class DBService {
         request.onsuccess = event => {
             this._db = event.target.result;
             this._db.onerror = err => console.error('Database error: ', err);
-            console.log("DB initilized");
+            debug("DB initilized");
         };
 
         request.onerror = event => console.error('Database error: ', event.target.error);
@@ -77,7 +78,6 @@ export default class DBService {
     }
 
     // Queries for goods
-
     getStockOfProduct = goodId => {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(['goods'], 'readonly');

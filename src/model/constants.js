@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const DEBUG_MODE = false;
+export const DEBUG_MODE = true;
 export const AVAILABLE_DEBUG_MODES = ["log", "error", "info", "warn", "table"];
 export const APP_NAME = "El Galpón";
 export const VERSION_CODE = "1";
