@@ -9,7 +9,7 @@ const View = () => {
     const db = useDatabase();   
     
     useEffect(() => {
-        db.getItems('products')
+        db.getAllItems('products')
         .then(console.table)
         .catch(console.error);
     }, []);
@@ -17,10 +17,11 @@ const View = () => {
     const handleCreate = () => {
         const data = {
             product_id: 1,
-            name: "Glifosato",
+            name: "2,4 D",
+            category: "herbicidas",
             extra: {}
         };
-        db.addItem(data,'product')
+        db.addItem(data,'products')
         .then(()=>console.log("Data pushed to db"))
         .catch(console.error);
     };

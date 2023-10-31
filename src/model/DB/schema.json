@@ -1,0 +1,60 @@
+{
+    "stores": {
+        "attributes": ["hidden", "name", "person", "lat", "lng", "created", "modified"],
+        "options": {
+            "keyPath": "id",
+            "autoIncrement": true
+        }
+    },
+    "products": {
+        "attributes": ["hidden", "name", "categories", "pack_size", "pack_unit", "expirable", "returnable"],
+        "options": {
+            "keyPath": "id",
+            "autoIncrement": true
+        }
+    },
+    "goods": {
+        "attributes": ["product_id", "store_id", "stock", "empty", "expiration_date"],
+        "options": {
+            "keyPath": "id",
+            "autoIncrement": true
+        },
+        "indexes": [{
+                "name": "store_id",
+                "keyPath": "store_id",
+                "options": {
+                    "unique": false
+                }
+            },
+            {
+                "name": "product_id",
+                "keyPath": "product_id",
+                "options": {
+                    "unique": true
+                }
+            }
+        ]
+    },
+    "operations": {
+        "attributes": ["timestamp", "type", "good_id", "store_from_id", "store_to_id", "stock_amount", "empty_amount"],
+        "options": {
+            "keyPath": "id",
+            "autoIncrement": true
+        },
+        "indexes": [{
+                "name": "good_id",
+                "keyPath": "good_id",
+                "options": {
+                    "unique": false
+                }
+            },
+            {
+                "name": "timestamp",
+                "keyPath": "timestamp",
+                "options": {
+                    "unique": false
+                }
+            }
+        ]
+    }
+}
