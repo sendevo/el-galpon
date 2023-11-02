@@ -1,11 +1,13 @@
 import Home from './Home';
-import Products from './Products';
+import ProductList from './ProductList';
+import ProductForm from './ProductForm';
 import Operations from './Operations';
 import About from './About';
 
 export {
     Home,
-    Products,
+    ProductList,
+    ProductForm,
     Operations,
     About
 };

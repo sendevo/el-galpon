@@ -77,7 +77,7 @@ const View = () => (
             spacing={1} 
             alignItems="center">
             <Grid item>
-                <Link to="/products">
+                <Link to="/product-list">
                     <Button variant="contained" sx={buttonStyle}>Productos</Button>
                 </Link>
             </Grid>

@@ -19,7 +19,8 @@ const App = () => (
             <BrowserRouter>
                 <Routes location={location}>
                     <Route index element={<Views.Home/>} />
-                    <Route path='/products' element={<Views.Products/>}/>
+                    <Route path='/product-list' element={<Views.ProductList/>}/>
+                    <Route path='/product-form' element={<Views.ProductForm/>}/>
                     <Route path='/operations' element={<Views.Operations/>}/>
                     <Route path='/about' element={<Views.About/>}/>
                     <Route path="*" element={<Navigate replace to="/" />} />
