@@ -26,7 +26,6 @@ Definen productos y sus principales características. Los productos pueden ser h
     hidden: false, // Los productos no se pueden eliminar
     name: "",
     brand: "",
-    manufacturer: "",
     comments: "",
     categories: ["Herbicidas"],
     pack_size: 20,

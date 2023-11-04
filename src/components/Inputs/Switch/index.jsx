@@ -7,9 +7,9 @@ import {
 } from "@mui/material";
 import classes from '../style.module.css';
 
-const Switch = ({name, value, error, labelLeft, labelRight, onChange}) => (
+const Switch = ({title, name, value, error, labelLeft, labelRight, onChange}) => (
     <Box>
-        {name && <span className={classes.Title}>{name}</span>}
+        {title && <span className={classes.Title}>{title}</span>}
     
         <Box className={classes.InputContainer} style={{border: error ? "1px solid red":null}}>
             <Grid 
@@ -28,7 +28,7 @@ const Switch = ({name, value, error, labelLeft, labelRight, onChange}) => (
                         labelPlacement="bottom"
                         sx={{"&.MuiFormControlLabel-root":{margin:"0px"}}}
                         control={
-                            <MuiSwitch checked={value} onChange={onChange} />
+                            <MuiSwitch checked={value} onChange={event => onChange({target:{name, value:event.target.checked}})} />
                         }/>        
                 </Grid>
                 <Grid item sm={4}>

@@ -52,6 +52,24 @@ export default class LocalDatabase {
         });
     }
 
+    getItem = (itemId, section) => {
+        return new Promise((resolve, reject) => {
+            this.performTransaction(() => {
+                const request = this._db
+                    .transaction(section, 'readonly')
+                    .objectStore(section)
+                    .get(itemId);
+        
+                request.onsuccess = (event) => {
+                    const product = event.target.result;
+                    if (product) resolve(product);
+                    else reject(`Item with ID ${itemId} not found`);
+                };
+                request.onerror = event => reject(event.target.error);
+            });
+        });
+    }
+
     removeItem = (itemId, section) => {
         return new Promise((resolve, reject) => {
             this.performTransaction(() => {

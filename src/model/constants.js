@@ -35,6 +35,18 @@ export const MOMENT_LOCALE_CONFIG = {
         yy : '%d años'
     }
 };
+export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u"];
+export const CATEGORIES = [
+    {
+        label:"Herbicidas",
+        key: 0
+    }, 
+    {
+        label: "Fertilizantes",
+        key: 1
+    }
+];
+
 
 if(DEBUG_MODE) console.log(`Debug mode on. Available functions: ${AVAILABLE_DEBUG_MODES.join(", ")}`);
 moment.updateLocale('es', MOMENT_LOCALE_CONFIG);
