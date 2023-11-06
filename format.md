@@ -27,7 +27,10 @@ Definen productos y sus principales características. Los productos pueden ser h
     name: "",
     brand: "",
     comments: "",
-    categories: ["Herbicidas"],
+    categories: [
+        {label: "Herbicidas", key: 0},
+        {label: "Fumigacion", key: 1}
+    ],
     pack_size: 20,
     pack_unit: "l",
     expirable: false,
