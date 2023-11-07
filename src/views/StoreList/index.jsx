@@ -12,16 +12,17 @@ import {
     Paper, 
     Checkbox, 
     Typography, 
-    Box 
+    Box, 
+    Link
 } from '@mui/material';
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
 import MainView from "../../components/MainView";
 import { componentsStyles } from "../../themes";
-import { debug, cropString } from "../../model/utils";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { debug, latLng2GoogleMap, cropString } from "../../model/utils";
 import background from "../../assets/backgrounds/background1.jpg";
 import iconEmpty from "../../assets/icons/empty_folder.png";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 
 const View = () => {
@@ -32,16 +33,16 @@ const View = () => {
     const [selected, setSelected] = useState([]);
     
     useEffect(() => {
-        db.getAllItems("products")
+        db.getAllItems("stores")
             .then(setData)
             .catch(console.error);
     }, []);
 
-    const handleSelect = productId => {
-        const selectedIndex = selected.indexOf(productId);
+    const handleSelect = storeId => {
+        const selectedIndex = selected.indexOf(storeId);
         const newSelected = [...selected];
         if (selectedIndex === -1)
-            newSelected.push(productId);
+            newSelected.push(storeId);
         else
             newSelected.splice(selectedIndex, 1);
         setSelected(newSelected);
@@ -54,12 +55,12 @@ const View = () => {
             setSelected([]);
     };
 
-    const handleNew = () => navigate("/product-form");
+    const handleNew = () => navigate("/store-form");
 
     const handleEdit = () => {
         if(selected.length === 1){
-            const productId = selected[0];
-            navigate(`/product-form?id=${productId}`);
+            const storeId = selected[0];
+            navigate(`/store-form?id=${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
             setSelected([]);
@@ -68,10 +69,10 @@ const View = () => {
 
     const handleDelete = () => {
         // TODO: confirm modal && feedback
-        const job = selected.map(productId => db.removeItem(productId, "products"));
+        const job = selected.map(storeId => db.removeItem(storeId, "stores"));
         Promise.all(job)
             .then(() => {
-                db.getAllItems("products")
+                db.getAllItems("stores")
                     .then(updatedData => {
                         setData(updatedData);
                         setSelected([]);
@@ -81,7 +82,7 @@ const View = () => {
     };
 
     return(
-        <MainView title={"Productos"} background={background}>
+        <MainView title={"Depósitos"} background={background}>
             {data.length > 0 ?
                 <Box>
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
@@ -94,35 +95,32 @@ const View = () => {
                                             onChange={e => handleSelectAll(e.target.checked)} />
                                     </TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Nombre</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Capacidad</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Unidad</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Expirable</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Retornable</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Marca/Fabricante</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Comentarios</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Categorías</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Creado</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Modificado</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {data.map(product => (
-                                <TableRow key={product.id}>
+                            {data.map(store => (
+                                <TableRow key={store.id}>
                                     <TableCell sx={componentsStyles.tableCell}>
                                         <Checkbox 
-                                            checked={selected.indexOf(product.id) !== -1} 
-                                            onChange={() => handleSelect(product.id)} />
+                                            checked={selected.indexOf(store.id) !== -1} 
+                                            onChange={() => handleSelect(store.id)} />
                                     </TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.name || "Sin nombre"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_size}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_unit}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.expirable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.returnable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{cropString(product.comments || "-", 10)}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.categories?.map(c => c.label).join(', ') || "-"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{moment(product.created).format("DD/MM/YYYY HH:mm")}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{moment(product.modified).format("DD/MM/YYYY HH:mm")}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{store.name || "Sin nombre"}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>
+                                        <Link 
+                                            target="_blank"
+                                            rel="nooreferrer"
+                                            href={latLng2GoogleMap(store.lat, store.lng)}>
+                                                Ver <FaExternalLinkAlt/>
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{cropString(store.comments || "-", 10)}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{moment(store.created).format("DD/MM/YYYY HH:mm")}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{moment(store.modified).format("DD/MM/YYYY HH:mm")}</TableCell>
                                 </TableRow>
                             ))}
                             </TableBody>
@@ -166,7 +164,7 @@ const View = () => {
                     alignItems={"center"}
                     sx={{mt: "50%"}}>
                     <img src={iconEmpty} height="100px" alt="Sin datos" />
-                    <Typography variant="h5" fontWeight={"bold"}>Aún no hay productos</Typography>
+                    <Typography variant="h5" fontWeight={"bold"}>Aún no hay depósitos</Typography>
                     <Button 
                         sx={{mt: 2}}
                         variant="contained"

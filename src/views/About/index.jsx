@@ -7,19 +7,20 @@ import {
 } from "@mui/material";
 import MainView from "../../components/MainView";
 import { APP_NAME, VERSION_VALUE } from "../../model/constants";
+import { viewsStyles } from "../../themes";
 import background from "../../assets/backgrounds/background1.jpg";
 import logoInta from '../../assets/logo_inta.png';
 import { FaChevronDown } from "react-icons/fa";
 
-const accordionStyle = {backgroundColor: "rgba(255, 255, 255, 0.7)"};
-const summaryStyle = {fontWeight: "bold"};
+
+const styles = viewsStyles.about;
 
 const View = () => (
     <MainView background={background} title="Acerca de El Galpón">
         <Box>
-            <Accordion sx={accordionStyle}>
+            <Accordion sx={styles.accordion}>
                 <AccordionSummary expandIcon={<FaChevronDown />}>
-                    <Typography sx={summaryStyle}>Versión de la aplicación</Typography>
+                    <Typography sx={styles.summary}>Versión de la aplicación</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <h3 style={{margin:0, textAlign:"center"}}>{APP_NAME} {VERSION_VALUE}</h3>
@@ -29,9 +30,9 @@ const View = () => (
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={accordionStyle}>
+            <Accordion sx={styles.accordion}>
                 <AccordionSummary expandIcon={<FaChevronDown />}>
-                    <Typography sx={summaryStyle}>Descripción de la app</Typography>
+                    <Typography sx={styles.summary}>Descripción de la app</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography style={{textAlign: "justify"}}>El Galpón es una aplicación utilitaria para tablets y smartphones que permite gestionar y controlar listas de insumos agropecuarios, depósitos de almacenamiento y movimientos.</Typography>
@@ -41,9 +42,9 @@ const View = () => (
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={accordionStyle}>
+            <Accordion sx={styles.accordion}>
                 <AccordionSummary expandIcon={<FaChevronDown />}>
-                    <Typography sx={summaryStyle}>Datos de contacto</Typography>
+                    <Typography sx={styles.summary}>Datos de contacto</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography sx={{mt:1, mb:1}}>
@@ -58,18 +59,18 @@ const View = () => (
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={accordionStyle}>
+            <Accordion sx={styles.accordion}>
                 <AccordionSummary expandIcon={<FaChevronDown />}>
-                    <Typography sx={summaryStyle}>Fuente de información</Typography>
+                    <Typography sx={styles.summary}>Fuente de información</Typography>
                 </AccordionSummary>
                 <AccordionDetails>          
                     <Typography style={{textAlign:"justify"}}>Las ecuaciones de cálculo de insumos fueron desarrolladas y validadas por expertos de INTA. Consulte la sección de "Términos y Condiciones" y "Responsabilidades" para obtener más información.</Typography>
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={accordionStyle}>
+            <Accordion sx={styles.accordion}>
                 <AccordionSummary expandIcon={<FaChevronDown />}>
-                    <Typography sx={summaryStyle}>Términos y condiciones</Typography>
+                    <Typography sx={styles.summary}>Términos y condiciones</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography><i>Aceptación de los términos y condiciones</i></Typography>
@@ -101,9 +102,9 @@ const View = () => (
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion sx={accordionStyle}>
+            <Accordion sx={styles.accordion}>
                 <AccordionSummary expandIcon={<FaChevronDown />}>
-                    <Typography sx={summaryStyle}>Responsabilidades</Typography>
+                    <Typography sx={styles.summary}>Responsabilidades</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography style={{textAlign:"justify"}}>La Estación Experimental Agropecuaria Hilario Ascasubi (CERBAS - INTA) no será responsable de los

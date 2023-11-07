@@ -24,6 +24,17 @@ export const colorRangeGenerator = (count, hue, satFrom = 0.1, satTo = 0.9, tran
     return colors;
 };
 
+export const stringEncode = str => {
+    if (str.length === 0) return "";
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+    }
+    return String(hash).replace(/-/g, '0').replace(/^-/, '');
+};
+  
+
 export const randomColorsGenerator = (count, transparency = 0.7) => {
     const colors = [];
     for (let c = 0; c < count; c++) {
@@ -44,20 +55,15 @@ export const colorMapGenerator = (values, hue, satFrom = 0.1, satTo = 0.9, trans
         const [r, g, b] = hsv2rgb(hue, s, 0.9);
         return `rgba(${r}, ${g}, ${b}, ${transparency})`;
     });
-}
-
-const latLng2GoogleMap = (lat, lng) => `http://www.google.com/maps/place/${lat},${lng}`;
-
-export const location2GoogleMap = location => {
-    const [lng, lat] = location.features[0].geometry.coordinates;
-    return latLng2GoogleMap(lat, lng);
 };
+
+export const latLng2GoogleMap = (lat, lng) => `http://www.google.com/maps/place/${lat},${lng}`;
 
 export const getRandomElement = arr => arr[Math.floor(Math.random() * arr.length)];
 
 export const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const cropString = (str, len) => str.slice(0, len) + (str.length > len ? "..." : "");
+export const cropString = (str, len=10) => str.slice(0, len) + (str.length > len ? "..." : "");
 
 export const formatDate = d => {
     const m = moment(d);

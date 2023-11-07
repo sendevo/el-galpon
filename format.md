@@ -3,9 +3,9 @@ Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad
 ```js
 {
     id: 0, // auto increment
-    hidden: false, // Los depósitos no se pueden eliminar
     name: "",
-    person: { // Datos de contacto
+    comments: "",
+    contact: { // Datos de contacto
         name: "",
         phone: "",
         address: "",
@@ -23,7 +23,6 @@ Definen productos y sus principales características. Los productos pueden ser h
 ```js
 {
     id: 0, // auto increment
-    hidden: false, // Los productos no se pueden eliminar
     name: "",
     brand: "",
     comments: "",

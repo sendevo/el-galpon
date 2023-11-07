@@ -1,13 +1,13 @@
 {
     "stores": {
-        "attributes": ["hidden", "name", "person", "lat", "lng", "created", "modified"],
+        "attributes": ["name", "comments", "contact", "lat", "lng", "created", "modified"],
         "options": {
             "keyPath": "id",
             "autoIncrement": true
         }
     },
     "products": {
-        "attributes": ["hidden", "name", "categories", "pack_size", "pack_unit", "expirable", "returnable"],
+        "attributes": ["name", "brand", "comments", "categories", "pack_size", "pack_unit", "expirable", "returnable", "created", "modified"],
         "options": {
             "keyPath": "id",
             "autoIncrement": true

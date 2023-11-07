@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { 
     Button, 
-    Paper,
     Grid,
+    Paper,
     Typography 
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -14,42 +14,39 @@ import {
     Select,
     Switch
 } from "../../components/Inputs";
-import { debug, stringEncode } from "../../model/utils";
+import { debug } from "../../model/utils";
 import { UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 import background from "../../assets/backgrounds/background1.jpg";
 
-
-const validateForm = formData => Boolean(formData.name && formData.pack_size);
-
-const categories2Select = cats => cats?.map(c => ({label: c, key: stringEncode(c)}));
+const validateForm = formData => Boolean(formData.name && formData.lat && formData.lng);
 
 const View = () => {
 
     const navigate = useNavigate();
     const db = useDatabase();   
     const [searchParams] = useSearchParams();    
-    const [viewTitle, setViewTitle] = useState("Productos");
-    const [formData, setFormData] = useState({created: Date.now()});
+    const [viewTitle, setViewTitle] = useState("Depósitos");
+    const [formData, setFormData] = useState({});
 
     useEffect(() => {
         const id = searchParams.get("id");
-        if(Boolean(id)){ // Editing product
-            db.getItem(parseInt(id), 'products')
+        if(Boolean(id)){ // Editing form
+            db.getItem(parseInt(id), "stores")
                 .then(data => {
                     setFormData(data);
-                    setViewTitle("Edición de producto");
+                    setViewTitle("Edición de depósito");
                 })
                 .catch(console.error);
         }else{
-            setViewTitle("Creación de producto");
+            setViewTitle("Creación de depósito");
         }
     }, []);
 
     const handleSubmit = () => {
         if(validateForm(formData)){
             debug(formData);
-            db.addItem(formData,'products')
+            db.addItem(formData,"stores")
                 .then(()=>{
                     if(formData.id) // Editing
                         debug("Item updated successfully");
@@ -65,11 +62,21 @@ const View = () => {
 
     const handleInputChange = event => {
         const {name, value} = event.target;
-        setFormData({
-            ...formData,
-            modified: Date.now(),
-            [name]: name === "categories" ? value.map(v => v.label) : value
-        });
+        if(name.includes("contact_")){
+            const contactField = name.replace("contact_", "");
+            setFormData({
+                ...formData,
+                contact: {
+                    ...formData.contact, 
+                    [contactField]: value
+                }
+            });
+        }else{
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
     };
 
     return(
@@ -85,76 +92,73 @@ const View = () => {
                         onChange={handleInputChange}/>
                 </Grid>
                 <Grid item xs={12}>
+                    <Input 
+                        multiline
+                        label="Comentarios"
+                        name="comments"
+                        type="text"
+                        value={formData.comments || ""}
+                        onChange={handleInputChange}/>
+                </Grid>
+                <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Presentación</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Ubicación</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Input 
-                                    label="Capacidad*"
-                                    name="pack_size"
+                                    label="Latitud*"
+                                    name="lat"
                                     type="number"
-                                    value={formData.pack_size || ""}
+                                    value={formData.lat || ""}
+                                    error={formData.lat === ""}
                                     onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={6}>
-                                <Select
-                                    label="Unidad*"
-                                    name="pack_unit"
-                                    value={formData.pack_unit || ""}
-                                    options={UNITS.map(u => ({label: u, value: u}))}
-                                    onChange={handleInputChange}
-                                />
+                                <Input 
+                                    label="Longitud*"
+                                    name="lng"
+                                    type="number"
+                                    value={formData.lng || ""}
+                                    error={formData.lat === ""}
+                                    onChange={handleInputChange}/>
                             </Grid>
                         </Grid>
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Switch 
-                        title="Caducidad"
-                        labelLeft="Sin vencimiento"
-                        labelRight="Con vencimiento"
-                        name="expirable"
-                        value={formData.expirable}
-                        onChange={handleInputChange}/>
-                </Grid>
-                <Grid item xs={12}>
-                    <Switch 
-                        title="Reciclaje"
-                        labelLeft="No retornable"
-                        labelRight="Retornable"
-                        name="returnable"
-                        value={formData.returnable}
-                        onChange={handleInputChange}/>
-                </Grid>
-                <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Detalles adicionales</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Datos de contacto</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Input 
-                                    label={"Marca/Fabricante"}
-                                    name="brand"
+                                    label="Responsable"
+                                    name="contact_name"
                                     type="text"
-                                    value={formData.brand || ""}
+                                    value={formData.contact?.name || ""}                                    
                                     onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={12}>
-                                <SuggesterInput 
-                                    multiple
-                                    type="text"                                
-                                    label="Categorías"
-                                    name="categories"
-                                    value={categories2Select(formData.categories) || []}
-                                    onChange={handleInputChange}
-                                    options={categories2Select(CATEGORIES)}/>
+                                <Input 
+                                    label="Teléfono"
+                                    name="contact_phone"
+                                    type="text"
+                                    value={formData?.contact?.phone || ""}
+                                    onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Input 
-                                    multiline
-                                    label="Comentarios"
-                                    name="comments"
+                                    label="Dirección"
+                                    name="contact_address"
                                     type="text"
-                                    value={formData.comments || ""}
+                                    value={formData?.contact?.address || ""}
+                                    onChange={handleInputChange}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Input 
+                                    label="email"
+                                    name="contact_email"
+                                    type="text"
+                                    value={formData?.contact?.email || ""}
                                     onChange={handleInputChange}/>
                             </Grid>
                         </Grid>

@@ -8,26 +8,39 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 
 ## Backlog versión 1.0.0 (alpha)  
 
-### Desarrollo  
-  - [x] Boilerplate React 18 + MUI + Capacitor.  
-  - [x] Menu de utilidades.  
-  - [ ] Context GUI (modals, toasts, prompts).  
-  - [ ] Database Service y Context.  
+### Modelo de datos
+  - [ ] Modelo de productos, insumos, depósitos e insumos.  
+  - [ ] Modelo de categorías.  
+  - [ ] Base de datos con IndexedDB.  
   - [ ] Creación y edición de:
     - [ ] Productos.  
     - [ ] Insumos (instancias de productos).  
     - [ ] Depósitos.  
-    - [ ] Movimientos.  
+  - [ ] Registro automático de movimientos.  
   - [ ] Consulta de:  
-    - [ ] Insumos por producto.  
-    - [ ] Insumos por depósito.  
-    - [ ] Insumos por movimiento.  
-  - [ ] Ayuda y acerca de.  
+    - [ ] Insumos de un producto.  
+    - [ ] Insumos en un depósito.  
+    - [ ] Movimientos de un producto.  
+
+### Interfaz gráfica y utilidades
+  - [x] Boilerplate React 18 + MUI + Capacitor.  
+  - [x] Menu de utilidades.  
+  - [ ] Context GUI (modals, toasts, prompts).  
+  - [x] Service para Database.  
+  - [x] Ayuda y acerca de.  
+  - [ ] Listado de:  
+    - [ ] Productos  
+    - [ ] Insumos  
+    - [ ] Depósitos  
+    - [ ] Movimientos  
+  - [ ] Formularios para edición de:  
+    - [ ] Productos  
+    - [ ] Insumos  
+    - [ ] Depósitos  
   - [ ] Exportación de consultas a XLS.  
   - [ ] Exportación de consultas a PDF.  
-  - [ ] 
 
-### Producción  
-  - [ ] Compilación web.  
-  - [ ] Compilación Android.  
-  - [ ] Publicación.  
+### Producción e integración  
+  - [ ] Compilación web -> vercel.  
+  - [ ] Compilación Android ->  PlayStore.  
+  - [ ] Migraciones de base de datos.  
