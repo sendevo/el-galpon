@@ -123,12 +123,12 @@ const View = () => {
                                             onChange={() => handleSelect(store.id)} />
                                     </TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{store.name || "Sin nombre"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>
+                                    <TableCell sx={{...componentsStyles.tableCell, textAlign:"center"}}>
                                         <Link 
                                             target="_blank"
                                             rel="nooreferrer"
                                             href={latLng2GoogleMap(store.lat, store.lng)}>
-                                                Ver <FaExternalLinkAlt/>
+                                                <FaExternalLinkAlt/>
                                         </Link>
                                     </TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{cropString(store.comments || "-", 10)}</TableCell>
@@ -144,15 +144,20 @@ const View = () => {
                             <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
                             {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más ítems</Typography>}
                         </Grid>
-                        <Grid container spacing={1}>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
+                        <Grid 
+                            container 
+                            direction="row"
+                            spacing={2} 
+                            justifyContent="space-around">
+                            <Grid item>
                                 <Button 
+                                    color="green"
                                     variant="contained"
                                     onClick={handleNew}>
                                     Nuevo
                                 </Button>
                             </Grid>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
+                            <Grid item>
                                 <Button 
                                     variant="contained"
                                     disabled={selected.length !== 1}
@@ -160,8 +165,9 @@ const View = () => {
                                     Editar        
                                 </Button>
                             </Grid>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
+                            <Grid item>
                                 <Button     
+                                    color="red"
                                     variant="contained"
                                     disabled={selected.length === 0}
                                     onClick={handleDelete}>

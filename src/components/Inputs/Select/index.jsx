@@ -20,6 +20,7 @@ const Select = props => {
         label,
         name,
         value,
+        disabled,
         options
     } = props;
 
@@ -46,6 +47,7 @@ const Select = props => {
                 <FormControl fullWidth size="small">
                     <InputLabel id={id}>{label}</InputLabel>
                     <MuiSelect
+                        disabled={disabled}
                         className={classes.SelectContainer}
                         name={name}
                         labelId={id}

@@ -15,8 +15,8 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   - [ ] Creación y edición de:
     - [x] Productos.  
     - [x] Depósitos.  
-    - [ ] Insumos (instancias de productos).  
-  - [ ] Registro automático de movimientos.  
+    - [ ] Movimientos.  
+  - [ ] Registro automático de insumos.  
   - [ ] Consulta de:  
     - [ ] Insumos de un producto.  
     - [ ] Insumos en un depósito.  
@@ -29,14 +29,14 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   - [x] Service para Database.  
   - [x] Ayuda y acerca de.  
   - [ ] Listado de:  
-    - [x] Depósitos  
-    - [x] Productos  
-    - [ ] Insumos  
-    - [ ] Movimientos  
+    - [x] Depósitos.  
+    - [x] Productos.  
+    - [ ] Insumos.  
+    - [ ] Movimientos.  
   - [ ] Formularios para edición de:  
-    - [x] Depósitos  
-    - [x] Productos  
-    - [ ] Insumos  
+    - [x] Depósitos.  
+    - [x] Productos.  
+    - [ ] Movimientos.  
   - [ ] Exportación de consultas a XLS.  
   - [ ] Exportación de consultas a PDF.  
 

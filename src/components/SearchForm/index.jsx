@@ -183,13 +183,14 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
                     <Grid 
                         sx={{mt:1}}
                         container 
+                        direction={"row"}
                         spacing={2} 
-                        justifyContent="center" >
+                        justifyContent="space-around">
                         <Grid item>
                             <Button 
                                 size="small"
                                 variant="contained" 
-                                color="secondary"
+                                color="red"
                                 onClick={handleFiltersReset}>
                                     Limpiar filtros
                             </Button>

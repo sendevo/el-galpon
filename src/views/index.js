@@ -1,17 +1,21 @@
 import Home from './Home';
-import ProductList from './ProductList';
+import Goods from './Goods';
+import OperationForm from './OperationForm';
+import OperationList from './OperationList';
 import ProductForm from './ProductForm';
-import StoreList from './StoreList';
+import ProductList from './ProductList';
 import StoreForm from './StoreForm';
-import Operations from './Operations';
+import StoreList from './StoreList';
 import About from './About';
 
 export {
     Home,
+    Goods,
     ProductList,
     ProductForm,
     StoreList,
     StoreForm,
-    Operations,
+    OperationForm,
+    OperationList,
     About
 };

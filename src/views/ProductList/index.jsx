@@ -67,6 +67,16 @@ const View = () => {
         }
     };
 
+    const handleOperation = () => {
+        if(selected.length === 1){
+            const productId = selected[0];
+            navigate(`/operation-form?id=${productId}`);
+        }else{
+            debug("Multpiple selection for operation", "error");
+            setSelected([]);
+        }
+    };
+
     const handleDelete = () => {
         // TODO: confirm modal && feedback
         const job = selected.map(productId => db.removeItem(productId, "products"));
@@ -146,24 +156,39 @@ const View = () => {
                             <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
                             {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más ítems</Typography>}
                         </Grid>
-                        <Grid container spacing={1}>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
+                        <Grid 
+                            container 
+                            direction="row"
+                            spacing={1}
+                            justifyContent="space-around">
+                            <Grid item>
                                 <Button 
+                                    color="green"
                                     variant="contained"
                                     onClick={handleNew}>
                                     Nuevo
                                 </Button>
                             </Grid>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
-                                <Button 
+                            <Grid item>
+                                <Button
                                     variant="contained"
                                     disabled={selected.length !== 1}
                                     onClick={handleEdit}>
                                     Editar        
                                 </Button>
                             </Grid>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
+                            <Grid item>
+                                <Button
+                                    color="secondary"
+                                    variant="contained"
+                                    disabled={selected.length !== 1}
+                                    onClick={handleOperation}>
+                                    Mover
+                                </Button>
+                            </Grid>
+                            <Grid item>
                                 <Button     
+                                    color="red"
                                     variant="contained"
                                     disabled={selected.length === 0}
                                     onClick={handleDelete}>

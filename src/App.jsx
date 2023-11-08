@@ -19,11 +19,13 @@ const App = () => (
             <BrowserRouter>
                 <Routes location={location}>
                     <Route index element={<Views.Home/>} />
-                    <Route path='/product-list' element={<Views.ProductList/>}/>
+                    <Route path='/goods' element={<Views.Goods/>}/>
+                    <Route path='/operation-form' element={<Views.OperationForm/>}/>
+                    <Route path='/operation-list' element={<Views.OperationList/>}/>
                     <Route path='/product-form' element={<Views.ProductForm/>}/>
-                    <Route path='/store-list' element={<Views.StoreList/>}/>
+                    <Route path='/product-list' element={<Views.ProductList/>}/>
                     <Route path='/store-form' element={<Views.StoreForm/>}/>
-                    <Route path='/operations' element={<Views.Operations/>}/>
+                    <Route path='/store-list' element={<Views.StoreList/>}/>
                     <Route path='/about' element={<Views.About/>}/>
                     <Route path="*" element={<Navigate replace to="/" />} />
                 </Routes>

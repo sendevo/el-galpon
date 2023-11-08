@@ -12,6 +12,7 @@ const Input = props => {
         label,
         value,
         name,
+        disabled,
         multiline,
         onChange,
         error,
@@ -39,6 +40,7 @@ const Input = props => {
             }
             <Grid item xs={rIcon ? 11 : (iconDisplay ? 10 : 12)} className={classes.Container}>
                 <TextField
+                    disabled={disabled}
                     multiline={multiline}
                     variant="outlined"
                     size="small" 

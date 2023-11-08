@@ -41,12 +41,12 @@ const View = () => (
                 </Link>
             </Grid>
             <Grid item>
-                <Link to="/stock">
+                <Link to="/goods">
                     <Button variant="contained" sx={styles.button}>Insumos</Button>
                 </Link>
             </Grid>
             <Grid item>
-                <Link to="/operations">
+                <Link to="/operation-list">
                     <Button variant="contained" sx={styles.button}>Movimientos</Button>
                 </Link>
             </Grid>

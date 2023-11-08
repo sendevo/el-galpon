@@ -12,7 +12,8 @@ export const componentsStyles = {
         fontSize: "12px",
         padding: "0px",
         margin: "0px",
-        lineHeight: "1em"
+        lineHeight: "1em",
+        color: "rgb(100,100,100)"
     },
     tableCell: {
         padding: '2px 10px',
@@ -78,16 +79,9 @@ const theme = createTheme({
     },
     palette: {
         mode: "light",
-        primary: {main: "#3477FF"},
-        secondary: {main: "#71AEF8"},
-        tertiary: {main: "#FFFFFF"},
-        red: {main: "#FF0000"},
-        text: {
-            primary: "#000000", 
-            secondary: "#555555",
-            tertiary: "#3477FF",
-            red: "#FFFFFF"
-        }
+        //primary: {main: "#3477FF", contrastText: "#FFFFFF"},
+        red: {main: "#DD0000", contrastText: "#FFFFFF"},
+        green: {main: "#007700", contrastText: "#FFFFFF"}
     }
 });
 

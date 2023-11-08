@@ -88,6 +88,7 @@ const View = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Input 
+                                    disabled={Boolean(formData.id)}
                                     label="Capacidad*"
                                     name="pack_size"
                                     type="number"
@@ -96,6 +97,7 @@ const View = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Select
+                                    disabled={Boolean(formData.id)}
                                     label="Unidad*"
                                     name="pack_unit"
                                     value={formData.pack_unit || ""}
@@ -104,15 +106,17 @@ const View = () => {
                                 />
                             </Grid>
                         </Grid>
+                        {Boolean(formData.id) && <Typography sx={{...componentsStyles.hintText, textAlign:"center", p:1}}>
+                            - Estos campos no se pueden editar en productos creados -
+                        </Typography>}
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
-                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Envases</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"10px"}>Reciclaje y caducidad de envases</Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <Switch 
-                                    title="Caducidad"
                                     labelLeft="Sin vencimiento"
                                     labelRight="Con vencimiento"
                                     name="expirable"
@@ -121,7 +125,6 @@ const View = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Switch 
-                                    title="Reciclaje"
                                     labelLeft="No retornable"
                                     labelRight="Retornable"
                                     name="returnable"
