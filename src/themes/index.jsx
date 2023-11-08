@@ -7,6 +7,13 @@ export const globalStyles = {
 export const componentsStyles = {
     paper: {backgroundColor: 'rgba(255, 255, 255, 0.8)'},
     headerCell: {fontWeight: "bold",p: '2px 10px'},
+    hintText: {
+        fontStyle: "italic",
+        fontSize: "12px",
+        padding: "0px",
+        margin: "0px",
+        lineHeight: "1em"
+    },
     tableCell: {
         padding: '2px 10px',
         whiteSpace: "nowrap",

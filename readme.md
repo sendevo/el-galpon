@@ -10,12 +10,12 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 
 ### Modelo de datos
   - [ ] Modelo de productos, insumos, depósitos e insumos.  
-  - [ ] Modelo de categorías.  
-  - [ ] Base de datos con IndexedDB.  
+  - [x] Modelo de categorías.  
+  - [x] Base de datos con IndexedDB.  
   - [ ] Creación y edición de:
-    - [ ] Productos.  
+    - [x] Productos.  
+    - [x] Depósitos.  
     - [ ] Insumos (instancias de productos).  
-    - [ ] Depósitos.  
   - [ ] Registro automático de movimientos.  
   - [ ] Consulta de:  
     - [ ] Insumos de un producto.  
@@ -29,14 +29,14 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   - [x] Service para Database.  
   - [x] Ayuda y acerca de.  
   - [ ] Listado de:  
-    - [ ] Productos  
+    - [x] Depósitos  
+    - [x] Productos  
     - [ ] Insumos  
-    - [ ] Depósitos  
     - [ ] Movimientos  
   - [ ] Formularios para edición de:  
-    - [ ] Productos  
+    - [x] Depósitos  
+    - [x] Productos  
     - [ ] Insumos  
-    - [ ] Depósitos  
   - [ ] Exportación de consultas a XLS.  
   - [ ] Exportación de consultas a PDF.  
 

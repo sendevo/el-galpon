@@ -17,6 +17,7 @@ import {
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
 import MainView from "../../components/MainView";
+import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -80,10 +81,22 @@ const View = () => {
             .catch(console.error);
     };
 
+    const handleSearch = query => {
+        console.log(query);
+    };
+
+    const handleFilter = filters => {
+        console.log(filters);
+    };
+
     return(
         <MainView title={"Productos"} background={background}>
+            <SearchForm 
+                fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
+                onFiltersChange={handleFilter}
+                onQueryChange={handleSearch}/>
             {data.length > 0 ?
-                <Box>
+                <Box sx={{mt:2}}>
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
                         <Table size="small">
                             <TableHead>
@@ -120,7 +133,7 @@ const View = () => {
                                     <TableCell sx={componentsStyles.tableCell}>{product.returnable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{cropString(product.comments || "-", 10)}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.categories?.map(c => c.label).join(', ') || "-"}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{product.categories?.join(', ') || "-"}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{moment(product.created).format("DD/MM/YYYY HH:mm")}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{moment(product.modified).format("DD/MM/YYYY HH:mm")}</TableCell>
                                 </TableRow>
@@ -129,8 +142,9 @@ const View = () => {
                         </Table>
                     </TableContainer>
                     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
-                        <Grid container sx={{mb:1}}>
+                        <Grid container sx={{mb:1}} direction={"column"}>
                             <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
+                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más ítems</Typography>}
                         </Grid>
                         <Grid container spacing={1}>
                             <Grid item xs={4} display={"flex"} justifyContent={"center"}>

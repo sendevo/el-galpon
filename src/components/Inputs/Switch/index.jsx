@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { 
     Box, 
     Grid, 
@@ -7,38 +8,74 @@ import {
 } from "@mui/material";
 import classes from '../style.module.css';
 
-const Switch = ({title, name, value, error, labelLeft, labelRight, onChange}) => (
-    <Box>
-        {title && <span className={classes.Title}>{title}</span>}
-    
-        <Box className={classes.InputContainer} style={{border: error ? "1px solid red":null}}>
-            <Grid 
-                container 
-                direction="row"
-                alignItems="center" 
-                spacing={0}>
-                <Grid item sm={4}>
-                    <Typography fontWeight={value ? "normal" : "bold"}>
-                        {labelLeft}
-                    </Typography>
+const Switch = props => {
+
+    const {
+        icon,
+        rIcon,
+        onIconClick,
+        title, 
+        name, 
+        value, 
+        error, 
+        labelLeft, 
+        labelRight, 
+        onChange
+    } = props;
+
+    const [iconLoaded, setIconLoaded] = useState(false);
+
+    const iconDisplay = icon && iconLoaded || rIcon;
+
+    return (
+        <Grid container spacing={1} alignItems="center">
+            {icon &&
+                <Grid item xs={rIcon ? 1 : 2} display={iconDisplay ? 'block':'none'}>
+                    {icon && !rIcon && 
+                        <img 
+                            onLoad={()=>setIconLoaded(true)} 
+                            src={icon} 
+                            className={classes.Icon} 
+                            alt="icon" 
+                            onClick={onIconClick}/>
+                    }
+                    {rIcon && <Box>{ icon }</Box>}
                 </Grid>
-                <Grid item sm={4}>
-                    <FormControlLabel
-                        label=""
-                        labelPlacement="bottom"
-                        sx={{"&.MuiFormControlLabel-root":{margin:"0px"}}}
-                        control={
-                            <MuiSwitch checked={value} onChange={event => onChange({target:{name, value:event.target.checked}})} />
-                        }/>        
-                </Grid>
-                <Grid item sm={4}>
-                    <Typography fontWeight={value ? "bold" : "normal"}>
-                        {labelRight}
-                    </Typography>
-                </Grid>
+            }
+            <Grid item xs={rIcon ? 11 : (iconDisplay ? 10 : 12)} className={classes.Container}>
+                {title && <span className={classes.Title}>{title}</span>}
+                <Box className={classes.InputContainer} sx={{border: error ? "1px solid red":null, marginLeft:"0px"}}>
+                    <Grid 
+                        container 
+                        direction="row"
+                        alignItems="center" 
+                        spacing={1}>
+                        {labelLeft && 
+                            <Grid item sm={4}>
+                                <Typography fontWeight={value ? "normal" : "bold"}>
+                                    {labelLeft}
+                                </Typography>
+                            </Grid>
+                        }
+                        <Grid item sm={4}>
+                            <FormControlLabel
+                                label=""
+                                labelPlacement="bottom"
+                                sx={{"&.MuiFormControlLabel-root":{margin:"0px"}}}
+                                control={
+                                    <MuiSwitch checked={value} onChange={event => onChange({target:{name, value:event.target.checked}})} />
+                                }/>        
+                        </Grid>
+                        <Grid item sm={4}>
+                            <Typography fontWeight={value ? "bold" : "normal"}>
+                                {labelRight}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Box>
             </Grid>
-        </Box>
-    </Box>
-);
+        </Grid>
+    );
+};
 
 export default Switch;

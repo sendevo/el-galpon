@@ -14,15 +14,13 @@ import {
     Select,
     Switch
 } from "../../components/Inputs";
-import { debug, stringEncode } from "../../model/utils";
+import { debug, categories2Select } from "../../model/utils";
 import { UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 import background from "../../assets/backgrounds/background1.jpg";
 
 
 const validateForm = formData => Boolean(formData.name && formData.pack_size);
-
-const categories2Select = cats => cats?.map(c => ({label: c, key: stringEncode(c)}));
 
 const View = () => {
 
@@ -86,7 +84,7 @@ const View = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Presentación</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Presentación</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Input 
@@ -109,22 +107,29 @@ const View = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Switch 
-                        title="Caducidad"
-                        labelLeft="Sin vencimiento"
-                        labelRight="Con vencimiento"
-                        name="expirable"
-                        value={formData.expirable}
-                        onChange={handleInputChange}/>
-                </Grid>
-                <Grid item xs={12}>
-                    <Switch 
-                        title="Reciclaje"
-                        labelLeft="No retornable"
-                        labelRight="Retornable"
-                        name="returnable"
-                        value={formData.returnable}
-                        onChange={handleInputChange}/>
+                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Envases</Typography>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                                <Switch 
+                                    title="Caducidad"
+                                    labelLeft="Sin vencimiento"
+                                    labelRight="Con vencimiento"
+                                    name="expirable"
+                                    value={formData.expirable}
+                                    onChange={handleInputChange}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Switch 
+                                    title="Reciclaje"
+                                    labelLeft="No retornable"
+                                    labelRight="Retornable"
+                                    name="returnable"
+                                    value={formData.returnable}
+                                    onChange={handleInputChange}/>
+                            </Grid>
+                        </Grid>
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>

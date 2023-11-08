@@ -18,6 +18,7 @@ import {
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
 import MainView from "../../components/MainView";
+import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
 import { debug, latLng2GoogleMap, cropString } from "../../model/utils";
 import background from "../../assets/backgrounds/background1.jpg";
@@ -81,10 +82,22 @@ const View = () => {
             .catch(console.error);
     };
 
+    const handleSearch = query => {
+        console.log(query);
+    };
+
+    const handleFilter = filters => {
+        console.log(filters);
+    };
+
     return(
         <MainView title={"Depósitos"} background={background}>
+            <SearchForm 
+                fields={["dateFrom", "dateTo"]} 
+                onFiltersChange={handleFilter}
+                onQueryChange={handleSearch}/>
             {data.length > 0 ?
-                <Box>
+                <Box sx={{mt:2}}>
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
                         <Table size="small">
                             <TableHead>
@@ -127,8 +140,9 @@ const View = () => {
                         </Table>
                     </TableContainer>
                     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
-                        <Grid container sx={{mb:1}}>
+                        <Grid container sx={{mb:1}} direction={"column"}>
                             <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
+                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más ítems</Typography>}
                         </Grid>
                         <Grid container spacing={1}>
                             <Grid item xs={4} display={"flex"} justifyContent={"center"}>

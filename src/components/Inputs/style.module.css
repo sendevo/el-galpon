@@ -53,7 +53,7 @@
     background-color: rgba(250, 250, 250, 0.6);
     border:1px solid #bbb;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
-    padding: 0px 30px!important;    
+    padding: 0px 10px!important;
 }
 
 .Slider {    
@@ -66,3 +66,4 @@
     border-radius: 5px!important;
     /*border: 1px solid rgb(180, 180, 180);*/    
 }
+                

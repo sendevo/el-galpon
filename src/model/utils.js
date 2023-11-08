@@ -33,8 +33,9 @@ export const stringEncode = str => {
     }
     return String(hash).replace(/-/g, '0').replace(/^-/, '');
 };
-  
 
+export const categories2Select = cats => cats?.map(c => ({label: c, key: stringEncode(c)}));
+  
 export const randomColorsGenerator = (count, transparency = 0.7) => {
     const colors = [];
     for (let c = 0; c < count; c++) {
