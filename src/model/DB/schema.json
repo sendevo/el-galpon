@@ -14,7 +14,7 @@
         }
     },
     "goods": {
-        "attributes": ["product_id", "store_id", "stock", "empty", "expiration_date"],
+        "attributes": ["product_id", "store_id", "stock", "pack", "expiration_date"],
         "options": {
             "keyPath": "id",
             "autoIncrement": true

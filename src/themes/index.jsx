@@ -6,7 +6,7 @@ export const globalStyles = {
 
 export const componentsStyles = {
     paper: {backgroundColor: 'rgba(255, 255, 255, 0.8)'},
-    headerCell: {fontWeight: "bold",p: '2px 10px'},
+    title: {fontSize: "16px", fontWeight: "bold"},
     hintText: {
         fontStyle: "italic",
         fontSize: "12px",
@@ -15,6 +15,7 @@ export const componentsStyles = {
         lineHeight: "1em",
         color: "rgb(100,100,100)"
     },
+    headerCell: {fontWeight: "bold",p: '2px 10px'},
     tableCell: {
         padding: '2px 10px',
         whiteSpace: "nowrap",

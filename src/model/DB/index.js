@@ -1,11 +1,6 @@
 import { DB_NAME,DB_VERSION } from "../constants";
-import { debug } from "../utils";
+import { debug, levenshteinDistance } from "../utils";
 import schema from "./schema.json";
-import {
-    getStockOfProduct,
-    getOperationsForGood,
-    searchTerm
-} from "./queries";
 
 
 // TODO: remove this
@@ -95,7 +90,7 @@ const storesTempData = [
 export default class LocalDatabase {
     constructor() {
         this._db = null;
-        this.onReady = () => {};
+        this.onReady = []; // List of callbacks
 
         const request = indexedDB.open(DB_NAME, DB_VERSION);
 
@@ -116,7 +111,7 @@ export default class LocalDatabase {
             this.getItem(34, "products")
                 .then(() => {
                     console.log("test data already there");
-                    this.onReady();
+                    this.onReady.forEach(callback => callback());
                 })
                 .catch(() => {
                     const job = [
@@ -126,27 +121,30 @@ export default class LocalDatabase {
                     Promise.all(job)
                         .then(() => {
                             debug("DB initilized");
-                            this.onReady();
+                            this.onReady.forEach(callback => callback());
                         })
                         .catch(console.error);
                 });
 
             // TODO: uncomment this
             //debug("DB initilized");
-            //this.onReady();
+            //this.onReady.forEach(callback => callback())
         };
 
         request.onerror = event => debug(event.target.error, "error");
     }
 
-    performTransaction = callback => {
-        if (this._db) callback();
-        else this.onReady = callback;
-    }
+    _performTransaction(callback) {
+        debug(`DB callback stack len: ${this.onReady.length}`);
+        if (this._db)
+            callback();
+        else 
+            this.onReady.push(callback);
+    };
 
-    addItem = (data, section) => {
+    addItem(data, section) {
         return new Promise((resolve, reject) => {
-            this.performTransaction( () => {
+            this._performTransaction( () => {
                 const request = this._db
                     .transaction(section, 'readwrite')
                     .objectStore(section)
@@ -157,15 +155,14 @@ export default class LocalDatabase {
         });
     }
 
-    getItem = (itemId, section) => {
+    getItem(itemId, section) {
         return new Promise((resolve, reject) => {
-            this.performTransaction(() => {
+            this._performTransaction(() => {
                 const request = this._db
                     .transaction(section, 'readonly')
                     .objectStore(section)
                     .get(itemId);
-        
-                request.onsuccess = (event) => {
+                request.onsuccess = event => {
                     const product = event.target.result;
                     if (product) resolve(product);
                     else reject(`Item with ID ${itemId} not found`);
@@ -175,9 +172,9 @@ export default class LocalDatabase {
         });
     }
 
-    removeItem = (itemId, section) => {
+    removeItem(itemId, section) {
         return new Promise((resolve, reject) => {
-            this.performTransaction(() => {
+            this._performTransaction(() => {
                 const request = this._db
                     .transaction(section, 'readwrite')
                     .objectStore(section)
@@ -188,9 +185,9 @@ export default class LocalDatabase {
         });
     }
 
-    getAllItems = section => {
+    getAllItems(section) {
         return new Promise((resolve, reject) => {
-            this.performTransaction(() => {
+            this._performTransaction(() => {
                 const request = this._db
                     .transaction(section, 'readonly')
                     .objectStore(section)
@@ -201,9 +198,9 @@ export default class LocalDatabase {
         });
     }
 
-    getItems = (section, page, count) => {
+    getItems(section, page, count) {
         return new Promise((resolve, reject) => {
-            this.performTransaction(() => {
+            this._performTransaction(() => {
                 const lowerBound = (page - 1) * count;
                 const upperBound = page * count;
                 const keyRange = IDBKeyRange.bound(lowerBound, upperBound, false, false);
@@ -212,7 +209,7 @@ export default class LocalDatabase {
                     .transaction(section, 'readonly')
                     .objectStore(section)
                     .openCursor(keyRange);
-                request.onsuccess = (event) => {
+                request.onsuccess = event => {
                     const cursor = event.target.result;
                     if (cursor) {
                         data.push(cursor.value);
@@ -226,13 +223,42 @@ export default class LocalDatabase {
         });
     }
 
-    // Queries
-    searchTerm = (section, attr, term) => searchTerm(this._db, section, attr, term, 3)
-    getStockOfProduct = goodId => getStockOfProduct(this._db, goodId)
-    getOperationsForGood = goodId => getOperationsForGood(this._db, goodId)
+    searchTerm(section, attr, term, thresh = 3) {
+        return new Promise((resolve, reject) => {
+            this._performTransaction(() => {
+                const results = [];
+                const request = this._db
+                    .transaction(section, 'readonly')
+                    .objectStore(section)
+                    .openCursor();
+                request.onsuccess = event => {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        const similarity = levenshteinDistance(term, cursor.value[attr]);
+                        if (similarity <= thresh) 
+                            results.push({id: cursor.value.id, similarity});
+                        cursor.continue();
+                    } else {
+                        results.sort((a, b) => a.similarity - b.similarity);
+                        resolve(results);
+                    }
+                };
+                request.onerror = event => reject(event.target.error);
+            });
+        });
+    }
+
+    getStockOfProduct(productId) {
+        return new Promise((resolve, reject) => {
+            this._performTransaction(() => {
+                const request = this._db
+                    .transaction(['goods'], 'readonly')
+                    .objectStore('goods')
+                    .index('product_id')
+                    .getAll(IDBKeyRange.only(productId));
+                request.onsuccess = event => resolve(event.target.result);
+                request.onerror = event => reject(event.target.error);
+            });
+        });
+    }
 }
-
-
-
-
-
