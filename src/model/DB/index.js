@@ -87,6 +87,33 @@ const storesTempData = [
     }
 ];
 
+const goodsTempData = [
+    {
+        id: 1,
+        product_id: 34,
+        store_id: 35,
+        stock: 10,
+        packs: 10,
+        expiration_date: 1731151088080
+    },
+    {
+        id: 2,
+        product_id: 35,
+        store_id: 36,
+        stock: 5.5,
+        packs: null,
+        expiration_date: 1731151088080
+    },
+    {
+        id: 5,
+        product_id: 35,
+        store_id: 37,
+        stock: 2,
+        packs: null,
+        expiration_date: 1731151088080
+    }
+];
+
 export default class LocalDatabase {
     constructor() {
         this._db = null;
@@ -116,7 +143,8 @@ export default class LocalDatabase {
                 .catch(() => {
                     const job = [
                         ...productsTempData.map(data => this.addItem(data, "products")),
-                        ...storesTempData.map(data => this.addItem(data, "stores"))
+                        ...storesTempData.map(data => this.addItem(data, "stores")),
+                        ...goodsTempData.map(data => this.addItem(data, "goods"))
                     ];
                     Promise.all(job)
                         .then(() => {
@@ -256,6 +284,36 @@ export default class LocalDatabase {
                     .objectStore('goods')
                     .index('product_id')
                     .getAll(IDBKeyRange.only(productId));
+                request.onsuccess = event => {
+                    const goodData = event.target.result;
+                    // For each good, add store data
+                    this.getAllItems("stores")
+                        .then(stores => {
+                            resolve(
+                                goodData.map(g => {
+                                    const storeIndex = stores.findIndex(s => s.id === g.store_id);
+                                    return {
+                                        ...g,
+                                        storeData: storeIndex !== -1 ? stores[storeIndex] : {}
+                                    };
+                                })
+                            );
+                        })
+                        .catch(reject);
+                };
+                request.onerror = event => reject(event.target.error);
+            });
+        });
+    }
+
+    getStockInStore(storeId) {
+        return new Promise((resolve, reject) => {
+            this._performTransaction(() => {
+                const request = this._db
+                    .transaction(['goods'], 'readonly')
+                    .objectStore('goods')
+                    .index('store_id')
+                    .getAll(IDBKeyRange.only(storeId));
                 request.onsuccess = event => resolve(event.target.result);
                 request.onerror = event => reject(event.target.error);
             });

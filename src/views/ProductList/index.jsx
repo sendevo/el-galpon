@@ -183,7 +183,7 @@ const View = () => {
                                     variant="contained"
                                     disabled={selected.length !== 1}
                                     onClick={handleOperation}>
-                                    Mover
+                                    Ítems
                                 </Button>
                             </Grid>
                             <Grid item>
