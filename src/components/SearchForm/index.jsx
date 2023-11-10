@@ -15,6 +15,7 @@ import {
     Input,
     Switch
 } from "../Inputs";
+import { componentsStyles } from "../../themes";
 import { CATEGORIES } from "../../model/constants";
 import { categories2Select } from "../../model/utils";
 import { 
@@ -81,7 +82,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
         <Box>
             <Accordion 
                 sx={{
-                    backgroundColor: "rgba(255,255,255,0.8)",
+                    ...componentsStyles.paper,
                     ".Mui-focusVisible": {
                         backgroundColor: "rgba(255,255,255,0)!important"
                     }

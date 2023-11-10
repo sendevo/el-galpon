@@ -7,13 +7,15 @@ import {
 } from "@mui/material";
 import MainView from "../../components/MainView";
 import { APP_NAME, VERSION_VALUE } from "../../model/constants";
-import { viewsStyles } from "../../themes";
 import background from "../../assets/backgrounds/background1.jpg";
 import logoInta from '../../assets/logo_inta.png';
 import { FaChevronDown } from "react-icons/fa";
 
 
-const styles = viewsStyles.about;
+const styles = {
+    accordion: {backgroundColor: "rgba(255, 255, 255, 0.7)"},
+    summary: {fontWeight: "bold"}
+};
 
 const View = () => (
     <MainView background={background} title="Acerca de El Galpón">

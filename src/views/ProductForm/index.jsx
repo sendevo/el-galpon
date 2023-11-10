@@ -17,7 +17,6 @@ import {
 import { debug, categories2Select } from "../../model/utils";
 import { UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
-import background from "../../assets/backgrounds/background1.jpg";
 
 
 const validateForm = formData => Boolean(formData.name && formData.pack_size);
@@ -71,7 +70,7 @@ const View = () => {
     };
 
     return(
-        <MainView title={viewTitle} background={background}>
+        <MainView title={viewTitle}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Input 

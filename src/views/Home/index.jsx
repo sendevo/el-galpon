@@ -6,15 +6,57 @@ import {
     Typography 
 } from "@mui/material";
 import MainView from "../../components/MainView";
+import views from "../index";
 import { APP_NAME } from "../../model/constants";
-import { viewsStyles } from "../../themes";
 import background from "../../assets/backgrounds/background1.jpg";
 import logo from "../../assets/logo_el_galpon.png";
 import leftImage from "../../assets/logo_inta_white.png";
 import rightImage from "../../assets/logo_ministerio_white.png";
 
 
-const styles = viewsStyles.home;
+const styles = {
+    title: {
+        marginTop: "0px",
+        marginBottom: "0px",
+        lineHeight: "100%",
+        color: "white",
+        textShadow: "4px 4px 3px black",
+        textTransform: "uppercase",
+        fontWeight: "bold"
+    },
+    logo: {
+        margin:"5px 5px 0px 5px",
+        position: "absolute",
+        padding: "0px", 
+        height: "50px"
+    },
+    mainIcon: {
+        textAlign: "center", 
+        mb: 0, 
+        mt:2
+    },
+    buttonsContainer: {marginTop:"5%"},
+    button: {
+        p: 2,
+        lineHeight: "1em",
+        width: "60vw",
+        maxWidth: "400px",
+        backgroundColor: "rgba(250,250,250,.5)",
+        color: "#000000",
+        fontWeight: "bold"
+    },
+    bottomBox: {
+        backgroundColor: "#2D6F94",
+        width: "100vw",
+        height: "65px",
+        m: 0,
+        left: 0,
+        bottom: 0,
+        position: "fixed",
+        verticalAlign: "middle",
+        textAlign: "left"
+    }
+};
 
 const View = () => (
     <MainView background={background}>
@@ -30,31 +72,21 @@ const View = () => (
             direction="column"
             spacing={1} 
             alignItems="center">
-            <Grid item>
-                <Link to="/store-list">
-                    <Button variant="contained" sx={styles.button}>Depósitos</Button>
-                </Link>
-            </Grid>
-            <Grid item>
-                <Link to="/product-list">
-                    <Button variant="contained" sx={styles.button}>Productos</Button>
-                </Link>
-            </Grid>
-            <Grid item>
-                <Link to="/goods">
-                    <Button variant="contained" sx={styles.button}>Insumos</Button>
-                </Link>
-            </Grid>
-            <Grid item>
-                <Link to="/operation-list">
-                    <Button variant="contained" sx={styles.button}>Movimientos</Button>
-                </Link>
-            </Grid>
-            <Grid item sx={{mt:2}}>
-                <Link to="/about">
-                    <Button variant="contained" sx={styles.button}>Información y ayuda</Button>
-                </Link>
-            </Grid>
+                {
+                    views
+                        .filter(p => Boolean(p.homeTitle))
+                        .map(p => (
+                            <Grid item>
+                                <Link to={p.path}>
+                                    <Button 
+                                        variant="contained" 
+                                        sx={styles.button}>
+                                        {p.homeTitle}
+                                    </Button>
+                                </Link>
+                            </Grid>            
+                        ))
+                }
         </Grid>
         <Box sx={styles.bottomBox}>
             <img 

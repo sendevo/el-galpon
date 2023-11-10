@@ -9,15 +9,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
 import MainView from "../../components/MainView";
 import { 
-    Input,
-    SuggesterInput,
-    Select,
-    Switch
+    Input
 } from "../../components/Inputs";
 import { debug } from "../../model/utils";
-import { UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
-import background from "../../assets/backgrounds/background1.jpg";
 
 const validateForm = formData => Boolean(formData.name && formData.lat && formData.lng);
 
@@ -80,7 +75,7 @@ const View = () => {
     };
 
     return(
-        <MainView title={viewTitle} background={background}>
+        <MainView title={viewTitle} >
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Input 

@@ -3,12 +3,13 @@ import {
     Routes, 
     Route, 
     Navigate
-} from 'react-router-dom';
-import { CssBaseline, GlobalStyles } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles'; 
-import DatabaseProvider from './context/Database';
-import * as Views from './views';
-import theme, { globalStyles } from './themes';
+} from "react-router-dom";
+import { CssBaseline, GlobalStyles } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles"; 
+import DatabaseProvider from "./context/Database";
+import Home from "./views/Home";
+import views from "./views";
+import theme, { globalStyles } from "./themes";
 
 
 const App = () => (
@@ -17,16 +18,13 @@ const App = () => (
         <GlobalStyles styles={globalStyles}/>
         <DatabaseProvider>
             <BrowserRouter>
-                <Routes location={location}>
-                    <Route index element={<Views.Home/>} />
-                    <Route path='/goods' element={<Views.Goods/>}/>
-                    <Route path='/operation-form' element={<Views.OperationForm/>}/>
-                    <Route path='/operation-list' element={<Views.OperationList/>}/>
-                    <Route path='/product-form' element={<Views.ProductForm/>}/>
-                    <Route path='/product-list' element={<Views.ProductList/>}/>
-                    <Route path='/store-form' element={<Views.StoreForm/>}/>
-                    <Route path='/store-list' element={<Views.StoreList/>}/>
-                    <Route path='/about' element={<Views.About/>}/>
+                <Routes>
+                    <Route index element={<Home/>} />
+                    {
+                        views.map(v => (
+                            <Route path={v.path} element={v.component} />
+                        ))        
+                    }
                     <Route path="*" element={<Navigate replace to="/" />} />
                 </Routes>
             </BrowserRouter>
