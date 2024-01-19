@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { CssBaseline, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles"; 
+import UIUtilsProvider from './context/UIFeedback';
 import DatabaseProvider from "./context/Database";
 import Home from "./views/Home";
 import views from "./views";
@@ -17,17 +18,19 @@ const App = () => (
         <CssBaseline />
         <GlobalStyles styles={globalStyles}/>
         <DatabaseProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<Home/>} />
-                    {
-                        views.map(v => (
-                            <Route path={v.path} element={v.component} />
-                        ))        
-                    }
-                    <Route path="*" element={<Navigate replace to="/" />} />
-                </Routes>
-            </BrowserRouter>
+            <UIUtilsProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route index element={<Home/>} />
+                        {
+                            views.map(v => (
+                                <Route path={v.path} element={v.component} />
+                            ))        
+                        }
+                        <Route path="*" element={<Navigate replace to="/" />} />
+                    </Routes>
+                </BrowserRouter>
+            </UIUtilsProvider>
         </DatabaseProvider>
     </ThemeProvider>
 );

@@ -1,0 +1,25 @@
+.Container {
+    position: fixed;        
+    left: 0px;
+    top: 50%;
+    height: 100%;    
+    width: 100%;
+    z-index: 9999;
+}
+
+.Container:before {
+    content: '';    
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(20, 20, 20,.8);    
+}
+
+.SpinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

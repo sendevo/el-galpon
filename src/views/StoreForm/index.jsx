@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { 
     Button, 
     Grid,
@@ -7,12 +7,15 @@ import {
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
+import { UIUtilsDispatchContext } from "../../context/UIFeedback";
+import { showToast } from "../../context/UIFeedback/actions";
 import MainView from "../../components/MainView";
 import { 
     Input
 } from "../../components/Inputs";
 import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
+
 
 const validateForm = formData => Boolean(formData.name && formData.lat && formData.lng);
 
@@ -23,6 +26,7 @@ const View = () => {
     const [searchParams] = useSearchParams();    
     const [viewTitle, setViewTitle] = useState("Depósitos");
     const [formData, setFormData] = useState({});
+    const uiDispatch = useContext(UIUtilsDispatchContext);
 
     useEffect(() => {
         const id = searchParams.get("id");
@@ -52,6 +56,7 @@ const View = () => {
                 .catch(console.error);
         }else{
             debug("Complete all fields", "error");
+            showToast(uiDispatch, "Complete los campos obligatorios", "error");
         }
     };
 

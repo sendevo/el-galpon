@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
     Grid, 
@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
+import { UIUtilsDispatchContext } from "../../context/UIFeedback";
+import { showConfirm, showToast } from "../../context/UIFeedback/actions";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
@@ -24,13 +26,14 @@ import { debug, latLng2GoogleMap, cropString } from "../../model/utils";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
-
 const View = () => {
 
     const navigate = useNavigate();
     const db = useDatabase();   
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
+
+    const uiDispatch = useContext(UIUtilsDispatchContext);
     
     useEffect(() => {
         db.getAllItems("stores")
@@ -78,17 +81,25 @@ const View = () => {
     };
 
     const handleDelete = () => {
-        // TODO: confirm modal && feedback
-        const job = selected.map(storeId => db.removeItem(storeId, "stores"));
-        Promise.all(job)
-            .then(() => {
-                db.getAllItems("stores")
-                    .then(updatedData => {
-                        setData(updatedData);
-                        setSelected([]);
-                    });
-            })
-            .catch(console.error);
+        showConfirm(
+            uiDispatch, 
+            "Confirmar operación", 
+            "¿Desea eliminar los ítems seleccionados?",
+            () => {
+                const job = selected.map(storeId => db.removeItem(storeId, "stores"));
+                const len = selected.length;
+                Promise.all(job)
+                    .then(() => {
+                        db.getAllItems("stores")
+                            .then(updatedData => {
+                                setData(updatedData);
+                                setSelected([]);
+                                showToast(uiDispatch, `Se ${len > 1 ? "eliminaron":"eliminó"} ${len} depósito${len>1 ? "s":""}`, "success");
+                            });
+                    })
+                    .catch(console.error);
+            }
+        );
     };
 
     const handleSearch = query => {
