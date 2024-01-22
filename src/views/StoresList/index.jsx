@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
     Grid, 
@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
-import { UIUtilsDispatchContext } from "../../context/UIFeedback";
-import { showConfirm, showToast } from "../../context/UIFeedback/actions";
+import useToast from "../../hooks/useToast";
+import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
@@ -33,7 +33,8 @@ const View = () => {
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
 
-    const uiDispatch = useContext(UIUtilsDispatchContext);
+    const toast = useToast();
+    const confirm = useConfirm();
     
     useEffect(() => {
         db.getAllItems("stores")
@@ -81,8 +82,7 @@ const View = () => {
     };
 
     const handleDelete = () => {
-        showConfirm(
-            uiDispatch, 
+        confirm(
             "Confirmar operación", 
             "¿Desea eliminar los ítems seleccionados?",
             () => {
@@ -94,7 +94,7 @@ const View = () => {
                             .then(updatedData => {
                                 setData(updatedData);
                                 setSelected([]);
-                                showToast(uiDispatch, `Se ${len > 1 ? "eliminaron":"eliminó"} ${len} depósito${len>1 ? "s":""}`, "success");
+                                toast(`Se ${len > 1 ? "eliminaron":"eliminó"} ${len} depósito${len>1 ? "s":""}`, "success");
                             });
                     })
                     .catch(console.error);

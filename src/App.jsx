@@ -23,8 +23,8 @@ const App = () => (
                     <Routes>
                         <Route index element={<Home/>} />
                         {
-                            views.map(v => (
-                                <Route path={v.path} element={v.component} />
+                            views.map((v,k) => (
+                                <Route key={k} path={v.path} element={v.component} />
                             ))        
                         }
                         <Route path="*" element={<Navigate replace to="/" />} />

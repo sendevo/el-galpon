@@ -75,8 +75,8 @@ const View = () => (
                 {
                     views
                         .filter(p => Boolean(p.homeTitle))
-                        .map(p => (
-                            <Grid item>
+                        .map((p,k) => (
+                            <Grid item key={k}>
                                 <Link to={p.path}>
                                     <Button 
                                         variant="contained" 

@@ -23,6 +23,6 @@ const UIUtilsProvider = ({ children }) => {
             </UIUtilsDispatchContext.Provider>
         </UIUtilsStateContext.Provider>
     );
-}
+};
 
 export default UIUtilsProvider;
