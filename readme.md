@@ -8,7 +8,7 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 
 
 ## Stories
-  - [ ] Crear, editar y eliminar productos y depósitos.  
+  - [x] Crear, editar y eliminar productos y depósitos.  
   - [ ] Registrar movimiento (compra, venta, uso, devolución) de productos entre depósitos.  
   - [ ] Consultar historial de movimientos.  
   - [ ] Cuando se registra un movimiento, se actualiza el stock de insumos.  
@@ -18,18 +18,18 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 ## Backlog versión 1.0.0 (alpha)  
 
 ### Modelo de datos
-  - [ ] Modelo de productos, insumos, depósitos e insumos.  
-  - [x] Modelo de categorías.  
+  - [x] Modelo de productos, insumos, depósitos y movimientos.  
   - [x] Base de datos con IndexedDB.  
   - [ ] Creación y edición de:
     - [x] Productos.  
     - [x] Depósitos.  
+    - [ ] Items.  
+  - [ ] Registro y consulta de movimientos.  
+  - [ ] Consulta filtrada y paginada de:  
+    - [ ] Depositos.  
+    - [ ] Productos.  
+    - [ ] Insumos.  
     - [ ] Movimientos.  
-  - [ ] Registro automático de insumos.  
-  - [ ] Consulta de:  
-    - [ ] Insumos de un producto.  
-    - [ ] Insumos en un depósito.  
-    - [ ] Movimientos de un producto.  
 
 ### Interfaz gráfica y utilidades
   - [x] Boilerplate React 18 + MUI + Capacitor.  
@@ -37,17 +37,24 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   - [x] Context GUI (modals, toasts, prompts).  
   - [x] Service para Database.  
   - [x] Ayuda y acerca de.  
-  - [ ] Listado de:  
-    - [x] Depósitos.  
-    - [x] Productos.  
-    - [ ] Insumos.  
-    - [ ] Movimientos.  
-  - [ ] Formularios para edición de:  
-    - [x] Depósitos.  
-    - [x] Productos.  
-    - [ ] Movimientos.  
-  - [ ] Exportación de consultas a XLS.  
-  - [ ] Exportación de consultas a PDF.  
+  - [ ] Depósitos:  
+    - [ ] Listado con filtro.  
+    - [x] Creación y edicion.  
+    - [ ] Eliminacion con confirmacion.  
+    - [ ] Consultar insumos.  
+  - [ ] Productos. 
+    - [ ] Listado con filtro.  
+    - [x] Creación y edicion.  
+    - [ ] Eliminacion con confirmacion.  
+    - [ ] Consultar insumos.  
+  - [ ] Insumos:  
+    - [ ] Listado con filtro.  
+  - [ ] Movimientos.  
+  - [ ] Importación y exportación:  
+     - [ ] Importación de ubicaciones desde mapa.  
+     - [ ] Importación de planilla de depósitos.  
+     - [ ] Importacion de planilla de items (genera productos).  
+     
 
 ### Producción e integración  
   - [x] Compilación web -> vercel (sinc con rama main).  

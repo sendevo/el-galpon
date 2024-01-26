@@ -74,7 +74,7 @@ const View = () => {
     const handleStock = () => {
         if(selected.length === 1){
             const storeId = selected[0];
-            navigate(`/store-stock?id=${storeId}`);
+            navigate(`/stock?storeId=${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
             setSelected([]);
@@ -85,7 +85,7 @@ const View = () => {
         confirm(
             "Confirmar operación", 
             "¿Desea eliminar los ítems seleccionados?",
-            () => {
+            () => { // On success
                 const job = selected.map(storeId => db.removeItem(storeId, "stores"));
                 const len = selected.length;
                 Promise.all(job)
@@ -167,8 +167,8 @@ const View = () => {
                         <Grid 
                             container 
                             direction="row"
-                            spacing={2} 
-                            justifyContent="space-around">
+                            spacing={0} 
+                            justifyContent="space-between">
                             <Grid item>
                                 <Button 
                                     color="green"

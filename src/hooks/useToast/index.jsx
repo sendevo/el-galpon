@@ -10,11 +10,12 @@ const useToast = () => {
         payload: {
           message,
           severity,
-          onClose,
+          onClose
         },
       });
   
       setTimeout(() => {
+        onClose();
         dispatch({
           type: 'HIDE_TOAST',
         });

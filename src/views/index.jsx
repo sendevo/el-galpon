@@ -1,9 +1,7 @@
 import StoresList from "./StoresList";
 import StoreForm from "./StoreForm";
-import StoreStock from "./StoreStock";
 import ProductsList from "./ProductsList";
 import ProductForm from "./ProductForm";
-import ProductStock from "./ProductStock";
 import Stock from "./Stock";
 import OperationsList from "./OperationsList";
 import About from "./About";
@@ -19,10 +17,6 @@ const views = [
         component: <StoreForm />
     },
     {
-        path: "/store-stock",
-        component: <StoreStock />
-    },
-    {
         path: "/products-list",
         homeTitle: "Productos",
         component: <ProductsList />
@@ -30,10 +24,6 @@ const views = [
     {
         path: "/product-form",
         component: <ProductForm />
-    },
-    {
-        path: "/product-stock",
-        component: <ProductStock />
     },
     {
         path: "/operations-list",

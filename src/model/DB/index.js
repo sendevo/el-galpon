@@ -87,7 +87,7 @@ const storesTempData = [
     }
 ];
 
-const goodsTempData = [
+const itemsTempData = [
     {
         id: 1,
         product_id: 34,
@@ -113,6 +113,14 @@ const goodsTempData = [
         expiration_date: 1731151088080
     }
 ];
+
+export const isValidQuery = query => [
+    "getItem",
+    "getAllItems",
+    "getStockOfProduct",
+    "getStockInStore",
+    "searchTerm"
+].includes(query);
 
 export default class LocalDatabase {
     constructor() {
@@ -144,7 +152,7 @@ export default class LocalDatabase {
                     const job = [
                         ...productsTempData.map(data => this.addItem(data, "products")),
                         ...storesTempData.map(data => this.addItem(data, "stores")),
-                        ...goodsTempData.map(data => this.addItem(data, "goods"))
+                        ...itemsTempData.map(data => this.addItem(data, "items"))
                     ];
                     Promise.all(job)
                         .then(() => {
@@ -280,17 +288,17 @@ export default class LocalDatabase {
         return new Promise((resolve, reject) => {
             this._performTransaction(() => {
                 const request = this._db
-                    .transaction(['goods'], 'readonly')
-                    .objectStore('goods')
+                    .transaction(['items'], 'readonly')
+                    .objectStore('items')
                     .index('product_id')
                     .getAll(IDBKeyRange.only(productId));
                 request.onsuccess = event => {
-                    const goodData = event.target.result;
-                    // For each good, add store data
+                    const itemData = event.target.result;
+                    // For each item, add store data
                     this.getAllItems("stores")
                         .then(stores => {
                             resolve(
-                                goodData.map(g => {
+                                itemData.map(g => {
                                     const storeIndex = stores.findIndex(s => s.id === g.store_id);
                                     return {
                                         ...g,
@@ -310,8 +318,8 @@ export default class LocalDatabase {
         return new Promise((resolve, reject) => {
             this._performTransaction(() => {
                 const request = this._db
-                    .transaction(['goods'], 'readonly')
-                    .objectStore('goods')
+                    .transaction(['items'], 'readonly')
+                    .objectStore('items')
                     .index('store_id')
                     .getAll(IDBKeyRange.only(storeId));
                 request.onsuccess = event => resolve(event.target.result);

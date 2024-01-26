@@ -46,11 +46,13 @@ const View = () => {
             debug(formData);
             db.addItem(formData,"stores")
                 .then(()=>{
-                    if(formData.id) // Editing
-                        debug("Item updated successfully");
-                    else // Create new
-                        debug("New item created successfully");
-                    navigate(-1);
+                    if(formData.id){ // Editing
+                        debug("Store item updated successfully");
+                        toast("Datos actualizados", "success", 2000, () => navigate(-1));
+                    }else{ // Create new
+                        debug("New store item created successfully");
+                        toast("Depósito creado", "success", 2000, () => navigate(-1));
+                    }
                 })
                 .catch(console.error);
         }else{
@@ -61,7 +63,7 @@ const View = () => {
 
     const handleInputChange = event => {
         const {name, value} = event.target;
-        if(name.includes("contact_")){
+        if(name.includes("contact_")){ // Contact data is nested
             const contactField = name.replace("contact_", "");
             setFormData({
                 ...formData,
@@ -80,29 +82,36 @@ const View = () => {
 
     return(
         <MainView title={viewTitle} >
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <Input 
-                        label="Nombre*"
-                        name="name"
-                        type="text"
-                        value={formData.name || ""}
-                        error={formData.name === ""}
-                        onChange={handleInputChange}/>
-                </Grid>
-                <Grid item xs={12}>
-                    <Input 
-                        multiline
-                        label="Comentarios"
-                        name="comments"
-                        type="text"
-                        value={formData.comments || ""}
-                        onChange={handleInputChange}/>
+                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Básico</Typography>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                                <Input 
+                                    label="Nombre*"
+                                    name="name"
+                                    type="text"
+                                    value={formData.name || ""}
+                                    error={formData.name === ""}
+                                    onChange={handleInputChange}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Input 
+                                    multiline
+                                    label="Comentarios"
+                                    name="comments"
+                                    type="text"
+                                    value={formData.comments || ""}
+                                    onChange={handleInputChange}/>
+                            </Grid>
+                        </Grid>
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Ubicación</Typography>
-                        <Grid container spacing={2}>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Ubicación</Typography>
+                        <Grid container spacing={1}>
                             <Grid item xs={6}>
                                 <Input 
                                     label="Latitud*"
@@ -122,12 +131,13 @@ const View = () => {
                                     onChange={handleInputChange}/>
                             </Grid>
                         </Grid>
+                        <Typography sx={{fontSize:10, color:"gray", mt:1, textAlign:"right"}}>Selección manual desde mapa disponible próximamente</Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Datos de contacto</Typography>
-                        <Grid container spacing={2}>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Datos de contacto</Typography>
+                        <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <Input 
                                     label="Responsable"

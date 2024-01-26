@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
+import useToast from "../../hooks/useToast";
+import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
@@ -31,6 +33,9 @@ const View = () => {
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
     
+    const toast = useToast();
+    const confirm = useConfirm();
+
     useEffect(() => {
         db.getAllItems("products")
             .then(setData)
@@ -66,10 +71,10 @@ const View = () => {
         }
     };
 
-    const handleOperation = () => {
+    const handleStock = () => {
         if(selected.length === 1){
             const productId = selected[0];
-            navigate(`/product-stock?id=${productId}`);
+            navigate(`/stock?productId=${productId}`);
         }else{
             debug("Multpiple selection for stock", "error");
             setSelected([]);
@@ -77,17 +82,24 @@ const View = () => {
     };
 
     const handleDelete = () => {
-        // TODO: confirm modal && feedback
-        const job = selected.map(productId => db.removeItem(productId, "products"));
-        Promise.all(job)
-            .then(() => {
-                db.getAllItems("products")
-                    .then(updatedData => {
-                        setData(updatedData);
-                        setSelected([]);
-                    });
-            })
-            .catch(console.error);
+        confirm(
+            "Confirmar operación",
+            "¿Desea eliminar los ítems seleccionados?",
+            () => { // On success
+                const job = selected.map(productId => db.removeItem(productId, "products"));
+                const len = selected.length;
+                Promise.all(job)
+                    .then(() => {
+                        db.getAllItems("products")
+                            .then(updatedData => {
+                                setData(updatedData);
+                                setSelected([]);
+                                toast(`Se ${len > 1 ? "eliminaron":"eliminó"} ${len} producto${len>1 ? "s":""}`, "success");
+                            });
+                    })
+                    .catch(console.error);
+            }
+        );
     };
 
     const handleSearch = query => {
@@ -158,8 +170,8 @@ const View = () => {
                         <Grid 
                             container 
                             direction="row"
-                            spacing={1}
-                            justifyContent="space-around">
+                            spacing={0}
+                            justifyContent="space-between">
                             <Grid item>
                                 <Button 
                                     color="green"
@@ -181,7 +193,7 @@ const View = () => {
                                     color="secondary"
                                     variant="contained"
                                     disabled={selected.length !== 1}
-                                    onClick={handleOperation}>
+                                    onClick={handleStock}>
                                     Insumos
                                 </Button>
                             </Grid>

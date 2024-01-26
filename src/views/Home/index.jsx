@@ -41,7 +41,7 @@ const styles = {
         lineHeight: "1em",
         width: "60vw",
         maxWidth: "400px",
-        backgroundColor: "rgba(250,250,250,.5)",
+        backgroundColor: "rgba(250,250,250,.75)",
         color: "#000000",
         fontWeight: "bold"
     },
@@ -77,13 +77,13 @@ const View = () => (
                         .filter(p => Boolean(p.homeTitle))
                         .map((p,k) => (
                             <Grid item key={k}>
-                                <Link to={p.path}>
-                                    <Button 
-                                        variant="contained" 
-                                        sx={styles.button}>
-                                        {p.homeTitle}
-                                    </Button>
-                                </Link>
+                                <Button
+                                    component={Link} 
+                                    to={p.path}
+                                    variant="contained" 
+                                    sx={styles.button}>
+                                    {p.homeTitle}
+                                </Button>
                             </Grid>            
                         ))
                 }

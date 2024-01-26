@@ -21,8 +21,8 @@ describe("Database Operations", () => {
         expect(items).toHaveLength(1);
     });
 
-    it("should retrieve items from 'goods'", async () => {
-        const items = await db.getItems("goods");
+    it("should retrieve items from 'items'", async () => {
+        const items = await db.getItems("items");
         expect(Array.isArray(items)).toBe(true);
     });
 
@@ -31,9 +31,9 @@ describe("Database Operations", () => {
         expect(Array.isArray(productStock)).toBe(true);
     });
 
-    it("should retrieve operations for a good", async () => {
-        const goodId = 1; // Replace with a valid good ID
-        const operations = await db.getOperationsForGood(goodId);
+    it("should retrieve operations for a item", async () => {
+        const itemId = 1; // Replace with a valid item ID
+        const operations = await db.getOperationsForItem(itemId);
         expect(Array.isArray(operations)).toBe(true);
     });
 });

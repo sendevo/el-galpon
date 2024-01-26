@@ -39,7 +39,7 @@ Definen productos y sus principales características. Los productos pueden ser h
 }
 ```
 
-# Insumos (goods)
+# Insumos (items)
 Los insumos son instancias de productos que se encuentran almacenadas en un depósito. Hay un stock de productos cerrados (o usados en fracción) y un stock de envases vacíos. Si el producto tiene fecha de vencimiento, se puede cargar.    
 ```js
 {
@@ -53,13 +53,13 @@ Los insumos son instancias de productos que se encuentran almacenadas en un dep�
 ```
 
 # Movimientos (operations)
-Los movimientos permiten llevar un registro de las operaciones sobre las cantidades de insumos en cada lugar. 
+Los movimientos tienen fechas editables pero el resto son datos inmutables, permiten llevar un registro de las operaciones sobre las cantidades de insumos en cada lugar. 
 ```js
 {
     id: 0, // auto increment
     timestamp: 0,
-    type: "", // BUY, MOVE, SPEND, RETURN
-    good_id: 0,
+    type: "", // keywords: BUY, MOVE, SPEND, RETURN
+    item_id: 0,
     store_from_id: 0 || null,
     store_to_id: 0 || null,
     price: 0, // Costo de operacion (compra, movimiento o devolucion)

@@ -58,7 +58,10 @@ export const reducer = (prevState, action) => {
         case 'HIDE_TOAST': {
             return {
                 ...prevState,
-                toast: null
+                toast: {
+                    ...prevState.toast,
+                    open: false
+                }
             };
         }
         case 'SHOW_CONFIRM': {

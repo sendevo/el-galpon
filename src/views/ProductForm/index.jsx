@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
+import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
 import { 
     Input,
@@ -28,6 +29,7 @@ const View = () => {
     const [searchParams] = useSearchParams();    
     const [viewTitle, setViewTitle] = useState("Productos");
     const [formData, setFormData] = useState({created: Date.now()});
+    const toast = useToast();
 
     useEffect(() => {
         const id = searchParams.get("id");
@@ -48,15 +50,18 @@ const View = () => {
             debug(formData);
             db.addItem(formData,'products')
                 .then(()=>{
-                    if(formData.id) // Editing
-                        debug("Item updated successfully");
-                    else // Create new
-                        debug("New item created successfully");
-                    navigate(-1);
+                    if(formData.id){ // Editing
+                        debug("Product data updated successfully");
+                        toast("Datos actualizados", "success", 2000, ()=>navigate(-1));
+                    }else{ // Create new
+                        debug("New product created successfully");
+                        toast("Producto creado", "success", 2000, ()=>navigate(-1));
+                    }
                 })
                 .catch(console.error);
         }else{
             debug("Complete all fields", "error");
+            toast("Complete los campos obligatorios", "error");
         }
     };
 
@@ -73,13 +78,16 @@ const View = () => {
         <MainView title={viewTitle}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Input 
-                        label="Nombre*"
-                        name="name"
-                        type="text"
-                        value={formData.name || ""}
-                        error={formData.name === ""}
-                        onChange={handleInputChange}/>
+                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Producto</Typography>
+                        <Input 
+                            label="Nombre*"
+                            name="name"
+                            type="text"
+                            value={formData.name || ""}
+                            error={formData.name === ""}
+                            onChange={handleInputChange}/>
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
