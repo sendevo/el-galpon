@@ -19,7 +19,6 @@ import { useDatabase } from "../../context/Database";
 import MainView from "../../components/MainView";
 import { componentsStyles } from "../../themes";
 import { debug, cropString, latLng2GoogleMap } from "../../model/utils";
-import { isValidQuery } from "../../model/DB";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 
 
@@ -65,7 +64,7 @@ const ProductDetails = ({productData}) => (
 const StoreDetails = ({storeData}) => (
     <TableContainer component={Paper} sx={componentsStyles.paper}>
         <Box sx={{p:1}}>
-            <Typography sx={componentsStyles.title}>{productData.name || "Depósito sin nombre"}</Typography>
+            <Typography sx={componentsStyles.title}>{storeData.name || "Depósito sin nombre"}</Typography>
         </Box>
         <Table size="small">
             <TableBody>
@@ -75,11 +74,11 @@ const StoreDetails = ({storeData}) => (
                 </TableRow>
                 <TableRow>
                     <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>
-                    <TableCell sx={{...componentsStyles.tableCell, textAlign:"center"}}>
+                    <TableCell sx={{...componentsStyles.tableCell}}>
                         <Link 
                             target="_blank"
                             rel="nooreferrer"
-                            href={latLng2GoogleMap(storeData.lat, storeData.lng)}>
+                            to={latLng2GoogleMap(storeData.lat, storeData.lng)}>
                                 Ver en Google Maps 
                         </Link>
                     </TableCell>
@@ -97,21 +96,66 @@ const StoreDetails = ({storeData}) => (
     </TableContainer>
 );
 
+const EmptyListSection = ({message, icon}) => (
+    <Box 
+        sx={{
+            height:"40vh",
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center"
+        }}>
+        <Box 
+            display={"flex"} 
+            flexDirection={"column"} 
+            alignItems={"center"}
+            sx={{mt: 2}}>
+            <img src={icon} height="100px" alt="Sin datos" />
+            <Typography variant="h5" fontWeight={"bold"}>{message}</Typography>
+        </Box>
+    </Box>
+);
 
-const ItemList = ({queryName, queryArguments}) => {
+const ActionsBlock = ({onAdd, onMove, onRemove}) => (
+    <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
+        <Grid container sx={{mb:1}} direction={"column"}>
+            <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
+        </Grid>
+        <Grid 
+            container 
+            direction="row"
+            spacing={1}
+            justifyContent="space-around">
+            <Grid item>
+                <Button 
+                    color="green"
+                    variant="contained"
+                    onClick={onAdd}>
+                    Agregar
+                </Button>
+            </Grid>
+            <Grid item>
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={onMove}>
+                    Mover
+                </Button>
+            </Grid>
+            <Grid item>
+                <Button     
+                    color="red"
+                    variant="contained"
+                    onClick={onRemove}>
+                    Usar
+                </Button>
+            </Grid>
+        </Grid>
+    </Paper>
+)
 
-    const db = useDatabase();   
-    const [itemsData, setitemsData] = useState([]);
+
+const ItemList = ({itemsData}) => {
     const [selected, setSelected] = useState([]);
-
-    useEffect(() => {        
-        if(isValidQuery(queryName))
-            db[queryName](...queryArguments)
-                .then(setitemsData)
-                .catch(console.error);
-        else
-            debug("Query did not return any items.", "error");
-    }, []);
 
     const handleSelect = itemId => {
         const selectedIndex = selected.indexOf(itemId);
@@ -144,7 +188,7 @@ const ItemList = ({queryName, queryArguments}) => {
 
     return (
         <Box>
-            {itemsData.length > 0 ? 
+            {itemsData.length > 0 && 
                 <Box sx={{mt:2}}>
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
                         <Table size="small">
@@ -157,8 +201,8 @@ const ItemList = ({queryName, queryArguments}) => {
                                     </TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Stock</TableCell>
-                                    {productData.returnable && <TableCell sx={componentsStyles.headerCell}>Envases</TableCell>}
-                                    {productData.expirable && <TableCell sx={componentsStyles.headerCell}>Vencimiento</TableCell>}
+                                    <TableCell sx={componentsStyles.headerCell}>Envases</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>Vencimiento</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -170,74 +214,14 @@ const ItemList = ({queryName, queryArguments}) => {
                                                 onChange={() => handleSelect(item.id)} />
                                         </TableCell>
                                         <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>
-                                        <TableCell sx={componentsStyles.tableCell}>{item.stock} {productData.pack_size === 1 ? "" : `x ${productData.pack_size}`} {productData.pack_unit}</TableCell>
-                                        {productData.returnable && <TableCell sx={componentsStyles.tableCell}>{item.packs}</TableCell>}
-                                        {productData.expirable && <TableCell sx={componentsStyles.tableCell}>{moment(item.expiration_date).format("DD/MM/YYYY")}</TableCell>}
+                                        <TableCell sx={componentsStyles.tableCell}>{item.stock} {item.productData?.pack_size === 1 ? "" : `x ${item.productData?.pack_size}`} {item.productData?.pack_unit}</TableCell>
+                                        <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : 0}</TableCell>
+                                        <TableCell sx={componentsStyles.tableCell}>{item.expiration_date ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
-                        <Grid container sx={{mb:1}} direction={"column"}>
-                            <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
-                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más ítems</Typography>}
-                        </Grid>
-                        <Grid 
-                            container 
-                            direction="row"
-                            spacing={1}
-                            justifyContent="space-around">
-                            <Grid item>
-                                <Button 
-                                    color="green"
-                                    variant="contained"
-                                    onClick={handleAdd}>
-                                    Agregar
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    color="secondary"
-                                    variant="contained"
-                                    disabled={selected.length !== 1}
-                                    onClick={handleMove}>
-                                    Mover
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button     
-                                    color="red"
-                                    variant="contained"
-                                    disabled={selected.length === 0}
-                                    onClick={handleRemove}>
-                                    Quitar
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </Box>
-                :
-                <Box 
-                    height="70vh"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center">
-                    <Box 
-                        display={"flex"} 
-                        flexDirection={"column"} 
-                        alignItems={"center"}
-                        sx={{mt: 2}}>
-                        <img src={iconEmpty} height="100px" alt="Sin datos" />
-                        <Typography variant="h5" fontWeight={"bold"}>Aún no hay insumos</Typography>
-                        <Button 
-                            sx={{mt: 2}}
-                            variant="contained"
-                            component={Link}
-                            to="/products">
-                            Agregar ítems de producto
-                        </Button>
-                    </Box>
                 </Box>
             }
         </Box>
@@ -246,23 +230,55 @@ const ItemList = ({queryName, queryArguments}) => {
 
 const View = () => {
     const db = useDatabase();   
-    const [searchParams] = useSearchParams();        
+
+    const [searchParams] = useSearchParams();    
+
+    const [title, setTitle] = useState("Insumos");
+    const [emptyListMsg, setEmptyListMsg] = useState("Lista de insumos vacía");
     const [productData, setProductData] = useState();
+    const [storeData, setStoreData] = useState();
+    const [itemsData, setItemsData] = useState([]);
     
     useEffect(() => {
-        const productId = parseInt(searchParams.get("id"));
+        const productId = parseInt(searchParams.get("productId"));
         if(Boolean(productId)){
             db.getItem(productId, 'products')
-                .then(setProductData)
+                .then(pData => {
+                    setProductData(pData);
+                    db.getStockOfProduct(productId)
+                        .then(items => setItemsData(items.map(i => ({...i, productData:pData}))))
+                        .catch(console.error);
+                    })
                 .catch(console.error);
-        }else
-            debug("Product not found.", "error");
+            setTitle("Insumos de producto");
+            setEmptyListMsg("No hay ítems de este producto");
+        }
+        const storeId = parseInt(searchParams.get("storeId"));
+        if(Boolean(storeId)){
+            db.getItem(storeId, 'stores')
+                .then(sData => {
+                    setStoreData(sData);
+                    db.getStockInStore(storeId)
+                        .then(items => setItemsData(items.map(i => ({...i, storeData:sData}))))
+                        .catch(console.error);
+                })
+                .catch(console.error);
+            
+            setTitle("Insumos en depósito");
+            setEmptyListMsg("El depósito está vacío");
+        }
     }, []);
 
     return (
-        <MainView title={"Insumos"}>
+        <MainView title={title}>
             {productData && <ProductDetails productData={productData}/>}
-            <ItemList queryName={""} queryArguments={[]}/>
+            {storeData && <StoreDetails storeData={storeData}/>}
+            {itemsData.length !== 0 ? 
+                <ItemList itemsData={itemsData}/>
+                :
+                <EmptyListSection message={emptyListMsg} icon={iconEmpty} />
+            }
+            <ActionsBlock />
         </MainView>
     );
 };

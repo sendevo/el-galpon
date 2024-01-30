@@ -117,10 +117,13 @@ const itemsTempData = [
 export const isValidQuery = query => [
     "getItem",
     "getAllItems",
+    "getPaginatedItems",
     "getStockOfProduct",
     "getStockInStore",
     "searchTerm"
 ].includes(query);
+
+export const isValidSection = sectionName => Object.keys(schema).includes(sectionName);
 
 export default class LocalDatabase {
     constructor() {
@@ -180,107 +183,131 @@ export default class LocalDatabase {
 
     addItem(data, section) {
         return new Promise((resolve, reject) => {
-            this._performTransaction( () => {
-                const request = this._db
-                    .transaction(section, 'readwrite')
-                    .objectStore(section)
-                    .put(data);
-                request.onsuccess = () => resolve();
-                request.onerror = event => reject(event.target.error);
-            });
+            if(isValidSection(section)){
+                this._performTransaction( () => {
+                    const request = this._db
+                        .transaction(section, 'readwrite')
+                        .objectStore(section)
+                        .put(data);
+                    request.onsuccess = () => resolve();
+                    request.onerror = event => reject(event.target.error);
+                });
+            }else{
+                reject("Section not valid.");
+            }
         });
     }
 
     getItem(itemId, section) {
         return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const request = this._db
-                    .transaction(section, 'readonly')
-                    .objectStore(section)
-                    .get(itemId);
-                request.onsuccess = event => {
-                    const product = event.target.result;
-                    if (product) resolve(product);
-                    else reject(`Item with ID ${itemId} not found`);
-                };
-                request.onerror = event => reject(event.target.error);
-            });
+            if(isValidSection(section)){
+                this._performTransaction(() => {
+                    const request = this._db
+                        .transaction(section, 'readonly')
+                        .objectStore(section)
+                        .get(itemId);
+                    request.onsuccess = event => {
+                        const item = event.target.result;
+                        if (item) resolve(item);
+                        else reject(`Item with ID ${itemId} not found`);
+                    };
+                    request.onerror = event => reject(event.target.error);
+                });
+            }else{
+                reject("Section not valid.");
+            }
         });
     }
 
     removeItem(itemId, section) {
-        return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const request = this._db
-                    .transaction(section, 'readwrite')
-                    .objectStore(section)
-                    .delete(itemId);
-                request.onsuccess = () => resolve();
-                request.onerror = event => reject(event.target.error);
+        if(isValidSection(section)){
+            return new Promise((resolve, reject) => {
+                this._performTransaction(() => {
+                    const request = this._db
+                        .transaction(section, 'readwrite')
+                        .objectStore(section)
+                        .delete(itemId);
+                    request.onsuccess = () => resolve();
+                    request.onerror = event => reject(event.target.error);
+                });
             });
-        });
+        }else{
+            reject("Section not valid.");
+        }
     }
 
     getAllItems(section) {
         return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const request = this._db
-                    .transaction(section, 'readonly')
-                    .objectStore(section)
-                    .getAll();
-                request.onsuccess = event => resolve(event.target.result);
-                request.onerror = event => reject(event.target.error);
-            });
+            if(isValidSection(section)){
+                this._performTransaction(() => {
+                    const request = this._db
+                        .transaction(section, 'readonly')
+                        .objectStore(section)
+                        .getAll();
+                    request.onsuccess = event => resolve(event.target.result);
+                    request.onerror = event => reject(event.target.error);
+                });
+            }else{
+                reject("Section not valid.");
+            }
         });
     }
 
-    getItems(section, page, count) {
+    getPaginatedItems(section, page, count) {
         return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const lowerBound = (page - 1) * count;
-                const upperBound = page * count;
-                const keyRange = IDBKeyRange.bound(lowerBound, upperBound, false, false);
-                const data = [];
-                const request = this._db
-                    .transaction(section, 'readonly')
-                    .objectStore(section)
-                    .openCursor(keyRange);
-                request.onsuccess = event => {
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        data.push(cursor.value);
-                        cursor.continue();
-                    } else {
-                        resolve(data);
-                    }
-                };
-                request.onerror = event => reject(event.target.error);
-            });
+            if(isValidSection(section)){
+                this._performTransaction(() => {
+                    const lowerBound = (page - 1) * count;
+                    const upperBound = page * count;
+                    const keyRange = IDBKeyRange.bound(lowerBound, upperBound, false, false);
+                    const data = [];
+                    const request = this._db
+                        .transaction(section, 'readonly')
+                        .objectStore(section)
+                        .openCursor(keyRange);
+                    request.onsuccess = event => {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            data.push(cursor.value);
+                            cursor.continue();
+                        } else {
+                            resolve(data);
+                        }
+                    };
+                    request.onerror = event => reject(event.target.error);
+                });
+            }else{
+                reject("Section not valid.");
+            }
         });
     }
 
     searchTerm(section, attr, term, thresh = 3) {
         return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const results = [];
-                const request = this._db
-                    .transaction(section, 'readonly')
-                    .objectStore(section)
-                    .openCursor();
-                request.onsuccess = event => {
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        const similarity = levenshteinDistance(term, cursor.value[attr]);
-                        if (similarity <= thresh) 
-                            results.push({id: cursor.value.id, similarity});
-                        cursor.continue();
-                    } else {
-                        results.sort((a, b) => a.similarity - b.similarity);
-                        resolve(results);
-                    }
-                };
-                request.onerror = event => reject(event.target.error);
-            });
+            if(isValidSection(section)){
+                this._performTransaction(() => {
+                    const results = [];
+                    const request = this._db
+                        .transaction(section, 'readonly')
+                        .objectStore(section)
+                        .openCursor();
+                    request.onsuccess = event => {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            const similarity = levenshteinDistance(term, cursor.value[attr]);
+                            if (similarity <= thresh) 
+                                results.push({id: cursor.value.id, similarity});
+                            cursor.continue();
+                        } else {
+                            results.sort((a, b) => a.similarity - b.similarity);
+                            resolve(results);
+                        }
+                    };
+                    request.onerror = event => reject(event.target.error);
+                });
+            }else{
+                reject("Section not valid.");
+            }
         });
     }
 
@@ -322,7 +349,21 @@ export default class LocalDatabase {
                     .objectStore('items')
                     .index('store_id')
                     .getAll(IDBKeyRange.only(storeId));
-                request.onsuccess = event => resolve(event.target.result);
+                request.onsuccess = event => {
+                    const itemData = event.target.result;
+                    this.getAllItems("products")
+                        .then(products => {
+                            resolve(
+                                itemData.map(g => {
+                                    const productIndex = products.findIndex(s => s.id === g.product_id);
+                                    return {
+                                        ...g, 
+                                        productData: productIndex !== -1 ? products[productIndex] : {}
+                                    };
+                                })
+                            )
+                        })
+                }
                 request.onerror = event => reject(event.target.error);
             });
         });

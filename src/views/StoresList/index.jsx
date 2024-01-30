@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
     Grid, 
     Button, 
@@ -12,8 +12,7 @@ import {
     Paper, 
     Checkbox, 
     Typography, 
-    Box, 
-    Link
+    Box
 } from '@mui/material';
 import moment from "moment";
 import { useDatabase } from "../../context/Database";
@@ -147,7 +146,7 @@ const View = () => {
                                         <Link 
                                             target="_blank"
                                             rel="nooreferrer"
-                                            href={latLng2GoogleMap(store.lat, store.lng)}>
+                                            to={latLng2GoogleMap(store.lat, store.lng)}>
                                                 <FaExternalLinkAlt/>
                                         </Link>
                                     </TableCell>

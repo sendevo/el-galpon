@@ -17,12 +17,12 @@ describe("Database Operations", () => {
             name: "Test Product"
         };
         await db.addItem(data, "products");
-        const items = await db.getItems("products");
+        const items = await db.getAllItems("products");
         expect(items).toHaveLength(1);
     });
 
     it("should retrieve items from 'items'", async () => {
-        const items = await db.getItems("items");
+        const items = await db.getAllItems("items");
         expect(Array.isArray(items)).toBe(true);
     });
 
