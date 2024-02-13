@@ -98,7 +98,8 @@ export const levenshteinDistance = (str1, str2) => {
 };
 
 export const debug = (message, type = "log") => {
-    if (DEBUG_MODE)
+    if (DEBUG_MODE){
         if (AVAILABLE_DEBUG_MODES.includes(type))
             console[type](message);
+    }
 };

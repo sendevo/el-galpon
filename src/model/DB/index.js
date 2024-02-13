@@ -2,118 +2,6 @@ import { DB_NAME,DB_VERSION } from "../constants";
 import { debug, levenshteinDistance } from "../utils";
 import schema from "./schema.json";
 
-
-// TODO: remove this
-const productsTempData = [ 
-    {
-        id: 34,
-        name: "Glifosato",
-        pack_size: 20,
-        pack_unit: "l",
-        expirable: true,
-        returnable: true,
-        brand: "Estrella",
-        comments: "",
-        categories: ["Herbicidas"],
-        created: 1693683312000,
-        modified: 1693683312000
-    },
-    {
-        id: 35,
-        name: "Urea granulada",
-        pack_size: 1,
-        pack_unit: "ton",
-        expirable: true,
-        returnable: false,
-        brand: "Profertil",
-        comments: "",
-        categories: ["Fertilizantes"],
-        created: 1693683312000,
-        modified: 1693683312000
-    },
-    {
-        id: 38,
-        name: "Trigo",
-        pack_size: 25,
-        pack_unit: "kg",
-        expirable: true,
-        returnable: false,
-        brand: "ACA 304",
-        comments: "Cosecha 2021",
-        categories: ["Semillas"],
-        created: 1693683312000,
-        modified: 1693683312000
-    }
-];
-
-const storesTempData = [
-    {
-        id: 34,
-        name: "YPF Agro - Pedro Luro",
-        lat: -39.4993953,
-        lng: -62.6767609,
-        contact: {
-            name: "Fulano",
-            phone: "299 - 235 15123",
-            address: "Calle 38 1231"
-        },
-        created: 1693683312000,
-        modified: 1693683312000
-        
-    },
-    {
-        id: 35,
-        name: "Galpón",
-        lat: -39.363867,
-        lng: -62.685075,
-        created: 1693683312000,
-        modified: 1693683312000
-    },
-    {
-        id: 36,
-        name: "Silo IV",
-        lat: -39.365102,
-        lng: -62.680214,
-        created: 1693683312000,
-        modified: 1693683312000
-    },
-    {
-        id: 37,
-        name: "Silito",
-        lat: -39.365102,
-        lng: -62.680214,
-        created: 1693683312000,
-        modified: 1693683312000
-    }
-];
-
-const itemsTempData = [
-    {
-        id: 1,
-        product_id: 34,
-        store_id: 35,
-        stock: 10,
-        packs: 10,
-        expiration_date: 1731151088080
-    },
-    {
-        id: 2,
-        product_id: 35,
-        store_id: 36,
-        stock: 5.5,
-        packs: null,
-        expiration_date: 1731151088080
-    },
-    {
-        id: 5,
-        product_id: 35,
-        store_id: 37,
-        stock: 2,
-        packs: null,
-        expiration_date: 1731151088080
-    }
-];
-
 export const isValidQuery = query => [
     "getItem",
     "getAllItems",
@@ -127,6 +15,7 @@ export const isValidSection = sectionName => Object.keys(schema).includes(sectio
 
 export default class LocalDatabase {
     constructor() {
+        this.type = "production";
         this._db = null;
         this.onReady = []; // List of callbacks
 
@@ -137,37 +26,20 @@ export default class LocalDatabase {
             Object.keys(schema).forEach(key => {
                 const store = this._db.createObjectStore(key, schema[key].options);
                 if (schema[key].indexes)
-                    schema[key].indexes.forEach(index => store.createIndex(index.name, index.keyPath, index.options));
+                    schema[key].indexes.forEach(index => store.createIndex(
+                        index.name, 
+                        index.keyPath, 
+                        index.options)
+                    );
             });
         };
 
         request.onsuccess = event => {
             this._db = event.target.result;
             this._db.onerror = err => debug(err, "error");
-
-            // TODO: remove this
-            this.getItem(34, "products")
-                .then(() => {
-                    console.log("test data already there");
-                    this.onReady.forEach(callback => callback());
-                })
-                .catch(() => {
-                    const job = [
-                        ...productsTempData.map(data => this.addItem(data, "products")),
-                        ...storesTempData.map(data => this.addItem(data, "stores")),
-                        ...itemsTempData.map(data => this.addItem(data, "items"))
-                    ];
-                    Promise.all(job)
-                        .then(() => {
-                            debug("DB initilized");
-                            this.onReady.forEach(callback => callback());
-                        })
-                        .catch(console.error);
-                });
-
-            // TODO: uncomment this
-            //debug("DB initilized");
-            //this.onReady.forEach(callback => callback())
+            this.onReady.forEach(callback => callback());
+            this.onReady = [];
+            debug("DB initialized");
         };
 
         request.onerror = event => debug(event.target.error, "error");
@@ -220,8 +92,8 @@ export default class LocalDatabase {
     }
 
     removeItem(itemId, section) {
-        if(isValidSection(section)){
-            return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
+            if(isValidSection(section)){
                 this._performTransaction(() => {
                     const request = this._db
                         .transaction(section, 'readwrite')
@@ -230,10 +102,10 @@ export default class LocalDatabase {
                     request.onsuccess = () => resolve();
                     request.onerror = event => reject(event.target.error);
                 });
-            });
-        }else{
-            reject("Section not valid.");
-        }
+            }else{
+                reject("Section not valid.");
+            }
+        });
     }
 
     getAllItems(section) {

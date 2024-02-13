@@ -13,8 +13,16 @@ afterAll(() => {
 describe("Database Operations", () => {
     it("should add an item to 'products'", async () => {
         const data = {
-            product_id: 1,
-            name: "Test Product"
+            name: "Glifosato",
+            pack_size: 20,
+            pack_unit: "l",
+            expirable: true,
+            returnable: true,
+            brand: "Estrella",
+            comments: "",
+            categories: ["Herbicidas"],
+            created: 1693683312000,
+            modified: 1693683312000
         };
         await db.addItem(data, "products");
         const items = await db.getAllItems("products");
