@@ -23,7 +23,6 @@ export default class LocalDatabase {
 
     _performTransaction(callback) {
         debug(`DB callback stack len: ${this.onReady.length}`);
-        debug(this._db);
         if(this._db) 
             callback();
         else
@@ -36,7 +35,11 @@ export default class LocalDatabase {
         return new Promise((resolve, reject) => {
             if(isValidSection(section)){
                 this._performTransaction( () => {
-                    this._db[section].push(data);
+                    const index = this._db[section].findIndex(it => it.id === data.id);
+                    if(index < 0)
+                        this._db[section].push(data);
+                    else
+                        this._db[section][index] = data;
                     resolve();
                 });
             }else{
@@ -51,8 +54,10 @@ export default class LocalDatabase {
             if(isValidSection(section)){
                 this._performTransaction(() => {
                     const item = this._db[section].filter(it => it.id === itemId);
-                    if (item) resolve(item);
-                    else reject(`Item with ID ${itemId} not found`);
+                    if(item.length === 1)
+                        resolve(item[0]);
+                    else 
+                        reject(`Item with ID ${itemId} not found`);
                 });
             }else{
                 reject("Section not valid.");

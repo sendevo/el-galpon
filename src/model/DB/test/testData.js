@@ -3,6 +3,7 @@ export const testData = {
         {
             id: 34,
             name: "Glifosato",
+            sku: "10-01111-0",
             pack_size: 20,
             pack_unit: "l",
             expirable: true,
@@ -16,6 +17,7 @@ export const testData = {
         {
             id: 35,
             name: "Urea granulada",
+            sku: "03-1234-1",
             pack_size: 1,
             pack_unit: "ton",
             expirable: true,
@@ -29,6 +31,7 @@ export const testData = {
         {
             id: 38,
             name: "Trigo",
+            sku: "",
             pack_size: 25,
             pack_unit: "kg",
             expirable: true,
@@ -36,6 +39,62 @@ export const testData = {
             brand: "ACA 304",
             comments: "Cosecha 2021",
             categories: ["Semillas"],
+            created: 1693683312000,
+            modified: 1693683312000
+        },
+        {
+            id: 10,
+            name: "Maíz",
+            sku: "",
+            pack_size: 80000,
+            pack_unit: "u",
+            expirable: false,
+            returnable: false,
+            brand: "ACA 477",
+            comments: "",
+            categories: ["Semillas"],
+            created: 1693683312000,
+            modified: 1693683312000
+        },
+        {
+            id: 12,
+            name: "Girasol",
+            sku: "",
+            pack_size: 180000,
+            pack_unit: "u",
+            expirable: true,
+            returnable: false,
+            brand: "ACA 220",
+            comments: "",
+            categories: ["Semillas"],
+            created: 1693683312000,
+            modified: 1693683312000
+        },
+        {
+            id: 8,
+            name: "Silobolsa",
+            sku: "MA-0000",
+            pack_size: 50,
+            pack_unit: "m",
+            expirable: false,
+            returnable: false,
+            brand: "Pentasilo Manta",
+            comments: "Film de polietileno pentacapa (5 capas), bicolor (exterior blanco e interior negro), coextrusado con plástico virgen de altísima calidad",
+            categories: ["Silobolsas"],
+            created: 1693683312000,
+            modified: 1693683312000
+        },
+        {
+            id: 9,
+            name: "Suplemento vitamínico",
+            sku: "16-023008",
+            pack_size: 25,
+            pack_unit: "kg",
+            expirable: true,
+            returnable: false,
+            brand: "AF Mix ADQ Preparto Aniónica",
+            comments: "Recomendamos ingresar las vacas al lote y dosificar en la ración 21 días antes del parto",
+            categories: ["Nutrición animal"],
             created: 1693683312000,
             modified: 1693683312000
         }

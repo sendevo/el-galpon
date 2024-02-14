@@ -48,11 +48,12 @@ const View = () => {
                 .then(()=>{
                     if(formData.id){ // Editing
                         debug("Store item updated successfully");
-                        toast("Datos actualizados", "success", 2000, () => navigate(-1));
+                        toast("Datos actualizados", "success", 2000);
                     }else{ // Create new
                         debug("New store item created successfully");
-                        toast("Depósito creado", "success", 2000, () => navigate(-1));
+                        toast("Depósito creado", "success", 2000);
                     }
+                    navigate(-1);
                 })
                 .catch(console.error);
         }else{

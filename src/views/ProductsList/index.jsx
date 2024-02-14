@@ -133,6 +133,7 @@ const View = () => {
                                     <TableCell sx={componentsStyles.headerCell}>Expirable</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Retornable</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Marca/Fabricante</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>SKU</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Comentarios</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Categorías</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Creado</TableCell>
@@ -153,6 +154,7 @@ const View = () => {
                                     <TableCell sx={componentsStyles.tableCell}>{product.expirable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.returnable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{product.sku || ""}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{cropString(product.comments || "-", 10)}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.categories?.join(', ') || "-"}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{moment(product.created).format("DD/MM/YYYY HH:mm")}</TableCell>

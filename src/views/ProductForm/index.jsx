@@ -25,7 +25,7 @@ const validateForm = formData => Boolean(formData.name && formData.pack_size);
 const View = () => {
 
     const navigate = useNavigate();
-    const db = useDatabase();   
+    const db = useDatabase();
     const [searchParams] = useSearchParams();    
     const [viewTitle, setViewTitle] = useState("Productos");
     const [formData, setFormData] = useState({created: Date.now()});
@@ -52,11 +52,12 @@ const View = () => {
                 .then(()=>{
                     if(formData.id){ // Editing
                         debug("Product data updated successfully");
-                        toast("Datos actualizados", "success", 2000, ()=>navigate(-1));
+                        toast("Datos actualizados", "success", 2000);
                     }else{ // Create new
                         debug("New product created successfully");
-                        toast("Producto creado", "success", 2000, ()=>navigate(-1));
+                        toast("Producto creado", "success", 2000);
                     }
+                    navigate(-1);
                 })
                 .catch(console.error);
         }else{
@@ -151,6 +152,15 @@ const View = () => {
                                     name="brand"
                                     type="text"
                                     value={formData.brand || ""}
+                                    onChange={handleInputChange}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Input 
+                                    multiline
+                                    label="SKU"
+                                    name="sku"
+                                    type="text"
+                                    value={formData.sku || ""}
                                     onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={12}>
