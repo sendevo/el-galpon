@@ -5,9 +5,7 @@ import MainView from "../../components/MainView";
 import ProductDetails from "./productDetails";
 import StoreDetails from "./storeDetails";
 import ItemList from "./itemList";
-import EmptyListSection from "./emptyListSection";
 import ActionsBlock from "./actionsBlock";
-import iconEmpty from "../../assets/icons/empty_folder.png";
 
 const View = () => {
     const db = useDatabase();   
@@ -29,6 +27,7 @@ const View = () => {
                     })
                 .catch(console.error);
         }
+
         const storeId = parseInt(searchParams.get("storeId"));
         if(Boolean(storeId)){
             db.getItem(storeId, 'stores')
@@ -40,17 +39,17 @@ const View = () => {
                 })
                 .catch(console.error);
         }
+
+        if(!(Boolean(storeId) || Boolean(storeId))){ // Empty filters
+            db.getAllItems('items')
+        }
     }, []);
 
     return (
         <MainView title={"Insumos"}>
             {productData && <ProductDetails productData={productData}/>}
             {storeData && <StoreDetails storeData={storeData}/>}
-            {itemsData.length !== 0 ? 
-                <ItemList itemsData={itemsData} productData={productData} storeData={storeData}/>
-                :
-                <EmptyListSection message={"La lista de insumos está vacía"} icon={iconEmpty} />
-            }
+            <ItemList itemsData={itemsData} productData={productData} storeData={storeData}/>
             <ActionsBlock />
         </MainView>
     );

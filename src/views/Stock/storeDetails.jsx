@@ -14,7 +14,7 @@ import { componentsStyles } from "../../themes";
 import { latLng2GoogleMap } from "../../model/utils";
 
 const StoreDetails = ({storeData}) => (
-    <TableContainer component={Paper} sx={componentsStyles.paper}>
+    <TableContainer component={Paper} sx={{...componentsStyles.paper, mb:2}}>
         <Box sx={{pt:1, pl:1}}>
             <Typography sx={componentsStyles.title}>Depósito</Typography>
         </Box>

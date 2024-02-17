@@ -12,13 +12,11 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { componentsStyles } from "../../themes";
+import EmptyListSection from "./emptyListSection";
+import iconEmpty from "../../assets/icons/empty_folder.png";
 
 const ItemList = ({itemsData, productData, storeData}) => {
     const [selected, setSelected] = useState([]);
-
-    console.table(itemsData);
-    console.log(productData);
-    console.log(storeData);
 
     const handleSelect = itemId => {
         const selectedIndex = selected.indexOf(itemId);
@@ -37,22 +35,10 @@ const ItemList = ({itemsData, productData, storeData}) => {
             setSelected([]);
     };
 
-    const handleAdd = () => {
-
-    };
-
-    const handleMove = () => {
-
-    };
-
-    const handleRemove = () => {
-
-    };
-
     return (
         <Box>
-            {itemsData.length > 0 && 
-                <Box sx={{mt:2}}>
+            {itemsData.length > 0 ? 
+                <Box>
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
                         <Table size="small">
                             <TableHead>
@@ -77,9 +63,9 @@ const ItemList = ({itemsData, productData, storeData}) => {
                                                 checked={selected.indexOf(item.id) !== -1} 
                                                 onChange={() => handleSelect(item.id)} />
                                         </TableCell>
-                                        {!storeData && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}
-                                        {!productData && <TableCell sx={componentsStyles.tableCell}>{item.productData?.name || "S/D"}</TableCell>}
-                                        <TableCell sx={componentsStyles.tableCell}>{item.productData ? item.stock * item.productData.pack_size : item.stock}</TableCell>
+                                        {!storeData && <TableCell sx={componentsStyles.tableCell}>{item?.storeData.name || "S/D"}</TableCell>}
+                                        {!productData && <TableCell sx={componentsStyles.tableCell}>{item?.productData.name || "S/D"}</TableCell>}
+                                        <TableCell sx={componentsStyles.tableCell}>{item.productData ? item.stock * item.productData.pack_size : item.stock} {item.productData.pack_unit}</TableCell>
                                         <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : 0}</TableCell>
                                         <TableCell sx={componentsStyles.tableCell}>{item.expiration_date ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>
                                     </TableRow>
@@ -88,6 +74,8 @@ const ItemList = ({itemsData, productData, storeData}) => {
                         </Table>
                     </TableContainer>
                 </Box>
+                :
+                <EmptyListSection message={"La lista de insumos está vacía"} icon={iconEmpty} />
             }
         </Box>
     );

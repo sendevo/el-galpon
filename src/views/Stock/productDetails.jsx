@@ -13,7 +13,7 @@ import { componentsStyles } from "../../themes";
 import { cropString } from "../../model/utils";
 
 const ProductDetails = ({productData}) => (
-    <TableContainer component={Paper} sx={componentsStyles.paper}>
+    <TableContainer component={Paper} sx={{...componentsStyles.paper, mb:2}}>
         <Box sx={{pt:1, pl:1}}>
             <Typography sx={componentsStyles.title}>Producto</Typography>
         </Box>

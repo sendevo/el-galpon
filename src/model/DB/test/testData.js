@@ -158,8 +158,24 @@ export const testData = {
         },
         {
             id: 5,
-            product_id: 35,
-            store_id: 37,
+            product_id: 38,
+            store_id: 35,
+            stock: 2,
+            packs: null,
+            expiration_date: 1731151088080
+        },
+        {
+            id: 5,
+            product_id: 10,
+            store_id: 34,
+            stock: 2,
+            packs: null,
+            expiration_date: 1731151088080
+        },
+        {
+            id: 5,
+            product_id: 12,
+            store_id: 34,
             stock: 2,
             packs: null,
             expiration_date: 1731151088080

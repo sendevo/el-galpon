@@ -64,6 +64,6 @@ Los movimientos tienen fechas editables pero el resto son datos inmutables, perm
     store_to_id: 0 || null,
     price: 0, // Costo de operacion (compra, movimiento o devolucion)
     stock_amount: 0, // Siempre positivo o 0
-    empty_amount: 0 // Siempre positivo o 0
+    pack_amount: 0 // Siempre positivo o 0
 }
 ```

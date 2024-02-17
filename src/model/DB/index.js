@@ -1,4 +1,4 @@
-import { DB_NAME,DB_VERSION } from "../constants";
+import { DB_NAME, DB_VERSION, OPERATION_TYPES } from "../constants";
 import { debug, levenshteinDistance } from "../utils";
 import schema from "./schema.json";
 
@@ -17,8 +17,7 @@ export default class LocalDatabase {
     constructor() {
         this.type = "production";
         this._db = null;
-        this.onReady = []; // List of callbacks
-
+        
         const request = indexedDB.open(DB_NAME, DB_VERSION);
 
         request.onupgradeneeded = event => {
@@ -26,14 +25,16 @@ export default class LocalDatabase {
             Object.keys(schema).forEach(key => {
                 const store = this._db.createObjectStore(key, schema[key].options);
                 if (schema[key].indexes)
-                    schema[key].indexes.forEach(index => store.createIndex(
-                        index.name, 
-                        index.keyPath, 
-                        index.options)
-                    );
+                    schema[key].indexes
+                        .forEach(index => store.createIndex(
+                            index.name, 
+                            index.keyPath, 
+                            index.options)
+                        );
             });
         };
 
+        this.onReady = []; // List of callbacks
         request.onsuccess = event => {
             this._db = event.target.result;
             this._db.onerror = err => debug(err, "error");
@@ -45,13 +46,13 @@ export default class LocalDatabase {
         request.onerror = event => debug(event.target.error, "error");
     }
 
-    _performTransaction(callback) {
+    _performTransaction(callback) { // Check if DB is initialized
         debug(`DB callback stack len: ${this.onReady.length}`);
         if (this._db)
             callback();
-        else 
-            this.onReady.push(callback);
-    };
+        else // Save callback to execute it after DB opens successfully
+            this.onReady.push(callback); 
+    }
 
     addItem(data, section) {
         return new Promise((resolve, reject) => {
@@ -65,7 +66,7 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject("Section not valid.");
+                reject({message:"Section not valid."});
             }
         });
     }
@@ -81,12 +82,12 @@ export default class LocalDatabase {
                     request.onsuccess = event => {
                         const item = event.target.result;
                         if (item) resolve(item);
-                        else reject(`Item with ID ${itemId} not found`);
+                        else reject({message:`Item with ID ${itemId} not found`});
                     };
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject("Section not valid.");
+                reject({message:"Section not valid."});
             }
         });
     }
@@ -103,7 +104,7 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject("Section not valid.");
+                reject({message:"Section not valid."});
             }
         });
     }
@@ -120,7 +121,7 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject("Section not valid.");
+                reject({message:"Section not valid."});
             }
         });
     }
@@ -149,7 +150,7 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject("Section not valid.");
+                reject({message:"Section not valid."});
             }
         });
     }
@@ -178,10 +179,13 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject("Section not valid.");
+                reject({message:"Section not valid."});
             }
         });
     }
+
+
+    // Business model specific functions
 
     getStockOfProduct(productId) {
         return new Promise((resolve, reject) => {
@@ -238,6 +242,30 @@ export default class LocalDatabase {
                 }
                 request.onerror = event => reject(event.target.error);
             });
+        });
+    }
+
+    buyStock(itemId, amount, storeId, price) {
+        return new Promise((resolve, reject) => {
+
+        });
+    }
+
+    moveStock(itemId, amount, toStoreId) {
+        return new Promise((resolve, reject) => {
+
+        });
+    }
+
+    spendStock(itemId, amount) {
+        return new Promise((resolve, reject) => {
+
+        });
+    }
+
+    returnPacks(itemId, amount) {
+        return new Promise((resolve, reject) => {
+
         });
     }
 }
