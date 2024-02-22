@@ -18,7 +18,7 @@ const View = () => {
     useEffect(() => {
         const productId = parseInt(searchParams.get("productId"));
         if(Boolean(productId)){
-            db.getItem(productId, 'products')
+            db.getRow(productId, 'products')
                 .then(pData => {
                     setProductData(pData);
                     db.getStockOfProduct(productId)
@@ -30,7 +30,7 @@ const View = () => {
 
         const storeId = parseInt(searchParams.get("storeId"));
         if(Boolean(storeId)){
-            db.getItem(storeId, 'stores')
+            db.getRow(storeId, 'stores')
                 .then(sData => {
                     setStoreData(sData);
                     db.getStockInStore(storeId)
@@ -41,7 +41,7 @@ const View = () => {
         }
 
         if(!(Boolean(storeId) || Boolean(storeId))){ // Empty filters
-            db.getAllItems('items')
+            db.getAllRows('items')
         }
     }, []);
 

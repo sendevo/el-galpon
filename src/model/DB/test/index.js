@@ -4,17 +4,17 @@ import schema from "../schema.json";
 import { testData } from "./testData";
 
 export const isValidQuery = query => [
-    "getItem",
-    "getAllItems",
-    "getPaginatedItems",
+    "getRow",
+    "getAllRows",
+    "getPaginatedRows",
     "searchTerm",
     "getStockOfProduct",
     "getStockInStore",
     "moveStock"
 ].includes(query);
 
-export const isValidSection = sectionName => Object.keys(schema).includes(sectionName);
-// export const isValidSection = sectionName => sectionName in schema;
+export const isValidTable = sectionName => Object.keys(schema).includes(sectionName);
+// export const isValidTable = sectionName => sectionName in schema;
 
 export default class LocalDatabase {
     constructor() {
@@ -27,106 +27,121 @@ export default class LocalDatabase {
         return this.lastId++;
     }
 
-    addItem(data, section) {
-        debug("Adding item to "+section);
+    addRow(data, table) {
+        debug("Adding item to "+table);
         debug(data);
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
-                const index = this._db[section].findIndex(it => it.id === data.id);
+            if(isValidTable(table)){
+                const index = this._db[table].findIndex(it => it.id === data.id);
                 if(index < 0){
                     data.id = this.getNewId();
-                    this._db[section].push(data);
+                    this._db[table].push(data);
                 }else
-                    this._db[section][index] = data;
+                    this._db[table][index] = data;
                 resolve();
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    getItem(itemId, section) {
-        debug("Geting item "+itemId+" from "+section);
+    getRow(rowId, table) {
+        debug("Geting item "+rowId+" from "+table);
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
-                const item = this._db[section].filter(it => it.id === itemId);
+            if(isValidTable(table)){
+                const item = this._db[table].filter(it => it.id === rowId);
                 if(item.length === 1)
                     resolve(item[0]);
                 else 
-                    reject({message:`Item with ID ${itemId} not found`});
+                    reject({message:`Item with ID ${rowId} not found`});
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    removeItem(itemId, section) {
-        debug("Removing item "+itemId+" from "+section);
+    removeRow(rowId, table) {
+        debug("Removing item "+rowId+" from "+table);
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
-                const index = this._db[section].findIndex(it => it.id === itemId);
+            if(isValidTable(table)){
+                const index = this._db[table].findIndex(it => it.id === rowId);
                 if(index >= 0){
-                    this._db[section].splice(index,1);
+                    this._db[table].splice(index,1);
                     resolve();
                 }else{
-                    reject({message:`Item with ID ${itemId} not found`});
+                    reject({message:`Item with ID ${rowId} not found`});
                 }
             }else{  
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    getAllItems(section) {
-        debug("Get all items from "+section);
+    getAllRows(table) {
+        debug("Get all items from "+table);
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
-                resolve(this._db[section]);
+            if(isValidTable(table)){
+                resolve(this._db[table]);
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    getPaginatedItems(section, page, count) {
+    getPaginatedRows(table, page, count) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 const startIndex = (page - 1) * count;
                 const endIndex = startIndex + count;
-                const sectionItems = this._db[section];
+                const sectionItems = this._db[table];
                 const paginatedItems = sectionItems.slice(startIndex, endIndex);
                 resolve(paginatedItems);
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    searchTerm(section, attr, term, thresh = 3) {
+    searchTerm(table, attr, term, thresh = 3) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
-                const results = this._db[section]
+            if(isValidTable(table)){
+                const results = this._db[table]
                     .filter(it => levenshteinDistance(term, it[attr]) < thresh)
                     .sort((a, b) => a.similarity - b.similarity);
                 resolve(results);
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
 
     // Business model specific functions
+    getItemData(itemId) {
+        return new Promise((resolve, reject) => {
+            const itemData = this._db.items.find(it => it.id === itemId);
+            if(itemData){
+                const productData = this._db.products.find(prod => prod.id === itemData.product_id);
+                const storeData = this._db.stores.find(store => store.id === itemData.store_id);
+                resolve({
+                    ...itemData,
+                    productData,
+                    storeData
+                })
+            }else{
+                reject({message:"Item not found"});
+            }
+        });
+    }
 
     getStockOfProduct(productId) {
         return new Promise(resolve => {
             const data = this._db.items
                 .reduce((acc, current) => {
                     if(current.product_id === productId){
-                        const sIndex = this._db.stores.findIndex(store => store.id === current.store_id);
                         acc.push({
                             ...current,
-                            storeData: this._db.stores[sIndex]
+                            storeData: this._db.stores.find(store => store.id === current.store_id)
                         });
                     }
                     return acc;
@@ -192,9 +207,9 @@ export default class LocalDatabase {
                 pack_amount: packAmount 
             };
 
-            this.addItem(stockData, "items")
+            this.addRow(stockData, "items")
                 .then(() => { // Register operation
-                    this.addItem(operationData, "operations")
+                    this.addRow(operationData, "operations")
                         .then(resolve)
                         .catch(reject);
                 })
@@ -249,9 +264,9 @@ export default class LocalDatabase {
 
             if(amount === itemData[type]){ // Move all stock to another store
                 itemData.store_id = toStoreId;
-                this.addItem(itemData, "items")
+                this.addRow(itemData, "items")
                     .then(() => {
-                        this.addItem(operationData, "operations")
+                        this.addRow(operationData, "operations")
                             .then(resolve)
                             .catch(reject);
                     })
@@ -266,12 +281,12 @@ export default class LocalDatabase {
                     store_id: toStoreId,
                     [type]: amount
                 };
-                this.addItem(newItemData, "items")
+                this.addRow(newItemData, "items")
                     .then(() => { // Update amount of remaining
                         itemData[type] -= amount;
-                        this.addItem(itemData, "items")
+                        this.addRow(itemData, "items")
                             .then(() => {
-                                this.addItem(operationData, "operations")
+                                this.addRow(operationData, "operations")
                                     .then(resolve)
                                     .catch(reject);
                             })
@@ -320,7 +335,7 @@ export default class LocalDatabase {
                 itemData.packs += amount;
 
             // Update database
-            this.addItem(itemData, "items")
+            this.addRow(itemData, "items")
                 .then(() => {
                     const operationData = {
                         timestamp: Date.now(),
@@ -331,13 +346,15 @@ export default class LocalDatabase {
                         stock_amount: type === "stock" ? amount : null,
                         pack_amount: type === "packs" ? amount : null
                     };
-                    this.addItem(operationData, "operations")
+                    this.addRow(operationData, "operations")
                         .then(resolve)
                         .catch(reject);
                 })
                 .catch(reject);
         });
     }
+
+    // Operations for stored items (has storeId)
 
     moveStock(itemId, amount, toStoreId) {
         return this._moveStockOrPacks(itemId, amount, "stock", toStoreId);

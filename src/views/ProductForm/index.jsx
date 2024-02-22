@@ -34,7 +34,7 @@ const View = () => {
     useEffect(() => {
         const id = searchParams.get("id");
         if(Boolean(id)){ // Editing product
-            db.getItem(parseInt(id), 'products')
+            db.getRow(parseInt(id), 'products')
                 .then(data => {
                     setFormData(data);
                     setViewTitle("Edición de producto");
@@ -48,7 +48,7 @@ const View = () => {
     const handleSubmit = () => {
         if(validateForm(formData)){
             debug(formData);
-            db.addItem(formData,'products')
+            db.addRow(formData,'products')
                 .then(()=>{
                     if(formData.id){ // Editing
                         debug("Product data updated successfully");

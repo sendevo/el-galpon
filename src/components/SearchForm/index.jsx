@@ -44,7 +44,7 @@ const defaultFilters = {
     brand_active: false
 };
 
-const isAllFiltersDisabled = filters => Object.keys(filters) // Used for filters icon state in query section
+const isAllFiltersDisabled = filters => Object.keys(filters) // Used for filters icon state in query table
         .filter(fk => fk.includes("_active")) // Get only "..._active" attributes
         .map(fka => filters[fka]) // Get values of _active attributes
         .every(fkv => !fkv); // If all values are "false" --> all filters disabled

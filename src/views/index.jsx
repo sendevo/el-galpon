@@ -2,8 +2,9 @@ import StoresList from "./StoresList";
 import StoreForm from "./StoreForm";
 import ProductsList from "./ProductsList";
 import ProductForm from "./ProductForm";
-import Stock from "./Stock";
 import OperationsList from "./OperationsList";
+import OperationForm from "./OperationForm";
+import Stock from "./Stock";
 import About from "./About";
 
 const views = [
@@ -29,6 +30,10 @@ const views = [
         path: "/operations-list",
         homeTitle: "Movimientos",
         component: <OperationsList />
+    },
+    {
+        path: "/operation-form",
+        component: <OperationForm />
     },
     {
         path: "/stock",

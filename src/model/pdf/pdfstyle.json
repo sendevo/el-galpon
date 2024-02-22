@@ -9,7 +9,7 @@
         "bold": true,
         "margin": [0, 10, 0, 10]
     },
-    "section": {
+    "table": {
         "fontSize": 14,
         "bold": true,
         "margin": [0, 10, 0, 10]

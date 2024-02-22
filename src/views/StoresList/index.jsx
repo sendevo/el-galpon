@@ -36,7 +36,7 @@ const View = () => {
     const confirm = useConfirm();
     
     useEffect(() => {
-        db.getAllItems("stores")
+        db.getAllRows("stores")
             .then(setData)
             .catch(console.error);
     }, []);
@@ -85,11 +85,11 @@ const View = () => {
             "Confirmar operación", 
             "¿Desea eliminar los ítems seleccionados?",
             () => { // On success
-                const job = selected.map(storeId => db.removeItem(storeId, "stores"));
+                const job = selected.map(storeId => db.removeRow(storeId, "stores"));
                 const len = selected.length;
                 Promise.all(job)
                     .then(() => {
-                        db.getAllItems("stores")
+                        db.getAllRows("stores")
                             .then(updatedData => {
                                 setData(updatedData);
                                 setSelected([]);

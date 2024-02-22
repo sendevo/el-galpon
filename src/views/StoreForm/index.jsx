@@ -30,7 +30,7 @@ const View = () => {
     useEffect(() => {
         const id = searchParams.get("id");
         if(Boolean(id)){ // Editing form
-            db.getItem(parseInt(id), "stores")
+            db.getRow(parseInt(id), "stores")
                 .then(data => {
                     setFormData(data);
                     setViewTitle("Edición de depósito");
@@ -44,7 +44,7 @@ const View = () => {
     const handleSubmit = () => {
         if(validateForm(formData)){
             debug(formData);
-            db.addItem(formData,"stores")
+            db.addRow(formData,"stores")
                 .then(()=>{
                     if(formData.id){ // Editing
                         debug("Store item updated successfully");

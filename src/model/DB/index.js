@@ -3,15 +3,15 @@ import { debug, levenshteinDistance } from "../utils";
 import schema from "./schema.json";
 
 export const isValidQuery = query => [
-    "getItem",
-    "getAllItems",
-    "getPaginatedItems",
+    "getRow",
+    "getAllRows",
+    "getPaginatedRows",
     "getStockOfProduct",
     "getStockInStore",
     "searchTerm"
 ].includes(query);
 
-export const isValidSection = sectionName => Object.keys(schema).includes(sectionName);
+export const isValidTable = sectionName => Object.keys(schema).includes(sectionName);
 
 export default class LocalDatabase {
     constructor() {
@@ -54,89 +54,89 @@ export default class LocalDatabase {
             this.onReady.push(callback); 
     }
 
-    addItem(data, section) {
+    addRow(data, table) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 this._performTransaction( () => {
                     const request = this._db
-                        .transaction(section, 'readwrite')
-                        .objectStore(section)
+                        .transaction(table, 'readwrite')
+                        .objectStore(table)
                         .put(data);
                     request.onsuccess = () => resolve();
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    getItem(itemId, section) {
+    getRow(rowId, table) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 this._performTransaction(() => {
                     const request = this._db
-                        .transaction(section, 'readonly')
-                        .objectStore(section)
-                        .get(itemId);
+                        .transaction(table, 'readonly')
+                        .objectStore(table)
+                        .get(rowId);
                     request.onsuccess = event => {
                         const item = event.target.result;
                         if (item) resolve(item);
-                        else reject({message:`Item with ID ${itemId} not found`});
+                        else reject({message:`Item with ID ${rowId} not found`});
                     };
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    removeItem(itemId, section) {
+    removeRow(rowId, table) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 this._performTransaction(() => {
                     const request = this._db
-                        .transaction(section, 'readwrite')
-                        .objectStore(section)
-                        .delete(itemId);
+                        .transaction(table, 'readwrite')
+                        .objectStore(table)
+                        .delete(rowId);
                     request.onsuccess = () => resolve();
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    getAllItems(section) {
+    getAllRows(table) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 this._performTransaction(() => {
                     const request = this._db
-                        .transaction(section, 'readonly')
-                        .objectStore(section)
+                        .transaction(table, 'readonly')
+                        .objectStore(table)
                         .getAll();
                     request.onsuccess = event => resolve(event.target.result);
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    getPaginatedItems(section, page, count) {
+    getPaginatedRows(table, page, count) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 this._performTransaction(() => {
                     const lowerBound = (page - 1) * count;
                     const upperBound = page * count;
                     const keyRange = IDBKeyRange.bound(lowerBound, upperBound, false, false);
                     const data = [];
                     const request = this._db
-                        .transaction(section, 'readonly')
-                        .objectStore(section)
+                        .transaction(table, 'readonly')
+                        .objectStore(table)
                         .openCursor(keyRange);
                     request.onsuccess = event => {
                         const cursor = event.target.result;
@@ -150,19 +150,19 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
 
-    searchTerm(section, attr, term, thresh = 3) {
+    searchTerm(table, attr, term, thresh = 3) {
         return new Promise((resolve, reject) => {
-            if(isValidSection(section)){
+            if(isValidTable(table)){
                 this._performTransaction(() => {
                     const results = [];
                     const request = this._db
-                        .transaction(section, 'readonly')
-                        .objectStore(section)
+                        .transaction(table, 'readonly')
+                        .objectStore(table)
                         .openCursor();
                     request.onsuccess = event => {
                         const cursor = event.target.result;
@@ -179,7 +179,7 @@ export default class LocalDatabase {
                     request.onerror = event => reject(event.target.error);
                 });
             }else{
-                reject({message:"Section not valid."});
+                reject({message:"Table not valid."});
             }
         });
     }
@@ -198,7 +198,7 @@ export default class LocalDatabase {
                 request.onsuccess = event => {
                     const itemData = event.target.result;
                     // For each item, add store data
-                    this.getAllItems("stores")
+                    this.getAllRows("stores")
                         .then(stores => {
                             resolve(
                                 itemData.map(g => {
@@ -227,7 +227,7 @@ export default class LocalDatabase {
                     .getAll(IDBKeyRange.only(storeId));
                 request.onsuccess = event => {
                     const itemData = event.target.result;
-                    this.getAllItems("products")
+                    this.getAllRows("products")
                         .then(products => {
                             resolve(
                                 itemData.map(g => {

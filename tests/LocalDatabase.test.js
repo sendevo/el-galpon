@@ -24,13 +24,13 @@ describe("Database Operations", () => {
             created: 1693683312000,
             modified: 1693683312000
         };
-        await db.addItem(data, "products");
-        const items = await db.getAllItems("products");
+        await db.addRow(data, "products");
+        const items = await db.getAllRows("products");
         expect(items).toHaveLength(1);
     });
 
     it("should retrieve items from 'items'", async () => {
-        const items = await db.getAllItems("items");
+        const items = await db.getAllRows("items");
         expect(Array.isArray(items)).toBe(true);
     });
 

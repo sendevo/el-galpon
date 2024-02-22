@@ -15,7 +15,8 @@ export const OPERATION_TYPES = {
     BUY: 1,
     MOVE: 2,
     SPEND: 3,
-    RETURN: 4
+    RETURN: 4,
+    UNDEFINED: 5
 };
 
 // Model
