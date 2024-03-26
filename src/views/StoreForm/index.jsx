@@ -87,7 +87,7 @@ const View = () => {
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
                         <Typography lineHeight={"1em"} paddingBottom={"15px"}>Básico</Typography>
-                        <Grid container spacing={1}>
+                        <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Input 
                                     label="Nombre*"
@@ -138,7 +138,7 @@ const View = () => {
                 <Grid item xs={12}>
                     <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
                         <Typography lineHeight={"1em"} paddingBottom={"15px"}>Datos de contacto</Typography>
-                        <Grid container spacing={1}>
+                        <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Input 
                                     label="Responsable"

@@ -22,9 +22,7 @@ import { componentsStyles } from "../../themes";
 
 const validOperationType = type => Object.keys(OPERATION_TYPES).includes(type);
 
-const validForm = formData => {
-    return false;
-};
+const validForm = formData => (false);
 
 const View = () => {
 
