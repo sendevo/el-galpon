@@ -11,18 +11,23 @@ const View = () => {
     const db = useDatabase();   
 
     const [searchParams] = useSearchParams();    
-    const [productData, setProductData] = useState();
-    const [storeData, setStoreData] = useState();
-    const [itemsData, setItemsData] = useState([]);
+    const [productList, setProductList] = useState([]);
+    const [storeList, setStoreList] = useState([]);
+    const [items, setItems] = useState([]);
     
     useEffect(() => {
+
+        // Refactor the following into a single method
+
         const productId = parseInt(searchParams.get("productId"));
         if(Boolean(productId)){
             db.getRow(productId, 'products')
                 .then(pData => {
-                    setProductData(pData);
                     db.getStockOfProduct(productId)
-                        .then(setItemsData)
+                        .then(iData => {
+                            setItems(iData);
+                            setProductList([pData]);
+                        })
                         .catch(console.error);
                     })
                 .catch(console.error);
@@ -32,24 +37,40 @@ const View = () => {
         if(Boolean(storeId)){
             db.getRow(storeId, 'stores')
                 .then(sData => {
-                    setStoreData(sData);
                     db.getStockInStore(storeId)
-                        .then(setItemsData)
+                        .then(iData => {
+                            setItems(iData);
+                            setStoreList([sData]);
+                        })
                         .catch(console.error);
                 })
                 .catch(console.error);
         }
 
-        if(!(Boolean(storeId) || Boolean(storeId))){ // Empty filters
+        if(!(Boolean(storeId) || Boolean(storeId))){
             db.getAllRows('items')
+                .then(iData => {
+                    console.log(iData);
+                    const products = iData.reduce((acc, current) => {
+                        // TODO generate list of products data for each item
+                    },[]);
+                    const stores = iData.reduce((acc, current) => {
+                        // TODO generate list of stores data for each item
+                    },[]);
+                    setProductList(products);
+                    setStoreList(stores);
+                });
         }
     }, []);
 
     return (
         <MainView title={"Insumos"}>
-            {productData && <ProductDetails productData={productData}/>}
-            {storeData && <StoreDetails storeData={storeData}/>}
-            <ItemList itemsData={itemsData} productData={productData} storeData={storeData}/>
+            {productList.length === 1 && <ProductDetails productData={productList[0]}/>}
+            {storeList.length === 1 && <StoreDetails storeData={storeList[0]}/>}
+            <ItemList 
+                items={items} 
+                productList={productList} 
+                storeList={storeList}/>
             <ActionsBlock />
         </MainView>
     );

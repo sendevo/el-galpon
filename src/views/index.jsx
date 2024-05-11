@@ -19,7 +19,7 @@ const views = [
     },
     {
         path: "/products-list",
-        homeTitle: "Productos",
+        //homeTitle: "Productos",
         component: <ProductsList />
     },
     {

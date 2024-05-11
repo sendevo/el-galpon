@@ -60,6 +60,10 @@ export default class LocalDatabase {
         });
     }
 
+    getRows(rowIds, table) {
+        debug("Getting multiple items: ",rowIds.toString()," from ", table);
+    }
+
     removeRow(rowId, table) {
         debug("Removing item "+rowId+" from "+table);
         return new Promise((resolve, reject) => {
@@ -117,6 +121,7 @@ export default class LocalDatabase {
 
 
     // Business model specific functions
+    // TODO: combine getStockOfProduct with getStockInStore into getItemData
     getItemData(itemId) {
         return new Promise((resolve, reject) => {
             const itemData = this._db.items.find(it => it.id === itemId);
@@ -156,10 +161,9 @@ export default class LocalDatabase {
             const data = this._db.items
                 .reduce((acc, current) => {
                     if(current.store_id === storeId){
-                        const pIndex = this._db.products.findIndex(prod => prod.id === current.product_id);
                         acc.push({
                             ...current,
-                            productData: this._db.products[pIndex]
+                            productData: this._db.products.find(prod => prod.id === current.product_id)
                         });
                     }
                     return acc;
