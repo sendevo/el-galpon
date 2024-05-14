@@ -15,7 +15,7 @@ import { componentsStyles } from "../../themes";
 import EmptyListSection from "./emptyListSection";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 
-const ItemList = ({items, productList, storeList}) => {
+const ItemList = ({items, showProductCol, showStoreCol}) => {
     const [selected, setSelected] = useState([]);
 
     const handleSelect = itemId => {
@@ -48,8 +48,8 @@ const ItemList = ({items, productList, storeList}) => {
                                             checked={selected.length === items.length} 
                                             onChange={e => handleSelectAll(e.target.checked)} />
                                     </TableCell>
-                                    {storeList.length > 1 && <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>}
-                                    {productList.length > 1 && <TableCell sx={componentsStyles.headerCell}>Producto</TableCell>}
+                                    {showStoreCol && <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>}
+                                    {showProductCol && <TableCell sx={componentsStyles.headerCell}>Producto</TableCell>}
                                     <TableCell sx={componentsStyles.headerCell}>Stock</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Envases</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Vencimiento</TableCell>
@@ -57,15 +57,15 @@ const ItemList = ({items, productList, storeList}) => {
                             </TableHead>
                             <TableBody>
                                 {items.map(item => (
-                                    <TableRow key={item.id}>
+                                    item && <TableRow key={item.id}>
                                         <TableCell sx={componentsStyles.tableCell}>
                                             <Checkbox 
                                                 checked={selected.indexOf(item.id) !== -1} 
                                                 onChange={() => handleSelect(item.id)} />
                                         </TableCell>
-                                        {storeList.length > 1 && <TableCell sx={componentsStyles.tableCell}>{item?.storeData.name || "S/D"}</TableCell>}
-                                        {productList.length > 1 && <TableCell sx={componentsStyles.tableCell}>{item?.productData.name || "S/D"}</TableCell>}
-                                        <TableCell sx={componentsStyles.tableCell}>{item.productData ? item.stock * item.productData.pack_size : item.stock} {item.productData.pack_unit}</TableCell>
+                                        {showStoreCol && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}
+                                        {showProductCol && <TableCell sx={componentsStyles.tableCell}>{item.productData?.name || "S/D"}</TableCell>}
+                                        <TableCell sx={componentsStyles.tableCell}>{item.productData ? item.stock * item?.productData?.pack_size : item.stock} {item.productData?.pack_unit}</TableCell>
                                         <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : 0}</TableCell>
                                         <TableCell sx={componentsStyles.tableCell}>{item.expiration_date ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>
                                     </TableRow>

@@ -18,7 +18,7 @@ Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad
 }
 ```
 
-# Productos (products)
+# Productos/Artículos (products)
 Definen productos y sus principales características. Los productos pueden ser herbicidas, semillas, fertilizantes, materiales de construcción, insumos veterinarios y demás. Algunos productos tienen envases retornables y fecha de vencimiento. Para cada tipo de presentación hay que crear un nuevo producto.  
 ```js
 {

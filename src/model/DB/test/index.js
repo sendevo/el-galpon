@@ -61,7 +61,15 @@ export default class LocalDatabase {
     }
 
     getRows(rowIds, table) {
-        debug("Getting multiple items: ",rowIds.toString()," from ", table);
+        debug("Getting rows from "+table+" with ids:");
+        debug(rowIds);
+        return new Promise((resolve, reject) => {
+            if(isValidTable(table)){
+                resolve(this._db[table].filter(row => rowIds.includes(row.id)));
+            }else{
+                reject({message:"Table not valid."});
+            }
+        });
     }
 
     removeRow(rowId, table) {
@@ -121,20 +129,17 @@ export default class LocalDatabase {
 
 
     // Business model specific functions
-    // TODO: combine getStockOfProduct with getStockInStore into getItemData
-    getItemData(itemId) {
+    getItems(IDs, productId, storeId){
         return new Promise((resolve, reject) => {
-            const itemData = this._db.items.find(it => it.id === itemId);
-            if(itemData){
-                const productData = this._db.products.find(prod => prod.id === itemData.product_id);
-                const storeData = this._db.stores.find(store => store.id === itemData.store_id);
-                resolve({
-                    ...itemData,
-                    productData,
-                    storeData
-                })
+            const items = IDs.length > 1 ? this._db.items.filter(it => IDs.includes(it)) : this._db.items;
+            if(items.length > 0){
+                for(let index = 0; index < items.length; index++){
+                    items[index].productData = this._db.products.find(prod => prod.id === productId || items[index].product_id);
+                    items[index].storeData = this._db.stores.find(store => store.id === storeId || items[index].store_id);
+                }
+                resolve(items);
             }else{
-                reject({message:"Item not found"});
+                reject({message:"No item was found with given IDs"});
             }
         });
     }
