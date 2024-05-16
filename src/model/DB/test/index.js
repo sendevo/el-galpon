@@ -4,8 +4,7 @@ import schema from "../schema.json";
 import { testData } from "./testData";
 
 export const isValidQuery = query => [
-    "getRow",
-    "getAllRows",
+    "query",
     "getPaginatedRows",
     "searchTerm",
     "getStockOfProduct",
@@ -45,29 +44,28 @@ export default class LocalDatabase {
         });
     }
 
-    getRow(rowId, table) {
-        debug("Geting item "+rowId+" from "+table);
-        return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                const item = this._db[table].filter(it => it.id === rowId);
-                if(item.length === 1)
-                    resolve(item[0]);
-                else 
-                    reject({message:`Item with ID ${rowId} not found`});
-            }else{
-                reject({message:"Table not valid."});
-            }
-        });
-    }
-
-    getRows(rowIds, table) {
+    query(table, rowIds = [], filters = {}) {
         debug("Getting rows from "+table+" with ids:");
         debug(rowIds);
+        debug("and filters:");
+        debug(filters);
         return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                resolve(this._db[table].filter(row => rowIds.includes(row.id)));
+            const rows = rowIds.length > 1 ? this._db[table].filter(it => {
+                const condition = Object.keys.reduce((acc, current) => {
+                    return acc && current in it && it[current] === filters[current];
+                }, rowIds.includes(it.id));
+                return condition;
+            }) : this._db[table];
+            if(rows.length > 0){
+                if(table === "items"){
+                    for(let index = 0; index < rows.length; index++){
+                        rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
+                        rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
+                    }
+                }
+                resolve(rows);
             }else{
-                reject({message:"Table not valid."});
+                reject({message:"No item was found with given query"});
             }
         });
     }
@@ -84,17 +82,6 @@ export default class LocalDatabase {
                     reject({message:`Item with ID ${rowId} not found`});
                 }
             }else{  
-                reject({message:"Table not valid."});
-            }
-        });
-    }
-
-    getAllRows(table) {
-        debug("Get all items from "+table);
-        return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                resolve(this._db[table]);
-            }else{
                 reject({message:"Table not valid."});
             }
         });
@@ -129,54 +116,6 @@ export default class LocalDatabase {
 
 
     // Business model specific functions
-    getItems(IDs, productId, storeId){
-        return new Promise((resolve, reject) => {
-            const items = IDs.length > 1 ? this._db.items.filter(it => IDs.includes(it)) : this._db.items;
-            if(items.length > 0){
-                for(let index = 0; index < items.length; index++){
-                    items[index].productData = this._db.products.find(prod => prod.id === productId || items[index].product_id);
-                    items[index].storeData = this._db.stores.find(store => store.id === storeId || items[index].store_id);
-                }
-                resolve(items);
-            }else{
-                reject({message:"No item was found with given IDs"});
-            }
-        });
-    }
-
-    getStockOfProduct(productId) {
-        return new Promise(resolve => {
-            const data = this._db.items
-                .reduce((acc, current) => {
-                    if(current.product_id === productId){
-                        acc.push({
-                            ...current,
-                            storeData: this._db.stores.find(store => store.id === current.store_id)
-                        });
-                    }
-                    return acc;
-                },[]);
-
-            resolve(data || []);
-        });
-    }
-
-    getStockInStore(storeId) {
-        return new Promise(resolve => { 
-            const data = this._db.items
-                .reduce((acc, current) => {
-                    if(current.store_id === storeId){
-                        acc.push({
-                            ...current,
-                            productData: this._db.products.find(prod => prod.id === current.product_id)
-                        });
-                    }
-                    return acc;
-                },[]);
-            resolve(data || []);
-        });
-    }
-
     buyStock(productId, amount, storeId, price, expirationDate) {
         return new Promise((resolve, reject) => {
             

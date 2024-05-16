@@ -4,7 +4,7 @@ import schema from "./schema.json";
 
 export const isValidQuery = query => [
     "getRow",
-    "getAllRows",
+    "query",
     "getPaginatedRows",
     "getStockOfProduct",
     "getStockInStore",
@@ -109,7 +109,7 @@ export default class LocalDatabase {
         });
     }
 
-    getAllRows(table) {
+    query(table) {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
                 this._performTransaction(() => {
@@ -198,7 +198,7 @@ export default class LocalDatabase {
                 request.onsuccess = event => {
                     const itemData = event.target.result;
                     // For each item, add store data
-                    this.getAllRows("stores")
+                    this.query("stores")
                         .then(stores => {
                             resolve(
                                 itemData.map(g => {
@@ -227,7 +227,7 @@ export default class LocalDatabase {
                     .getAll(IDBKeyRange.only(storeId));
                 request.onsuccess = event => {
                     const itemData = event.target.result;
-                    this.getAllRows("products")
+                    this.query("products")
                         .then(products => {
                             resolve(
                                 itemData.map(g => {

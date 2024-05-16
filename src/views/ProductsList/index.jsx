@@ -37,7 +37,7 @@ const View = () => {
     const confirm = useConfirm();
 
     useEffect(() => {
-        db.getAllRows("products")
+        db.query("products")
             .then(setData)
             .catch(console.error);
     }, []);
@@ -74,7 +74,7 @@ const View = () => {
     const handleStock = () => {
         if(selected.length === 1){
             const productId = selected[0];
-            navigate(`/stock?productId=${productId}`);
+            navigate(`/stock?product_id=${productId}`);
         }else{
             debug("Multpiple selection for stock", "error");
             setSelected([]);

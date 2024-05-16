@@ -7,33 +7,39 @@ import StoreDetails from "./storeDetails";
 import ItemList from "./itemList";
 import ActionsBlock from "./actionsBlock";
 
+const itemAttrs = ["store_id", "product_id", "stock", "packs", "expiration_date"];
+
 const View = () => {
     const db = useDatabase();   
 
     const [searchParams] = useSearchParams();    
     const [items, setItems] = useState([]);
-    const [showProduct, setShowProduct] = useState(false);
-    const [showStore, setShowStore] = useState(false);
+    const [ignoredCols, setIgnoredCols] = useState([]);
     
     useEffect(() => {
-        const productId = parseInt(searchParams.get("productId"));
-        const storeId = parseInt(searchParams.get("storeId"));
-        db.getItems([], productId, storeId)
+        let filters = {};
+        let ignored = [];
+        for(let index = 0; index < itemAttrs.length; index++){
+            const paramValue = parseInt(searchParams.get(itemAttrs[index]));
+            if(Boolean(paramValue)){
+                filters[itemAttrs[index]] = paramValue;
+                ignored.push(itemAttrs[index]);
+            }
+        }
+        db.query("items", [], filters)
             .then(iData => {
                 setItems(iData);
-                setShowProduct(Boolean(productId));
-                setShowStore(Boolean(storeId));
+                setIgnoredCols(ignored);
             });
     }, []);
 
     return (
         <MainView title={"Insumos"}>
-            {showProduct && <ProductDetails productData={items[0]?.productData}/>}
-            {showStore && <StoreDetails storeData={items[0]?.storeData}/>}
+            {ignoredCols.includes("product_id") && items.length > 0 && <ProductDetails productData={items[0]?.productData}/>}
+            {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
             <ItemList 
                 items={items} 
-                showProductCol={!showProduct}
-                showStoreCol={!showStore}/>
+                ignoredCols={ignoredCols}/>
             <ActionsBlock />
         </MainView>
     );
