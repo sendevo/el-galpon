@@ -13,14 +13,15 @@ export const DB_NAME = "elgalponDB";
 export const DB_VERSION = 1;
 export const OPERATION_TYPES = {
     BUY: 1,
-    MOVE: 2,
+    MOVE_STOCK: 2,
     SPEND: 3,
-    RETURN: 4,
-    UNDEFINED: 5
+    MOVE_PACK: 4,
+    RETURN: 5,
+    UNDEFINED: 6
 };
 
 // Model
-export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u"];
+export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u", "semillas"];
 export const CATEGORIES = ["Semillas", "Herbicidas", "Insecticidas", "Fungicidas",  "Inoculantes", "Coadyuvantes", "Fertilizantes", "Sanidad animal", "Nutrición animal", "Materiales de construcción", "Repuestos", "Combustible", "Herramientas", "Silobolsas", "Neumáticos", "Lubricantes", "Protección personal", "Otra"];
 
 // Moment
