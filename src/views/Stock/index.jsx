@@ -10,6 +10,35 @@ import ActionsBlock from "./actionsBlock";
 
 const itemAttrs = ["store_id", "product_id", "stock", "packs", "expiration_date"];
 
+const getItem = (items,id) => items.find(item => item.id === id);
+
+const isOperationAllowed = (operation, items, selected) => {
+    const selectedItem = getItem(items, selected[0]);
+    switch(operation){
+        case "BUY":
+            return selected.every(id => {
+                const item = getItem(items,id);
+                return item.product_id === selectedItem?.product_id && item.store_id === selectedItem?.store_id;
+            });
+        case "SPEND":
+            return selected.length > 0 && selected.every(id => getItem(items,id).stock > 0);
+        case "MOVE_STOCK":
+            return selected.length > 0 && selected.every(id => {
+                const item = getItem(items,id);
+                return item.stock > 0 && item.store_id === selectedItem.store_id;
+            });
+        case "MOVE_PACKS":
+            return selected.length > 0 && selected.every(id => {
+                const item = getItem(items,id);
+                return item.packs > 0 && item.store_id === selectedItem.store_id;
+            });
+        case "RETURN_PACKS":
+            return selected.length > 0 && selected.every(id => getItem(items,id).packs > 0);
+        default:
+            return false;
+    }
+};
+
 const View = () => {
     const db = useDatabase();   
     const navigate = useNavigate();
@@ -19,14 +48,11 @@ const View = () => {
     const [ignoredCols, setIgnoredCols] = useState([]);
     const [selected, setSelected] = useState([]);
 
-    const disabledButtons = { // TODO: improve logic here
-        buy: false,
-        moveStock: selected.length === 0,
-        movePacks: selected.length === 0,
-        spend: selected.length === 0,
-        return: selected.length === 0
-    };
-    
+    const enabledOperations = Object.keys(OPERATION_TYPES).reduce((acc, key) => {
+        acc[key] = isOperationAllowed(key, items, selected);
+        return acc;
+    }, {});
+
     useEffect(() => {
         let filters = {};
         let ignored = [];
@@ -45,11 +71,14 @@ const View = () => {
     }, []);
 
     const handleOperation = operationType => {
-        if(selected.length > 0){
-            navigate(`/operations-form?type=${operationType}?items=${selected.join("_")}`);
-        }else{
-            console.error("No item selected");
+        if(enabledOperations[operationType]){
+            const urlItemList = selected.length > 0 ? `&items=${selected.join("_")}` : "";
+            const url = `/operations-form?type=${operationType}${urlItemList}`;
+            console.log(url);
+            navigate(url);
         }
+        else
+            console.error("Operation not allowed");
     };
 
     return (
@@ -65,12 +94,12 @@ const View = () => {
                 setSelected={setSelected}/>
             
             <ActionsBlock
-                disabledButtons={disabledButtons}
-                onBuy={() => handleOperation(OPERATION_TYPES.BUY)}
-                onMoveStock={() => handleOperation(OPERATION_TYPES.MOVE_STOCK)}
-                onSpend={() => handleOperation(OPERATION_TYPES.SPEND)}
-                onMovePack={() => handleOperation(OPERATION_TYPES.MOVE_PACK)}
-                onReturn={() => handleOperation(OPERATION_TYPES.RETURN)}/>
+                enabledOperations={enabledOperations}
+                onBuy={() => handleOperation('BUY')}
+                onMoveStock={() => handleOperation('STOCK')}
+                onSpend={() => handleOperation('SPEND')}
+                onMovePack={() => handleOperation('PACKS')}
+                onReturn={() => handleOperation('RETURN_PACKS')}/>
         </MainView>
     );
 };

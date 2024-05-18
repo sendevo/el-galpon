@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { componentsStyles } from "../../themes";
 
-const ActionsBlock = ({disabledButtons, onBuy, onMoveStock, onSpend, onMovePack, onReturn}) => (
+const ActionsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePack, onReturn}) => (
     <Grid container direction={"column"}>
         <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
             <Grid container sx={{mb:1}} direction={"column"}>
@@ -19,7 +19,7 @@ const ActionsBlock = ({disabledButtons, onBuy, onMoveStock, onSpend, onMovePack,
                 justifyContent="space-around">
                 <Grid item>
                     <Button 
-                        disabled={disabledButtons.buy}
+                        disabled={!enabledOperations.BUY}
                         color="green"
                         variant="contained"
                         onClick={onBuy}>
@@ -28,7 +28,7 @@ const ActionsBlock = ({disabledButtons, onBuy, onMoveStock, onSpend, onMovePack,
                 </Grid>
                 <Grid item>
                     <Button
-                        disabled={disabledButtons.moveStock}
+                        disabled={!enabledOperations.MOVE_STOCK}
                         color="secondary"
                         variant="contained"
                         onClick={onMoveStock}>
@@ -37,7 +37,7 @@ const ActionsBlock = ({disabledButtons, onBuy, onMoveStock, onSpend, onMovePack,
                 </Grid>
                 <Grid item>
                     <Button     
-                        disabled={disabledButtons.spend}
+                        disabled={!enabledOperations.SPEND}
                         color="darkRed"
                         variant="contained"
                         onClick={onSpend}>
@@ -57,7 +57,7 @@ const ActionsBlock = ({disabledButtons, onBuy, onMoveStock, onSpend, onMovePack,
                 justifyContent="space-around">
                 <Grid item>
                     <Button
-                        disabled={disabledButtons.movePacks}
+                        disabled={!enabledOperations.MOVE_PACKS}
                         color="secondary"
                         variant="contained"
                         onClick={onMovePack}>
@@ -66,7 +66,7 @@ const ActionsBlock = ({disabledButtons, onBuy, onMoveStock, onSpend, onMovePack,
                 </Grid>
                 <Grid item>
                     <Button     
-                        disabled={disabledButtons.return}
+                        disabled={!enabledOperations.RETURN_PACKS}
                         color="darkRed"
                         variant="contained"
                         onClick={onReturn}>

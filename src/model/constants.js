@@ -15,8 +15,8 @@ export const OPERATION_TYPES = {
     BUY: 1,
     MOVE_STOCK: 2,
     SPEND: 3,
-    MOVE_PACK: 4,
-    RETURN: 5,
+    MOVE_PACKS: 4,
+    RETURN_PACKS: 5,
     UNDEFINED: 6
 };
 

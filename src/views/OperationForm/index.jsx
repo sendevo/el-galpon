@@ -26,6 +26,9 @@ const validForm = formData => (false);
 
 const View = () => {
 
+    console.log("Hola");
+    return;
+
     const navigate = useNavigate();
     const db = useDatabase();
     const [searchParams] = useSearchParams();    

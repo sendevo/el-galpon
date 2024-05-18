@@ -148,7 +148,7 @@ export default class LocalDatabase {
 
             const operationData = {
                 timestamp: Date.now(),
-                type: type === "stock" ? OPERATION_TYPES.MOVE_STOCK : OPERATION_TYPES.MOVE_PACK,
+                type: type === "stock" ? OPERATION_TYPES.MOVE_STOCK : OPERATION_TYPES.MOVE_PACKS,
                 item_id: itemId,
                 store_from_id: itemData.store_id,
                 store_to_id: toStoreId,
@@ -234,7 +234,7 @@ export default class LocalDatabase {
                 .then(() => {
                     const operationData = {
                         timestamp: Date.now(),
-                        type: OPERATION_TYPES.RETURN,
+                        type: OPERATION_TYPES.RETURN_PACKS,
                         item_id: itemId,
                         store_from_id: itemData.store_id,
                         price: 0,

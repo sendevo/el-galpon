@@ -58,7 +58,7 @@ Los movimientos tienen fechas editables pero el resto son datos inmutables, perm
 {
     id: 0, // auto increment
     timestamp: 0,
-    type: "", // keywords: BUY, MOVE, SPEND, RETURN
+    type: "", // keywords: BUY, MOVE_STOCK, SPEND, MOVE_PACKS, RETURN_PACKS
     item_id: 0,
     store_from_id: 0 || null,
     store_to_id: 0 || null,
