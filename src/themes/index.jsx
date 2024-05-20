@@ -30,11 +30,12 @@ const theme = createTheme({
     },
     palette: {
         mode: "light",
-        primary: {main: "#088A29", contrastText: "#FFFFFF"},
+        primary: { main: "#0066FF", contrastText: "#FFFFFF" },
         secondary: { main: "#806034", contrastText: "#FFFFFF" },
         red: {main: "#DD0000", contrastText: "#FFFFFF"},
         darkRed: {main:"#8A0808", contrastText: "#FFFFFF"},
-        green: {main: "#007700", contrastText: "#FFFFFF"}
+        green: {main: "#007700", contrastText: "#FFFFFF"},
+        darkGreen: {main: "#088A29", contrastText: "#FFFFFF"}
     }
 });
 

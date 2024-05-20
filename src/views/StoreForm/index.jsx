@@ -30,10 +30,14 @@ const View = () => {
     useEffect(() => {
         const id = searchParams.get("id");
         if(Boolean(id)){ // Editing form
-            db.getRow(parseInt(id), "stores")
+            db.query("stores",[parseInt(id)])
                 .then(data => {
-                    setFormData(data);
-                    setViewTitle("Edición de depósito");
+                    if(data.length === 1){
+                        setFormData(data[0]);
+                        setViewTitle("Edición de depósito");
+                    }else{
+                        console.error("Multiple items found with the same id");
+                    }
                 })
                 .catch(console.error);
         }else{
@@ -45,12 +49,11 @@ const View = () => {
         if(validateForm(formData)){
             debug(formData);
             db.addRow(formData,"stores")
-                .then(()=>{
+                .then(id => {
                     if(formData.id){ // Editing
-                        debug("Store item updated successfully");
                         toast("Datos actualizados", "success", 2000);
                     }else{ // Create new
-                        debug("New store item created successfully");
+                        debug("Item id = " + id);
                         toast("Depósito creado", "success", 2000);
                     }
                     navigate(-1);

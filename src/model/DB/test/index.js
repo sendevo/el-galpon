@@ -19,11 +19,12 @@ export default class LocalDatabase {
     constructor() {
         this.type = "testing";
         this._db = testData;
-        this.lastId = 0;
+        this.lastId = 0; // First id will be 1
     }
 
     getNewId() {
-        return this.lastId++;
+        this.lastId++;
+        return this.lastId;
     }
 
     addRow(data, table) {
@@ -32,12 +33,13 @@ export default class LocalDatabase {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
                 const index = this._db[table].findIndex(it => it.id === data.id);
-                if(index < 0){
+                if(index < 0){ // If not found new item  
                     data.id = this.getNewId();
                     this._db[table].push(data);
-                }else
+                }else{ // If found, update item
                     this._db[table][index] = data;
-                resolve();
+                }
+                resolve(data.id);
             }else{
                 reject({message:"Table not valid."});
             }
@@ -49,11 +51,11 @@ export default class LocalDatabase {
             const rows = this._db[table].filter(it => {
                 const condition = Object.keys(filters).reduce((acc, current) => {
                     return acc && current in it && it[current] === filters[current];
-                }, rowIds.length > 1 ? rowIds.includes(it.id) : true);
+                }, rowIds.length > 0 ? rowIds.includes(it.id) : true);
                 return condition;
             });
             if(rows.length > 0){
-                if(table === "items"){
+                if(table === "items"){ // For items, add product and store data
                     for(let index = 0; index < rows.length; index++){
                         rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
                         rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);

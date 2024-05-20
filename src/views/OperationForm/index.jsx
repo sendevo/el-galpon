@@ -48,8 +48,8 @@ const View = () => {
                 // Buying operation requires product to buy
                 const productId = searchParams.get("productId");
                 if(Boolean(productId)){
-                    db.getRow(parseInt(productId), 'products')
-                        .then(data => {
+                    db.query('products', [parseInt(productId)], {})
+                        .then(data => {parseInt(productId)
                             setItemData(prevData => ({
                                 ...prevData,
                                 productData: data

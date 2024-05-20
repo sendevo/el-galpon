@@ -7,6 +7,8 @@ import ProductDetails from "./productDetails";
 import StoreDetails from "./storeDetails";
 import ItemList from "./itemList";
 import ActionsBlock from "./actionsBlock";
+import EmptyListSection from "./emptyListSection";
+import iconEmpty from "../../assets/icons/empty_folder.png";
 
 const itemAttrs = ["store_id", "product_id", "stock", "packs", "expiration_date"];
 
@@ -87,19 +89,24 @@ const View = () => {
             
             {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
             
-            <ItemList 
-                items={items} 
-                ignoredCols={ignoredCols}
-                selected={selected}
-                setSelected={setSelected}/>
-            
-            <ActionsBlock
-                enabledOperations={enabledOperations}
-                onBuy={() => handleOperation('BUY')}
-                onMoveStock={() => handleOperation('STOCK')}
-                onSpend={() => handleOperation('SPEND')}
-                onMovePack={() => handleOperation('PACKS')}
-                onReturn={() => handleOperation('RETURN_PACKS')}/>
+            {items.length > 0 ? 
+                <>
+                    <ItemList 
+                        items={items} 
+                        ignoredCols={ignoredCols}
+                        selected={selected}
+                        setSelected={setSelected}/>
+                    <ActionsBlock
+                        enabledOperations={enabledOperations}
+                        onBuy={() => handleOperation('BUY')}
+                        onMoveStock={() => handleOperation('STOCK')}
+                        onSpend={() => handleOperation('SPEND')}
+                        onMovePack={() => handleOperation('PACKS')}
+                        onReturn={() => handleOperation('RETURN_PACKS')}/>
+                </>
+                :
+                <EmptyListSection message={"La lista de insumos está vacía"} icon={iconEmpty} />
+            }
         </MainView>
     );
 };
