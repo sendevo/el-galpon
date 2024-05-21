@@ -89,7 +89,7 @@ const View = () => {
                 const len = selected.length;
                 Promise.all(job)
                     .then(() => {
-                        db.getAllRows("stores")
+                        db.query("stores")
                             .then(updatedData => {
                                 setData(updatedData);
                                 setSelected([]);

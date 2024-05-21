@@ -8,11 +8,10 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 
 
 ## Stories
-  - [x] Crear, editar y eliminar productos y depósitos.  
+  - [ ] Crear, editar y eliminar productos y depósitos.  
+  - [ ] Consultar insumos de cada producto, listado por producto o por depósito.  
   - [ ] Registrar movimiento (compra, venta, uso, devolución) de productos entre depósitos.  
   - [ ] Consultar historial de movimientos.  
-  - [ ] Cuando se registra un movimiento, se actualiza el stock de insumos.  
-  - [ ] Consultar insumos de cada producto, listado por producto o por depósito.  
   - [ ] Se debe mostrar notificaciones de productos pronto a vencerse.  
 
 ## Backlog versión 1.0.0 (alpha)  

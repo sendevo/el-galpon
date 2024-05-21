@@ -3,8 +3,17 @@ import { UIUtilsDispatchContext } from "../../context/UIFeedback";
 
 const usePrompt = () => {
     const dispatch = useContext(UIUtilsDispatchContext);
-  
-    return (title, message, inputType, inputProps, onConfirm = val=>console.log(val), onCancel = ()=>{}) => {
+    return opts => {
+        const {
+            title, 
+            message, 
+            inputType,
+            inputProps,
+            onConfirm, 
+            showCancelButton,
+            onCancel
+        } = opts;
+
         dispatch({
             type: 'SHOW_PROMPT',
             payload: {
@@ -13,13 +22,16 @@ const usePrompt = () => {
                 inputType,
                 inputProps,
                 onConfirm: val => {
-                    onConfirm(val);
+                    if(onConfirm)
+                        onConfirm(val);
                     dispatch({
                         type: 'HIDE_PROMPT'
                     });
                 },
+                showCancelButton,
                 onCancel: () => {
-                    onCancel();
+                    if(onCancel) 
+                        onCancel();
                     dispatch({
                         type: 'HIDE_PROMPT'
                     });

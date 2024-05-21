@@ -60,6 +60,47 @@ export const colorMapGenerator = (values, hue, satFrom = 0.1, satTo = 0.9, trans
 
 export const latLng2GoogleMap = (lat, lng) => `http://www.google.com/maps/place/${lat},${lng}`;
 
+export const googleMap2LatLng = url => {
+    const regex = /\/@(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const match = url.match(regex);
+    if (match) {
+        const latitude = parseFloat(match[1]);
+        const longitude = parseFloat(match[2]);
+        return { latitude, longitude };
+    }
+    return null;
+};
+
+export const dms2LatLng = (dms) => {
+    const dmsRegex = /(\d+)°(\d+)'([\d.]+)"([NS])\s+(\d+)°(\d+)'([\d.]+)"([EW])/;
+                     
+    const match = dms.match(dmsRegex);
+
+    if (!match)
+        return null;
+
+    const latDegrees = parseInt(match[1]);
+    const latMinutes = parseInt(match[2]);
+    const latSeconds = parseFloat(match[3]);
+    const latDirection = match[4];
+
+    const lonDegrees = parseInt(match[5]);
+    const lonMinutes = parseInt(match[6]);
+    const lonSeconds = parseFloat(match[7]);
+    const lonDirection = match[8];
+
+    let latitude = latDegrees + (latMinutes / 60) + (latSeconds / 3600);
+    let longitude = lonDegrees + (lonMinutes / 60) + (lonSeconds / 3600);
+
+    // Apply negative sign for south and west coordinates
+    if (latDirection === 'S')
+        latitude = -latitude;
+    if (lonDirection === 'W')
+        longitude = -longitude;
+
+    return { latitude, longitude };
+};
+
 export const getRandomElement = arr => arr[Math.floor(Math.random() * arr.length)];
 
 export const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);

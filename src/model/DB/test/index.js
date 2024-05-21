@@ -27,7 +27,7 @@ export default class LocalDatabase {
         return this.lastId;
     }
 
-    addRow(data, table) {
+    insert(data, table) {
         debug("Adding item to "+table);
         debug(data);
         return new Promise((resolve, reject) => {
@@ -46,7 +46,7 @@ export default class LocalDatabase {
         });
     }
 
-    query(table, rowIds = [], filters = {}) {
+    query(table, rowIds = [], filters = {}, page = null, count = null) {
         return new Promise((resolve, reject) => {
             const rows = this._db[table].filter(it => {
                 const condition = Object.keys(filters).reduce((acc, current) => {
@@ -60,6 +60,12 @@ export default class LocalDatabase {
                         rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
                         rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
                     }
+                }
+                if(page && count){
+                    const startIndex = (page - 1) * count;
+                    const endIndex = startIndex + count;
+                    const paginatedItems = rows.slice(startIndex, endIndex);
+                    resolve(paginatedItems);
                 }
                 resolve(rows);
             }else{
@@ -80,20 +86,6 @@ export default class LocalDatabase {
                     reject({message:`Item with ID ${rowId} not found`});
                 }
             }else{  
-                reject({message:"Table not valid."});
-            }
-        });
-    }
-
-    getPaginatedRows(table, page, count) {
-        return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                const startIndex = (page - 1) * count;
-                const endIndex = startIndex + count;
-                const sectionItems = this._db[table];
-                const paginatedItems = sectionItems.slice(startIndex, endIndex);
-                resolve(paginatedItems);
-            }else{
                 reject({message:"Table not valid."});
             }
         });
@@ -161,9 +153,9 @@ export default class LocalDatabase {
 
             if(amount === itemData[type]){ // Move all stock to another store
                 itemData.store_id = toStoreId;
-                this.addRow(itemData, "items")
+                this.insert(itemData, "items")
                     .then(() => {
-                        this.addRow(operationData, "operations")
+                        this.insert(operationData, "operations")
                             .then(resolve)
                             .catch(reject);
                     })
@@ -178,12 +170,12 @@ export default class LocalDatabase {
                     store_id: toStoreId,
                     [type]: amount
                 };
-                this.addRow(newItemData, "items")
+                this.insert(newItemData, "items")
                     .then(() => { // Update amount of remaining
                         itemData[type] -= amount;
-                        this.addRow(itemData, "items")
+                        this.insert(itemData, "items")
                             .then(() => {
-                                this.addRow(operationData, "operations")
+                                this.insert(operationData, "operations")
                                     .then(resolve)
                                     .catch(reject);
                             })
@@ -232,7 +224,7 @@ export default class LocalDatabase {
                 itemData.packs += amount;
 
             // Update database
-            this.addRow(itemData, "items")
+            this.insert(itemData, "items")
                 .then(() => {
                     const operationData = {
                         timestamp: Date.now(),
@@ -243,7 +235,7 @@ export default class LocalDatabase {
                         stock_amount: type === "stock" ? amount : null,
                         pack_amount: type === "packs" ? amount : null
                     };
-                    this.addRow(operationData, "operations")
+                    this.insert(operationData, "operations")
                         .then(resolve)
                         .catch(reject);
                 })
@@ -291,9 +283,9 @@ export default class LocalDatabase {
                 pack_amount: packAmount 
             };
 
-            this.addRow(stockData, "items")
+            this.insert(stockData, "items")
                 .then(() => { // Register operation
-                    this.addRow(operationData, "operations")
+                    this.insert(operationData, "operations")
                         .then(resolve)
                         .catch(reject);
                 })

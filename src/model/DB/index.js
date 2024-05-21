@@ -54,7 +54,7 @@ export default class LocalDatabase {
             this.onReady.push(callback); 
     }
 
-    addRow(data, table) {
+    insert(data, table) {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
                 this._performTransaction( () => {

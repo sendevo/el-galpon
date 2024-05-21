@@ -25,6 +25,7 @@ prompt: {
         unit: ""
     },
     onConfirm: val=>console.log(val),
+    showCancelButton: true,
     onCancel: ()=>{}
 }
 */
@@ -86,7 +87,7 @@ export const reducer = (prevState, action) => {
             };
         }
         case 'SHOW_PROMPT': {
-            const {title, message, inputType, inputProps, onConfirm, onCancel} = action.payload;
+            const {title, message, inputType, inputProps, onConfirm, showCancelButton, onCancel} = action.payload;
             return {
                 ...prevState,
                 prompt: {
@@ -96,6 +97,7 @@ export const reducer = (prevState, action) => {
                     inputType,
                     inputProps,
                     onConfirm,
+                    showCancelButton,
                     onCancel
                 }
             };

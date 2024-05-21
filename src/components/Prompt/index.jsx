@@ -11,7 +11,18 @@ import {
 import Input from '../Inputs/Input';
 import Select from '../Inputs/Select';
 
-const Prompt = ({open, title, message, inputType, inputProps, onConfirm, onCancel}) => {
+const Prompt = (props) => {
+
+    const {
+        open, 
+        title, 
+        message, 
+        inputType, 
+        inputProps, 
+        onConfirm, 
+        showCancelButton,
+        onCancel
+    } = props;
 
     const [value, setValue] = useState("");
 
@@ -20,11 +31,22 @@ const Prompt = ({open, title, message, inputType, inputProps, onConfirm, onCance
         setValue(""); // Reset the value
     };
 
+    const handleClose = () => {
+        setValue(""); // Reset the value
+        onCancel && onCancel();
+    };
+
     return (
         <Dialog        
-            BackdropProps={{sx:{backdropFilter: "blur(2px)"}}}
+            slotProps={
+                {
+                    backdrop:{
+                        sx:{backdropFilter: "blur(2px)"}
+                    }
+                }
+            }
             open={open}
-            onClose={onCancel}>
+            onClose={handleClose}>
             <DialogTitle>
                 {title}
             </DialogTitle>
@@ -48,7 +70,7 @@ const Prompt = ({open, title, message, inputType, inputProps, onConfirm, onCance
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>Cancelar</Button>
+                {showCancelButton && <Button onClick={onCancel}>Cancelar</Button>}
                 <Button onClick={handleConfirm} autoFocus>Aceptar</Button>
             </DialogActions>
         </Dialog>
