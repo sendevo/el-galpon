@@ -26,6 +26,27 @@ import { FaInfoCircle } from "react-icons/fa";
 
 const validateForm = formData => Boolean(formData.name && formData.lat && formData.lng);
 
+const getLatLong = locationInput => { // Get latitude and longitude from location input
+    const result = googleMap2LatLng(locationInput) || dms2LatLng(locationInput);
+    if(result){ // Google map url link
+        return {
+            lat: result?.latitude,
+            lng: result?.longitude
+        };
+    }
+    
+    const values = locationInput.split(",");
+    if(values.length === 2 && !isNaN(values[0]) && !isNaN(values[1])){
+        return {
+            lat: values[0],
+            lng: values[1]
+        };
+    }    
+
+    return null;
+}
+
+
 const View = () => {
 
     const [searchParams] = useSearchParams();    
@@ -45,8 +66,11 @@ const View = () => {
             db.query("stores",[parseInt(id)])
                 .then(data => {
                     if(data.length === 1){
-                        setFormData(data[0]);
                         setViewTitle("Edición de depósito");
+                        setFormData({
+                            ...data[0],
+                            gmLink: latLng2GoogleMap(data[0]?.lat, data[0]?.lng)
+                        });
                     }else{
                         console.error("Multiple items found with the same id");
                     }
@@ -79,8 +103,7 @@ const View = () => {
 
     const handleInputChange = event => {
         const {name, value} = event.target;
-
-        if(name.includes("contact_")){
+        if(name.includes("contact_")){ // Contact fields are nested
             const contactField = name.replace("contact_", "");
             setFormData({
                 ...formData,
@@ -92,57 +115,32 @@ const View = () => {
             return;
         }
 
-        if(name === "lat" || name === "lng"){
+        if(name === "lat" || name === "lng"){ // For lat and lng fields, update google maps link
             if(formData.lat && formData.lng){
-                const gglLnk = latLng2GoogleMap(formData.lat, formData.lng);
-                console.log(gglLnk);
                 setFormData({
                     ...formData,
-                    gglLnk,
+                    gmLink: latLng2GoogleMap(formData.lat, formData.lng),
                     [name]: value
                 });
                 return;
             }
         }
 
-        if(name === "gglLnk"){
-            const result = googleMap2LatLng(value);
-            if(result){ // Google map url link
+        if(name === "gmLink"){ // For google maps link, update lat and lng fields
+            const result = getLatLong(value);
+            console.log(result);
+            if(result){
                 setFormData({
                     ...formData,
-                    lat: result?.latitude,
-                    lng: result?.longitude,
-                    gglLnk: value
+                    gmLink: value,
+                    lat: result.lat,
+                    lng: result.lng
                 });
                 return;
-            }else{ // Value is comma separated
-                const values = value.split(",");
-                if(values.length === 2){
-                    setFormData({
-                        ...formData,
-                        lat: values[0],
-                        lng: values[1],
-                        gglLnk: value
-                    });
-                    return;
-                }else{ // Value is in DMS format
-                    const result = dms2LatLng(value);
-                    if(result){
-                        setFormData({
-                            ...formData,
-                            lat: result?.latitude,
-                            lng: result?.longitude,
-                            gglLnk: value
-                        });
-                        return;
-                    }else{
-                        console.error("Invalid value for lat/lng");
-                    }
-                }
             }
-
         }
 
+        // For other fields
         setFormData({
             ...formData,
             [name]: value
@@ -219,9 +217,9 @@ const View = () => {
                         <Box sx={{mt:1}}>
                             <Input 
                                 label="Ubicación"
-                                name="gglLnk"
+                                name="gmLink"
                                 type="text"
-                                value={formData.gglLnk || ""}
+                                value={formData.gmLink || ""}
                                 onChange={handleInputChange}/>
                         </Box>
                     </Paper>

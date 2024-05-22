@@ -61,14 +61,24 @@ export const colorMapGenerator = (values, hue, satFrom = 0.1, satTo = 0.9, trans
 export const latLng2GoogleMap = (lat, lng) => `http://www.google.com/maps/place/${lat},${lng}`;
 
 export const googleMap2LatLng = url => {
+    // Example 1 https://www.google.com.ar/maps/@-38.7919835,-62.1916723,9.88z?entry=ttu
     const regex = /\/@(-?\d+\.\d+),(-?\d+\.\d+)/;
     const match = url.match(regex);
+    let latitude, longitude;
     if (match) {
-        const latitude = parseFloat(match[1]);
-        const longitude = parseFloat(match[2]);
-        return { latitude, longitude };
+        latitude = parseFloat(match[1]);
+        longitude = parseFloat(match[2]);
     }
-    return null;
+
+    // Example 2 http://www.google.com/maps/place/-39.363867,-62.685075
+    const regex2 = /\/place\/(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const match2 = url.match(regex2);
+    if (match2) {
+        latitude = parseFloat(match2[1]);
+        longitude = parseFloat(match2[2]);
+    }
+
+    return (latitude && longitude) ? { latitude, longitude } : null;
 };
 
 export const dms2LatLng = (dms) => {
