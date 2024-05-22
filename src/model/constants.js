@@ -19,6 +19,7 @@ export const OPERATION_TYPES = {
     RETURN_PACKS: 5,
     UNDEFINED: 6
 };
+export const validOperationType = type => Object.keys(OPERATION_TYPES).includes(type);
 
 // Model
 export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u", "semillas"];

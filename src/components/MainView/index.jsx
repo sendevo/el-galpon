@@ -6,7 +6,6 @@ import classes from './style.module.css';
 const MainView = ({title, background, children}) => {
     
     const navigate = useNavigate();        
-    const onGoBack = () => navigate(-1);
 
     return (
         <Box>
@@ -19,7 +18,7 @@ const MainView = ({title, background, children}) => {
                         <span 
                             className={classes.BackButton}
                             title="Volver"
-                            onClick={onGoBack}>
+                            onClick={() => navigate(-1)}>
                             <FaArrowLeft />
                         </span>
                         {title}

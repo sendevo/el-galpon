@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { 
     Grid, 
     Button, 
@@ -21,6 +21,7 @@ import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
+import { validOperationType } from "../../model/constants";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import iconEmpty from "../../assets/icons/empty_folder.png";
@@ -28,10 +29,15 @@ import iconEmpty from "../../assets/icons/empty_folder.png";
 
 const View = () => {
 
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    
     const db = useDatabase();   
+    
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
+
+    const opType = searchParams.get("op-type");
     
     const toast = useToast();
     const confirm = useConfirm();
@@ -60,6 +66,17 @@ const View = () => {
     };
 
     const handleNew = () => navigate("/product-form");
+
+    const handleBuy = () => {
+        if(selected.length === 1){
+            const productId = selected[0];
+            navigate(`/operation-form?type=BUY&itemId=${productId}`);
+        }else{
+            debug("Multpiple selection for buy", "error");
+            setSelected([]);
+        }
+    };
+        
 
     const handleEdit = () => {
         if(selected.length === 1){
@@ -178,8 +195,9 @@ const View = () => {
                                 <Button 
                                     color="green"
                                     variant="contained"
-                                    onClick={handleNew}>
-                                    Nuevo
+                                    disabled={selected.length !== 1}
+                                    onClick={handleBuy}>
+                                    Comprar
                                 </Button>
                             </Grid>
                             <Grid item>

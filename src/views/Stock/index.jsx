@@ -74,9 +74,9 @@ const View = () => {
 
     const handleOperation = operationType => {
         if(enabledOperations[operationType]){
+            const view = operationType === "BUY" ? "products-list" : "operation-form";
             const urlItemList = selected.length > 0 ? `&items=${selected.join("_")}` : "";
-            const url = `/operations-form?type=${operationType}${urlItemList}`;
-            console.log(url);
+            const url = `/${view}?type=${operationType}${urlItemList}`;
             navigate(url);
         }
         else

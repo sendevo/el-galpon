@@ -16,51 +16,28 @@ import {
     Switch
 } from "../../components/Inputs";
 import { debug, categories2Select } from "../../model/utils";
-import { UNITS, CATEGORIES, OPERATION_TYPES } from "../../model/constants";
+import { UNITS, CATEGORIES, validOperationType } from "../../model/constants";
 import { componentsStyles } from "../../themes";
-
-
-const validOperationType = type => Object.keys(OPERATION_TYPES).includes(type);
 
 const validForm = formData => (false);
 
 const View = () => {
 
-    console.log("Hola");
-    return;
-
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    
     const db = useDatabase();
-    const [searchParams] = useSearchParams();    
-    const [viewTitle, setViewTitle] = useState("Movimientos");
-    const [formData, setFormData] = useState({created: Date.now()});
-    const [itemData, setItemData] = useState({
-        productData: null,
-        storeData: null
-    });
-    const [operationType, setOperationType] = useState(OPERATION_TYPES.UNDEFINED);
+        
+    const [viewTitle, setViewTitle] = useState("Nuevo movimiento");
+    const [formData, setFormData] = useState({});
+    
     const toast = useToast();
 
     useEffect(() => {
-        const opType = searchParams.get("operationType");
+        const opType = searchParams.get("type");
         if(validOperationType(opType)){
-            if(opType === OPERATION_TYPES.BUY){ 
-                // Buying operation requires product to buy
-                const productId = searchParams.get("productId");
-                if(Boolean(productId)){
-                    db.query('products', [parseInt(productId)], {})
-                        .then(data => {parseInt(productId)
-                            setItemData(prevData => ({
-                                ...prevData,
-                                productData: data
-                            }));
-                            setViewTitle("Compra de insumo");
-                        })
-                        .catch(console.error);
-                }else{ // No product id provided
-                    console.error("Product not specified for operation BUY");
-                    navigate(-1);
-                }
+            if(opType === "BUY"){ 
+                console.log("buy");
             }else{ 
                 // Other operations require item data (already in stock)
                 const itemId = searchParams.get("itemId");
@@ -73,7 +50,6 @@ const View = () => {
                     navigate(-1);
                 }
             }
-            setOperationType(OPERATION_TYPES[opType]);
         }else{
             console.error("Unrecognised operation type");
             navigate(-1);
@@ -89,16 +65,8 @@ const View = () => {
         }
     };
 
-    const handleCancel = () => {
-        navigate(-1);
-    };
-
     const handleInputChange = event => {
-        const {name, value} = event.target;
-        setFormData({
-            ...formData,
-            modified: Date.now()
-        });
+        
     };
 
     return(
@@ -125,7 +93,7 @@ const View = () => {
                         <Grid item xs={6}>
                             <Button 
                                 variant="contained"
-                                onClick={handleCancel}>
+                                onClick={() => navigate(-1)}>
                                 Cancelar
                             </Button>
                         </Grid>
