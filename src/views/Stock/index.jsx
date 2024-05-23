@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { Box, Button } from "@mui/material";
 import { useDatabase } from "../../context/Database";
 import { OPERATION_TYPES } from "../../model/constants";
 import MainView from "../../components/MainView";
@@ -9,6 +10,13 @@ import ItemList from "./itemList";
 import ActionsBlock from "./actionsBlock";
 import EmptyListSection from "./emptyListSection";
 import iconEmpty from "../../assets/icons/empty_folder.png";
+
+const buyButtonStyle = {
+    marginTop: "20px",
+    display:"flex", 
+    alignItems:"center", 
+    justifyContent:"center"
+};
 
 const itemAttrs = ["store_id", "product_id", "stock", "packs", "expiration_date"];
 
@@ -20,7 +28,7 @@ const isOperationAllowed = (operation, items, selected) => {
         case "BUY":
             return selected.every(id => {
                 const item = getItem(items,id);
-                return item.product_id === selectedItem?.product_id && item.store_id === selectedItem?.store_id;
+                return item.product_id === selectedItem?.product_id;
             });
         case "SPEND":
             return selected.length > 0 && selected.every(id => getItem(items,id).stock > 0);
@@ -41,6 +49,13 @@ const isOperationAllowed = (operation, items, selected) => {
     }
 };
 
+const getEnabledOperations = (items, selected) => {
+    return Object.keys(OPERATION_TYPES).reduce((acc, key) => {
+        acc[key] = isOperationAllowed(key, items, selected);
+        return acc;
+    }, {});
+};
+
 const View = () => {
     const db = useDatabase();   
     const navigate = useNavigate();
@@ -50,10 +65,8 @@ const View = () => {
     const [ignoredCols, setIgnoredCols] = useState([]);
     const [selected, setSelected] = useState([]);
 
-    const enabledOperations = Object.keys(OPERATION_TYPES).reduce((acc, key) => {
-        acc[key] = isOperationAllowed(key, items, selected);
-        return acc;
-    }, {});
+    const enabledOperations = getEnabledOperations(items, selected);
+    const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value);
 
     useEffect(() => {
         let filters = {};
@@ -74,9 +87,21 @@ const View = () => {
 
     const handleOperation = operationType => {
         if(enabledOperations[operationType]){
-            const view = operationType === "BUY" ? "products-list" : "operation-form";
-            const urlItemList = selected.length > 0 ? `&items=${selected.join("_")}` : "";
-            const url = `/${view}?type=${operationType}${urlItemList}`;
+            let url = "";
+            if(operationType === "BUY"){
+                if(selected.length === 0)
+                    url = `/products-list?type=BUY`;
+                else{
+                    const sameProduct = selected.every(id => getItem(items,id).product_id === getItem(items,selected[0]).product_id);
+                    if(sameProduct){
+                        const storesIds = selected.map(id => getItem(items,id).store_id);
+                        url = `/operation-form?type=BUY&product=${getItem(items,selected[0]).product_id}&stores=${storesIds.join("_")}`;
+                    }
+                }
+            }else{
+                const urlItemList = selected.length > 0 ? `&items=${selected.join("_")}` : "";
+                url = `/operation-form?type=${operationType}${urlItemList}`;
+            }
             navigate(url);
         }
         else
@@ -86,27 +111,35 @@ const View = () => {
     return (
         <MainView title={"Insumos"}>
             {ignoredCols.includes("product_id") && items.length > 0 && <ProductDetails productData={items[0]?.productData}/>}
-            
             {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
-            
             {items.length > 0 ? 
-                <>
+                <Box>
                     <ItemList 
                         items={items} 
                         ignoredCols={ignoredCols}
                         selected={selected}
                         setSelected={setSelected}/>
-                    <ActionsBlock
-                        enabledOperations={enabledOperations}
-                        onBuy={() => handleOperation('BUY')}
-                        onMoveStock={() => handleOperation('STOCK')}
-                        onSpend={() => handleOperation('SPEND')}
-                        onMovePack={() => handleOperation('PACKS')}
-                        onReturn={() => handleOperation('RETURN_PACKS')}/>
-                </>
+                    {showActionBlock &&
+                        <ActionsBlock
+                            enabledOperations={enabledOperations}
+                            onMoveStock={() => handleOperation('STOCK')}
+                            onSpend={() => handleOperation('SPEND')}
+                            onMovePack={() => handleOperation('PACKS')}
+                            onReturn={() => handleOperation('RETURN_PACKS')}/>
+                    }
+                </Box>
                 :
                 <EmptyListSection message={"La lista de insumos está vacía"} icon={iconEmpty} />
             }
+            <Box style={buyButtonStyle}>
+                <Button 
+                    disabled={!enabledOperations.BUY}
+                    color="green"
+                    variant="contained"
+                    onClick={()=>handleOperation("BUY")}>
+                    Comprar insumos
+                </Button>
+            </Box>
         </MainView>
     );
 };
