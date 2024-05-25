@@ -33,17 +33,35 @@ const View = () => {
     
     const toast = useToast();
 
+    console.log("formData", formData);
+
     useEffect(() => {
         const opType = searchParams.get("type");
         if(validOperationType(opType)){
             if(opType === "BUY"){ 
-                console.log("buy");
+                // Buy operation requires product data
+                const productId = searchParams.get("productId");
+                if(Boolean(productId)){
+                    const pIds = productId.split("_").map(id => parseInt(id));
+                    db.query("products", pIds)
+                        .then(products => setFormData({
+                            ...formData,
+                            products
+                        }))
+                        .catch(console.error);
+                }else{
+                    console.error("Product not specified for operation", opType);
+                }
             }else{ 
                 // Other operations require item data (already in stock)
                 const itemId = searchParams.get("itemId");
                 if(Boolean(itemId)){
-                    db.getItemData(itemId)
-                        .then(setItemData)
+                    const iIds = itemId.split("_").map(id => parseInt(id));
+                    db.query("items", iIds)
+                        .then(items => setFormData({
+                            ...formData,
+                            items
+                        }))
                         .catch(console.error);
                 }else{
                     console.error("Item not specified for operation", opType);
@@ -71,6 +89,11 @@ const View = () => {
 
     return(
         <MainView title={viewTitle}>
+            <Grid container direction={"column"} spacing={2}>
+                <Grid item>
+
+                </Grid>
+            </Grid>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Typography 
@@ -79,7 +102,6 @@ const View = () => {
                 </Grid>
                 <Grid 
                     item 
-                    container 
                     xs={12} 
                     alignItems="center" 
                     justifyContent="center">

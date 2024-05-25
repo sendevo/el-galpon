@@ -69,8 +69,8 @@ const View = () => {
 
     const handleBuy = () => {
         if(selected.length === 1){
-            const productId = selected[0];
-            navigate(`/operation-form?type=BUY&itemId=${productId}`);
+            const productId = selected.join("_");
+            navigate(`/operation-form?type=BUY&productId=${productId}`);
         }else{
             debug("Multpiple selection for buy", "error");
             setSelected([]);
@@ -194,8 +194,8 @@ const View = () => {
                             <Grid item>
                                 <Button 
                                     color="green"
+                                    disabled={selected.length === 0}
                                     variant="contained"
-                                    disabled={selected.length !== 1}
                                     onClick={handleBuy}>
                                     Comprar
                                 </Button>
@@ -206,15 +206,6 @@ const View = () => {
                                     disabled={selected.length !== 1}
                                     onClick={handleEdit}>
                                     Editar        
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    color="secondary"
-                                    variant="contained"
-                                    disabled={selected.length !== 1}
-                                    onClick={handleStock}>
-                                    Insumos
                                 </Button>
                             </Grid>
                             <Grid item>
