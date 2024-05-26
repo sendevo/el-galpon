@@ -153,7 +153,7 @@ export const testData = {
             product_id: 35,
             store_id: 36,
             stock: 5.5,
-            packs: null,
+            packs: 0,
             expiration_date: 1731151088080
         },
         {
@@ -161,7 +161,7 @@ export const testData = {
             product_id: 35,
             store_id: 37,
             stock: 2,
-            packs: null,
+            packs: 0,
             expiration_date: 1731151088080
         },
         {
@@ -169,7 +169,7 @@ export const testData = {
             product_id: 38,
             store_id: 35,
             stock: 2,
-            packs: null,
+            packs: 0,
             expiration_date: 1731151088080
         },
         {
@@ -177,7 +177,7 @@ export const testData = {
             product_id: 10,
             store_id: 34,
             stock: 2,
-            packs: null,
+            packs: 0,
             expiration_date: 1731151088080
         },
         {
@@ -185,7 +185,7 @@ export const testData = {
             product_id: 12,
             store_id: 34,
             stock: 2,
-            packs: null,
+            packs: 0,
             expiration_date: 1731151088080
         }
     ]

@@ -1,5 +1,5 @@
 import { OPERATION_TYPES } from "../../constants";
-import { debug, levenshteinDistance } from "../../utils";
+import { debug, levenshteinDistance, comparation } from "../../utils";
 import schema from "../schema.json";
 import { testData } from "./testData";
 
@@ -46,13 +46,20 @@ export default class LocalDatabase {
         });
     }
 
-    query(table, rowIds = [], filters = {}, page = null, count = null) {
+    query(table, rowIds = [], filters = {}, filterComparators = {}, page = null, count = null) {
         return new Promise((resolve, reject) => {
             const rows = this._db[table].filter(it => {
-                const condition = Object.keys(filters).reduce((acc, current) => {
-                    return acc && current in it && it[current] === filters[current];
-                }, rowIds.length > 0 ? rowIds.includes(it.id) : true);
-                return condition;
+                const filterKeys = Object.keys(filters);
+                const filterComparatorsKeys = Object.keys(filterComparators);
+                //if(filterKeys.length === filterComparatorsKeys.length){
+                    const condition = filterKeys.reduce((acc, current) => {
+                        console.log("Comparing", current, filters[current], it[current]);
+                        return acc && current in it && it[current] === filters[current];
+                    }, rowIds.length > 0 ? rowIds.includes(it.id) : true);
+                    return condition;
+                //}else{
+                //    reject({message:"Number of filter names and comparators do not match."});
+                //}
             });
             if(rows.length > 0){
                 if(table === "items"){ // For items, add product and store data

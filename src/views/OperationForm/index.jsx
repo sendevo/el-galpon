@@ -40,7 +40,7 @@ const View = () => {
         if(validOperationType(opType)){
             if(opType === "BUY"){ 
                 // Buy operation requires product data
-                const productId = searchParams.get("productId");
+                const productId = searchParams.get("product");
                 if(Boolean(productId)){
                     const pIds = productId.split("_").map(id => parseInt(id));
                     db.query("products", pIds)

@@ -5,6 +5,25 @@ import {
     MONTHS
 } from "../model/constants.js";
 
+export const comparation = (value1, value2, operator) => {
+    switch (operator) {
+        case "==":
+            return value1 === value2;
+        case "!=":
+            return value1 !== value2;
+        case ">":
+            return value1 > value2;
+        case "<":
+            return value1 < value2;
+        case ">=":
+            return value1 >= value2;
+        case "<=":
+            return value1 <= value2;
+        default:
+            return false;
+    }
+};
+
 export const arraySum = (arr, attr = "") => arr.reduce((a, b) => a + (attr ? b[attr] : b), 0);
 
 export const round2 = num => Math.round(num * 100) / 100;
