@@ -85,6 +85,20 @@ export const testData = {
             modified: 1693683312000
         },
         {
+            id: 14,
+            name: "2,4D",
+            sku: "RD-0021",
+            pack_size: 20,
+            pack_unit: "l",
+            expirable: true,
+            returnable: true,
+            brand: "Monsanto",
+            comments: "",
+            categories: ["Herbicidas"],
+            created: Date.now(),
+            modified: Date.now()
+        },
+        {
             id: 9,
             name: "Suplemento vitamínico",
             sku: "16-023008",
@@ -149,6 +163,14 @@ export const testData = {
             expiration_date: 1731151088080
         },
         {
+            id: 27,
+            product_id: 34,
+            store_id: 34,
+            stock: 0,
+            packs: 5,
+            expiration_date: 1731151088080
+        },
+        {
             id: 2,
             product_id: 35,
             store_id: 36,
@@ -185,6 +207,22 @@ export const testData = {
             product_id: 12,
             store_id: 34,
             stock: 2,
+            packs: 0,
+            expiration_date: 1731151088080
+        },
+        {
+            id: 19,
+            product_id: 14,
+            store_id: 34,
+            stock: 3,
+            packs: 5,
+            expiration_date: 1731151088080
+        },
+        {
+            id: 11,
+            product_id: 12,
+            store_id: 36,
+            stock: 0,
             packs: 0,
             expiration_date: 1731151088080
         }

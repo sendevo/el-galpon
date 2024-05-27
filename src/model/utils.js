@@ -5,23 +5,31 @@ import {
     MONTHS
 } from "../model/constants.js";
 
-export const comparation = (value1, value2, operator) => {
+export const compare = (value1, value2, operator) => {
     switch (operator) {
-        case "==":
+        case "eq":
             return value1 === value2;
-        case "!=":
+        case "neq":
             return value1 !== value2;
-        case ">":
+        case "gt":
             return value1 > value2;
-        case "<":
+        case "lt":
             return value1 < value2;
-        case ">=":
-            return value1 >= value2;
-        case "<=":
-            return value1 <= value2;
         default:
+            console.log("Invalid operator: ", operator);
             return false;
     }
+};
+
+export const queryString2Filters = (queryString) => {
+    const urlParams = new URLSearchParams(queryString);
+    let filters = [];
+    urlParams.forEach((_, param) => {
+        const [key, operator, value] = param.split(':');
+        const parsed = { key, operator, value };
+        filters.push(parsed);
+    });
+    return filters;
 };
 
 export const arraySum = (arr, attr = "") => arr.reduce((a, b) => a + (attr ? b[attr] : b), 0);

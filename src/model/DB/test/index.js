@@ -1,5 +1,10 @@
 import { OPERATION_TYPES } from "../../constants";
-import { debug, levenshteinDistance, comparation } from "../../utils";
+import { 
+    debug, 
+    levenshteinDistance, 
+    queryString2Filters,
+    compare 
+} from "../../utils";
 import schema from "../schema.json";
 import { testData } from "./testData";
 
@@ -46,26 +51,43 @@ export default class LocalDatabase {
         });
     }
 
-    query(table, rowIds = [], filters = {}, filterComparators = {}, page = null, count = null) {
+    query(table, rowIds = [], queryString = "", page = null, count = null) {
+        // queryString: key:operator:value, example: "stock:gt:10"
         return new Promise((resolve, reject) => {
-            const rows = this._db[table].filter(it => {
-                const filterKeys = Object.keys(filters);
-                const filterComparatorsKeys = Object.keys(filterComparators);
-                //if(filterKeys.length === filterComparatorsKeys.length){
-                    const condition = filterKeys.reduce((acc, current) => {
-                        console.log("Comparing", current, filters[current], it[current]);
-                        return acc && current in it && it[current] === filters[current];
-                    }, rowIds.length > 0 ? rowIds.includes(it.id) : true);
-                    return condition;
-                //}else{
-                //    reject({message:"Number of filter names and comparators do not match."});
-                //}
+            if(!isValidTable(table)){
+                reject({message:"Table not valid."});
+                return;
+            }
+            const filters = queryString ? queryString2Filters(queryString) : []; // [{key, operator, value}]
+            // totalAmount is computed from product data, so filter is applied later
+            let filterByTotalAmount = {apply: false, value: 0, operator: ""}; 
+            // Filter by other properties
+            let rows = this._db[table].filter(it => {
+                const condition = filters.every(filter => {
+                    if(table === "items" && filter.key === "totalAmount"){ 
+                        filterByTotalAmount = {
+                            apply: true,
+                            value: parseInt(filter.value),
+                            operator: filter.operator
+                        };
+                        return true;
+                    }else{
+                        const value = it[filter.key];
+                        return compare(value, parseInt(filter.value), filter.operator);
+                    }
+                }) && (rowIds.length === 0 || rowIds.includes(it.id));
+                return condition;
             });
             if(rows.length > 0){
-                if(table === "items"){ // For items, add product and store data
+                if(table === "items"){ // For items, add product and store data and compute amount of stock
                     for(let index = 0; index < rows.length; index++){
                         rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
                         rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
+                        rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_size;
+                    }
+                    if(filterByTotalAmount.apply){ // Apply filter by totalAmount
+                        const { value, operator } = filterByTotalAmount;
+                        rows = rows.filter(it => compare(it.totalAmount, value, operator));
                     }
                 }
                 if(page && count){

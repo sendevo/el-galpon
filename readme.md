@@ -8,9 +8,9 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 
 
 ## Stories
-  - [ ] Crear, editar y eliminar productos y depósitos.  
-  - [ ] Consultar insumos de cada producto, listado por producto o por depósito.  
-  - [ ] Registrar movimiento (compra, venta, uso, devolución) de productos entre depósitos.  
+  - [ ] Crear, editar y eliminar productos y depósitos (revisar que no tengan items asociados).  
+  - [ ] Filtrar consulta de insumos, productos o depositos.  
+  - [ ] Realizar movimiento de insumos con consideraciones de stock en depósitos.
   - [ ] Consultar historial de movimientos.  
   - [ ] Se debe mostrar notificaciones de productos pronto a vencerse.  
 
@@ -18,11 +18,11 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 
 ### Modelo de datos
   - [x] Modelo de productos, insumos, depósitos y movimientos.  
-  - [x] Base de datos con IndexedDB.  
+  - [x] Base de datos.  
   - [ ] Creación y edición de:
     - [x] Productos.  
     - [x] Depósitos.  
-    - [ ] Items.  
+    - [ ] Items (operaciones).  
   - [ ] Registro y consulta de movimientos.  
   - [ ] Consulta filtrada y paginada de:  
     - [ ] Depositos.  

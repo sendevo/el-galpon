@@ -19,37 +19,18 @@ const buyButtonStyle = {
     justifyContent:"center"
 };
 
-const itemAttrs = ["store_id", "product_id", "stock", "packs", "expiration_date"];
+const itemAttrs = ["store_id", "product_id", "stock", "totalAmount", "packs", "expiration_date"];
 
 const getItem = (items,id) => items.find(item => item.id === id);
 
 const isOperationAllowed = (operation, items, selectedIds) => {
     const sameStore = selectedIds.every(id => getItem(items,id).store_id === getItem(items,selectedIds[0]).store_id);
-    if(operation !== "BUY" && !sameStore) // Cannot move or spend items from different stores
-        return false;
-    else{
-        const selectedItem = getItem(items, selectedIds[0]);
-        switch(operation){    
-            case "BUY": // BUY = true: buy selected products. Buy = false: buy other products
-                return selectedIds.length > 0;
-            case "SPEND":
-                return selectedIds.length > 0 && selectedIds.every(id => getItem(items,id).stock > 0);
-            case "MOVE_STOCK":
-                return selectedIds.length > 0 && selectedIds.every(id => {
-                    const item = getItem(items,id);
-                    return item.stock > 0 && item.store_id === selectedItem.store_id;
-                });
-            case "MOVE_PACKS":
-                return selectedIds.length > 0 && selectedIds.every(id => {
-                    const item = getItem(items,id);
-                    return item.packs > 0 && item.store_id === selectedItem.store_id;
-                });
-            case "RETURN_PACKS":
-                return selectedIds.length > 0 && selectedIds.every(id => getItem(items,id).packs > 0);
-            default:
-                return false;
-        }
-    }
+    const moreThanOne = selectedIds.length > 0;
+    return operation === "BUY" && moreThanOne || // When BUY = true: buy selected products else go to product list (enable other buy button)
+        operation === "SPEND" && moreThanOne && selectedIds.every(id => getItem(items,id).stock > 0) || // Enabled if all selected items have stock (items with stock=0 should not be in the list)
+        operation === "MOVE_STOCK" && moreThanOne && selectedIds.every(id => getItem(items,id).stock > 0 && sameStore) || // Enabled if all selected items have stock and are in different stores
+        operation === "MOVE_PACKS" && moreThanOne && selectedIds.every(id => getItem(items,id).packs > 0 && sameStore) || // Enabled if all selected items have packs and are in different stores
+        operation === "RETURN_PACKS" && moreThanOne && selectedIds.every(id => getItem(items,id).packs > 0); // Enabled if all selected items have packs
 };
 
 const getEnabledOperations = (items, selectedIds) => {
@@ -72,23 +53,22 @@ const View = () => {
     const [selectedIds, setSelectedIds] = useState([]);
 
     const enabledOperations = getEnabledOperations(items, selectedIds);
-    const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value);
+    const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
 
     useEffect(() => {
-        let filters = {}; // Filter names and their values
-        let filterComparators = {}; // 
-        let ignored = [];
-        for(let index = 0; index < itemAttrs.length; index++){
-            const paramValue = searchParams.get(itemAttrs[index]);
-            if(!isNaN(paramValue)){
-                if(paramValue){
-                    filters[itemAttrs[index]] = parseInt(paramValue);
-                    ignored.push(itemAttrs[index]);
-                }
-            }
-        }
-        console.log("Filters", filters);
-        db.query("items", [], filters)
+        const ignored = [];
+        searchParams.forEach((value, key) => {
+            const params = key.split(":");
+            if(params.length === 3){
+                const paramKey = params[0];
+                if(itemAttrs.includes(paramKey))
+                    ignored.push(paramKey);
+                else
+                    console.log("Invalid param: ", paramKey, value);
+            }else
+                console.log("Invalid param: ", key, value);
+        });
+        db.query("items", [], searchParams.toString())
             .then(iData => {
                 setItems(iData);
                 setIgnoredCols(ignored);
@@ -103,7 +83,7 @@ const View = () => {
             navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
         } else {
             toast("Operación no permitida", "error");
-            console.error("Operation not allowed");
+            console.error("Operation not allowed:", operationType);
         }
     };
 
@@ -122,9 +102,9 @@ const View = () => {
                         <ActionsBlock
                             enabledOperations={enabledOperations}
                             onBuy={() => handleOperation('BUY')}
-                            onMoveStock={() => handleOperation('STOCK')}
+                            onMoveStock={() => handleOperation('MOVE_STOCK')}
                             onSpend={() => handleOperation('SPEND')}
-                            onMovePack={() => handleOperation('PACKS')}
+                            onMovePack={() => handleOperation('MOVE_PACKS')}
                             onReturn={() => handleOperation('RETURN_PACKS')}/>
                     }
                 </Box>

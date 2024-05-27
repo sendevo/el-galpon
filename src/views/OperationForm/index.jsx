@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { 
     Button, 
-    Paper,
     Grid,
     Typography 
 } from "@mui/material";
@@ -9,15 +8,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
-import { 
-    Input,
-    SuggesterInput,
-    Select,
-    Switch
-} from "../../components/Inputs";
-import { debug, categories2Select } from "../../model/utils";
-import { UNITS, CATEGORIES, validOperationType } from "../../model/constants";
-import { componentsStyles } from "../../themes";
+import { debug } from "../../model/utils";
+import { validOperationType } from "../../model/constants";
 
 const validForm = formData => (false);
 
@@ -33,35 +25,37 @@ const View = () => {
     
     const toast = useToast();
 
-    console.log("formData", formData);
-
     useEffect(() => {
+        db.query("stores").then(stores => setFormData({...formData, stores}));
+
         const opType = searchParams.get("type");
         if(validOperationType(opType)){
-            if(opType === "BUY"){ 
-                // Buy operation requires product data
-                const productId = searchParams.get("product");
-                if(Boolean(productId)){
-                    const pIds = productId.split("_").map(id => parseInt(id));
+            if(opType === "BUY"){  // Buy operation requires product data
+                const productsId = searchParams.get("products");
+                if(Boolean(productsId)){
+                    const pIds = productsId.split("_").map(id => parseInt(id));
                     db.query("products", pIds)
                         .then(products => setFormData({
                             ...formData,
-                            products
+                            products,
+                            opType: "BUY"
                         }))
                         .catch(console.error);
                 }else{
                     console.error("Product not specified for operation", opType);
                 }
-            }else{ 
-                // Other operations require item data (already in stock)
-                const itemId = searchParams.get("itemId");
-                if(Boolean(itemId)){
-                    const iIds = itemId.split("_").map(id => parseInt(id));
+            }else{ // Other operations require item data (stock and packs)
+                const itemsId = searchParams.get("items");
+                if(Boolean(itemsId)){
+                    const iIds = itemsId.split("_").map(id => parseInt(id));
                     db.query("items", iIds)
-                        .then(items => setFormData({
-                            ...formData,
-                            items
-                        }))
+                        .then(items => {
+                            setFormData({
+                                ...formData,
+                                items,
+                                opType
+                            });
+                        })
                         .catch(console.error);
                 }else{
                     console.error("Item not specified for operation", opType);
@@ -83,42 +77,36 @@ const View = () => {
         }
     };
 
-    const handleInputChange = event => {
-        
-    };
-
     return(
         <MainView title={viewTitle}>
-            <Grid container direction={"column"} spacing={2}>
+            <Grid container spacing={2} direction="column">
                 <Grid item>
-
-                </Grid>
-            </Grid>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
                     <Typography 
                         fontSize="15px"
                         color="rgb(50,50,50)">* Campos obligatorios</Typography>
+                    <Typography> Operacion = {formData.opType} </Typography>
+                    <Typography> Productos = {formData.products?.map(p => p.name).join(", ") || ""} </Typography>
+                    <Typography> Items = {formData.items?.map(i => i.id).join(", ") || ""} </Typography>
                 </Grid>
-                <Grid 
-                    item 
-                    xs={12} 
-                    alignItems="center" 
-                    justifyContent="center">
-                        <Grid item xs={6}>
+                <Grid item>
+                    <Grid container spacing={2} direction={"row"} justifyContent={"space-around"}>
+                        <Grid item>
                             <Button 
                                 variant="contained"
+                                color="green"
                                 onClick={handleSubmit}>
-                                Continuar
+                                Confirmar
                             </Button>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item>
                             <Button 
                                 variant="contained"
+                                color="red"
                                 onClick={() => navigate(-1)}>
                                 Cancelar
                             </Button>
                         </Grid>
+                    </Grid>
                 </Grid>
             </Grid>     
         </MainView>
