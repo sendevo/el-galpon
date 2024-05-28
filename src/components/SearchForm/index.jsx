@@ -191,7 +191,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
                             <Button 
                                 size="small"
                                 variant="contained" 
-                                color="red"
+                                color="error"
                                 onClick={handleFiltersReset}>
                                     Limpiar filtros
                             </Button>

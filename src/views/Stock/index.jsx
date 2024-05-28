@@ -76,14 +76,18 @@ const View = () => {
     }, []);
 
     const handleOperation = operationType => {
-        if(enabledOperations[operationType]){
-            const products = selectedIds.map(id => getItem(items,id).product_id);
-            const urlProductList = products.length > 0 ? `&products=${products.join("_")}` : "";
-            const urlItemList = selectedIds.length > 0 && operationType !=="BUY" ? `&items=${selectedIds.join("_")}` : "";
-            navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
-        } else {
-            toast("Operación no permitida", "error");
-            console.error("Operation not allowed:", operationType);
+        if(operationType === "BUY" && !enabledOperations.BUY){ // No product selected
+            navigate("/products-list"); // Go to product list
+        }else{ // More than one selected -> go to operation form
+            if(enabledOperations[operationType]){
+                const products = selectedIds.map(id => getItem(items,id).product_id);
+                const urlProductList = products.length > 0 ? `&products=${products.join("_")}` : "";
+                const urlItemList = (selectedIds.length > 0 && operationType !=="BUY") ? `&items=${selectedIds.join("_")}` : "";
+                navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
+            } else {
+                toast("Operación no permitida", "error");
+                console.error("Operation not allowed:", operationType);
+            }
         }
     };
 
@@ -115,7 +119,7 @@ const View = () => {
             { !enabledOperations.BUY &&
                 <Box style={buyButtonStyle}>
                     <Button 
-                        color="green"
+                        color="success"
                         variant="contained"
                         onClick={()=>handleOperation("BUY")}>
                         Comprar insumos

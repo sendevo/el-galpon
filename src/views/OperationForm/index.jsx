@@ -9,7 +9,7 @@ import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
 import { debug } from "../../model/utils";
-import { validOperationType } from "../../model/constants";
+import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants";
 
 const validForm = formData => (false);
 
@@ -30,6 +30,7 @@ const View = () => {
 
         const opType = searchParams.get("type");
         if(validOperationType(opType)){
+            setViewTitle(OPERATION_TYPES_NAMES[opType]);
             if(opType === "BUY"){  // Buy operation requires product data
                 const productsId = searchParams.get("products");
                 if(Boolean(productsId)){
@@ -81,19 +82,22 @@ const View = () => {
         <MainView title={viewTitle}>
             <Grid container spacing={2} direction="column">
                 <Grid item>
-                    <Typography 
-                        fontSize="15px"
-                        color="rgb(50,50,50)">* Campos obligatorios</Typography>
-                    <Typography> Operacion = {formData.opType} </Typography>
                     <Typography> Productos = {formData.products?.map(p => p.name).join(", ") || ""} </Typography>
                     <Typography> Items = {formData.items?.map(i => i.id).join(", ") || ""} </Typography>
                 </Grid>
                 <Grid item>
+                    <Grid container>
+                        <Typography 
+                        fontSize="15px"
+                        color="rgb(50,50,50)">
+                            * Campos obligatorios
+                        </Typography>
+                    </Grid>
                     <Grid container spacing={2} direction={"row"} justifyContent={"space-around"}>
                         <Grid item>
                             <Button 
                                 variant="contained"
-                                color="green"
+                                color="success"
                                 onClick={handleSubmit}>
                                 Confirmar
                             </Button>
@@ -101,7 +105,7 @@ const View = () => {
                         <Grid item>
                             <Button 
                                 variant="contained"
-                                color="red"
+                                color="error"
                                 onClick={() => navigate(-1)}>
                                 Cancelar
                             </Button>

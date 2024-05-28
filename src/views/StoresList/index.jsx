@@ -170,7 +170,7 @@ const View = () => {
                             justifyContent="space-between">
                             <Grid item>
                                 <Button 
-                                    color="green"
+                                    color="success"
                                     variant="contained"
                                     onClick={handleNew}>
                                     Nuevo
@@ -195,7 +195,7 @@ const View = () => {
                             </Grid>
                             <Grid item>
                                 <Button     
-                                    color="red"
+                                    color="error"
                                     variant="contained"
                                     disabled={selected.length === 0}
                                     onClick={handleDelete}>

@@ -21,7 +21,6 @@ import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import { componentsStyles } from "../../themes";
-import { validOperationType } from "../../model/constants";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import iconEmpty from "../../assets/icons/empty_folder.png";
@@ -68,32 +67,16 @@ const View = () => {
     const handleNew = () => navigate("/product-form");
 
     const handleBuy = () => {
-        if(selected.length === 1){
-            const productId = selected.join("_");
-            navigate(`/operation-form?type=BUY&productId=${productId}`);
-        }else{
-            debug("Multpiple selection for buy", "error");
-            setSelected([]);
-        }
+        const products = selected.join("_");
+        navigate(`/operation-form?type=BUY&products=${products}`);
     };
         
-
     const handleEdit = () => {
         if(selected.length === 1){
             const productId = selected[0];
             navigate(`/product-form?id=${productId}`);
         }else{
             debug("Multpiple selection for edit", "error");
-            setSelected([]);
-        }
-    };
-
-    const handleStock = () => {
-        if(selected.length === 1){
-            const productId = selected[0];
-            navigate(`/stock?product_id=${productId}`);
-        }else{
-            debug("Multpiple selection for stock", "error");
             setSelected([]);
         }
     };
@@ -193,7 +176,7 @@ const View = () => {
                             justifyContent="space-between">
                             <Grid item>
                                 <Button 
-                                    color="green"
+                                    color="success"
                                     disabled={selected.length === 0}
                                     variant="contained"
                                     onClick={handleBuy}>

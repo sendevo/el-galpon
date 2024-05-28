@@ -11,6 +11,7 @@ export const BUILD_DATE = 1696264323611; // 2-10-2023 13:32 hs
 // Database
 export const DB_NAME = "elgalponDB";
 export const DB_VERSION = 1;
+
 export const OPERATION_TYPES = {
     BUY: 1,
     MOVE_STOCK: 2,
@@ -19,6 +20,16 @@ export const OPERATION_TYPES = {
     RETURN_PACKS: 5,
     UNDEFINED: 6
 };
+
+export const OPERATION_TYPES_NAMES = {
+    BUY: "Compra de insumos",
+    MOVE_STOCK: "Traslado de insumos",
+    SPEND: "Gasto de insumos",
+    MOVE_PACKS: "Traslado de envases",
+    RETURN_PACKS: "Devolución de envases",
+    UNDEFINED: "Operación no definida"
+};
+
 export const validOperationType = type => Object.keys(OPERATION_TYPES).includes(type);
 
 // Model

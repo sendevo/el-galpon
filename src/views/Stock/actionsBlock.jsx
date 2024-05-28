@@ -20,7 +20,7 @@ const ActionsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePac
                         <Grid item>
                             <Button
                                 disabled={!enabledOperations.BUY}
-                                color="green"
+                                color="success"
                                 variant="contained"
                                 onClick={onBuy}>
                                 Comprar

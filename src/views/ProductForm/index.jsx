@@ -185,21 +185,30 @@ const View = () => {
                         </Grid>
                     </Paper>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{mb:1}}>
                     <Typography 
                         fontSize="15px"
                         color="rgb(50,50,50)">* Campos obligatorios</Typography>
                 </Grid>
-                <Grid 
-                    item 
-                    container 
-                    xs={12} 
-                    alignItems="center" 
-                    justifyContent="center">
+            </Grid>
+            <Grid 
+                container 
+                direction="row" 
+                justifyContent={"space-around"}>
+                <Grid item>
                     <Button 
+                        color="success"
                         variant="contained"
                         onClick={handleSubmit}>
                         Guardar
+                    </Button>
+                </Grid>
+                <Grid>
+                    <Button 
+                        color="error"
+                        variant="contained"
+                        onClick={() => navigate(-1)}>
+                        Cancelar
                     </Button>
                 </Grid>
             </Grid>     
