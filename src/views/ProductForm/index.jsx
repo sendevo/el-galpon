@@ -28,7 +28,7 @@ const View = () => {
     const db = useDatabase();
     const [searchParams] = useSearchParams();    
     const [viewTitle, setViewTitle] = useState("Productos");
-    const [formData, setFormData] = useState({created: Date.now()});
+    const [formData, setFormData] = useState({});
     const toast = useToast();
 
     useEffect(() => {
@@ -36,7 +36,9 @@ const View = () => {
         if(Boolean(id)){ // Editing product
             db.query('products', [parseInt(id)])
                 .then(data => {
-                    setFormData(data);
+                    if(data.length === 1) 
+                        setFormData(data[0]);
+
                     setViewTitle("Edición de producto");
                 })
                 .catch(console.error);
@@ -47,7 +49,6 @@ const View = () => {
 
     const handleSubmit = () => {
         if(validateForm(formData)){
-            debug(formData);
             db.insert(formData,'products')
                 .then(()=>{
                     if(formData.id){ // Editing
@@ -79,7 +80,7 @@ const View = () => {
         <MainView title={viewTitle}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"15px"}>Producto</Typography>
                         <Input 
                             label="Nombre*"
@@ -91,7 +92,7 @@ const View = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"15px"}>Presentación</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
@@ -120,7 +121,7 @@ const View = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"10px"}>Reciclaje y caducidad de envases</Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
@@ -143,7 +144,7 @@ const View = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"20px"}>Detalles adicionales</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>

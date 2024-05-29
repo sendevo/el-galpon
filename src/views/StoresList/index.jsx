@@ -73,7 +73,7 @@ const View = () => {
     const handleStock = () => {
         if(selected.length === 1){
             const storeId = selected[0];
-            navigate(`/stock?store_id=${storeId}`);
+            navigate(`/stock?store_id:eq:${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
             setSelected([]);

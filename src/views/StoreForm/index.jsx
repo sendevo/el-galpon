@@ -34,8 +34,7 @@ const getLatLong = locationInput => { // Get latitude and longitude from locatio
             lng: result?.longitude
         };
     }
-    
-    const values = locationInput.split(",");
+    const values = locationInput.replace(/\s/g, "").split(",");
     if(values.length === 2 && !isNaN(values[0]) && !isNaN(values[1])){
         return {
             lat: values[0],
@@ -159,7 +158,7 @@ const View = () => {
         <MainView title={viewTitle} >
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"15px"}>Generales</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -184,7 +183,7 @@ const View = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"20px"}> Coordenadas </Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
@@ -225,7 +224,7 @@ const View = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper sx={{...componentsStyles.paper, padding:"10px"}}>
+                    <Paper sx={componentsStyles.paper}>
                         <Typography lineHeight={"1em"} paddingBottom={"15px"}>Datos de contacto</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>

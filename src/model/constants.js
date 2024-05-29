@@ -10,7 +10,7 @@ export const BUILD_DATE = 1696264323611; // 2-10-2023 13:32 hs
 
 // Database
 export const DB_NAME = "elgalponDB";
-export const DB_VERSION = 1;
+export const DB_MODE = "test";
 
 export const OPERATION_TYPES = {
     BUY: 1,

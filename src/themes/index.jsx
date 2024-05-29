@@ -5,7 +5,10 @@ export const globalStyles = {
 };
 
 export const componentsStyles = {
-    paper: {backgroundColor: 'rgb(245, 245, 245)'},
+    paper: {
+        backgroundColor: 'rgb(245, 245, 245)',
+        padding: '10px'
+    },
     title: {fontSize: "16px", fontWeight: "bold"},
     hintText: {
         fontStyle: "italic",

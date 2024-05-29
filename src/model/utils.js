@@ -61,6 +61,11 @@ export const stringEncode = str => {
     return String(hash).replace(/-/g, '0').replace(/^-/, '');
 };
 
+export const generateUUID = () => {
+    const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
+
 export const categories2Select = cats => cats?.map(c => ({label: c, key: stringEncode(c)}));
   
 export const randomColorsGenerator = (count, transparency = 0.7) => {

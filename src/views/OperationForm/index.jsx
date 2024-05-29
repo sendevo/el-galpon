@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { 
     Button, 
     Grid,
-    Typography 
+    Typography,
+    Paper
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
@@ -10,6 +11,7 @@ import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
 import { debug } from "../../model/utils";
 import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants";
+import { componentsStyles } from "../../themes";
 
 const validForm = formData => (false);
 
@@ -82,8 +84,15 @@ const View = () => {
         <MainView title={viewTitle}>
             <Grid container spacing={2} direction="column">
                 <Grid item>
-                    <Typography> Productos = {formData.products?.map(p => p.name).join(", ") || ""} </Typography>
-                    <Typography> Items = {formData.items?.map(i => i.id).join(", ") || ""} </Typography>
+                    {
+                        formData.products?.map(product => (
+                            <Paper key={product.id} sx={componentsStyles.paper}>
+                                <Typography>
+                                    {product.name}
+                                </Typography>
+                            </Paper>
+                        ))
+                    }
                 </Grid>
                 <Grid item>
                     <Grid container>

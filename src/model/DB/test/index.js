@@ -3,47 +3,97 @@ import {
     debug, 
     levenshteinDistance, 
     queryString2Filters,
-    compare 
+    compare, 
+    generateUUID
 } from "../../utils";
-import schema from "../schema.json";
+import { DB_MODE } from "../../constants";
+import migrateDB from "./migrations";
+import schemas from "../schemas.json";
 import { testData } from "./testData";
+
+export const DB_VERSION = schemas.length - 1;
+const currentSchema = schemas[DB_VERSION];
 
 export const isValidQuery = query => [
     "query",
-    "getPaginatedRows",
     "searchTerm",
-    "getStockOfProduct",
-    "getStockInStore",
-    "moveStock"
+    "moveStock",
+    "spendStock",
+    "movePacks",
+    "returnPacks"
 ].includes(query);
 
-export const isValidTable = sectionName => Object.keys(schema).includes(sectionName);
-// export const isValidTable = sectionName => sectionName in schema;
+export const isValidTable = tableName => Object.keys(currentSchema).includes(tableName);
+// export const isValidTable = tableName => tableName in schema;
 
 export default class LocalDatabase {
-    constructor() {
-        this.type = "testing";
-        this._db = testData;
-        this.lastId = 0; // First id will be 1
-    }
-
-    getNewId() {
-        this.lastId++;
-        return this.lastId;
+    constructor(onReady) {
+        this._db = {};
+        const version = localStorage.getItem("version");
+        if(version){ // With data
+            const versionCode = parseInt(version);
+            if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
+                debug("Database version changed, migrating data...");
+                const oldSchema = schemas[versionCode];
+                Object.keys(oldSchema).forEach(table => {
+                    const data = localStorage.getItem(table);
+                    this._db[table] = data ? JSON.parse(data) : [];
+                });
+                migrateDB(versionCode, DB_VERSION, this._db).then(newData => {
+                    this._db = newData;
+                    localStorage.clear();
+                    localStorage.setItem("version", JSON.stringify(DB_VERSION));
+                    Object.keys(currentSchema).forEach(table => {
+                        localStorage.setItem(table, JSON.stringify(this._db[table]));
+                    });
+                    debug("Migration completed.");
+                    onReady(this)
+                });
+            }else{ // Load data 
+                debug("Loading data...");
+                Object.keys(currentSchema).forEach(table => {
+                    const data = localStorage.getItem(table);
+                    this._db[table] = data ? JSON.parse(data) : [];
+                });
+                debug("Data loaded.");
+                onReady(this);
+            }
+        }else{ // Empty database
+            if(DB_MODE === "test"){
+                debug("Loading test data...");
+                Object.keys(testData).forEach(table => {
+                    if(table != "version"){
+                        const rows = testData[table];
+                        this._db[table] = rows;
+                        localStorage.setItem(table, JSON.stringify(rows));
+                    }
+                });
+                localStorage.setItem("version", JSON.stringify(DB_VERSION));
+            }else{
+                debug("Empty database, creating tables...");
+                Object.keys(currentSchema).forEach(table => {
+                    this._db[table] = [];
+                    localStorage.setItem(table, "");
+                });
+            }
+            onReady(this);
+        }
     }
 
     insert(data, table) {
-        debug("Adding item to "+table);
-        debug(data);
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
-                const index = this._db[table].findIndex(it => it.id === data.id);
-                if(index < 0){ // If not found new item  
-                    data.id = this.getNewId();
+                const index = this._db[table].findIndex(r => r.id === data.id);
+                if(index < 0){ // If not found, its a new row
+                    debug("Adding item to "+table);
+                    data.id = generateUUID();
                     this._db[table].push(data);
-                }else{ // If found, update item
+                }else{ // If found, update row data
+                    debug("Editing item in "+table);
                     this._db[table][index] = data;
                 }
+                localStorage.setItem(table, JSON.stringify(this._db[table]));
+                debug(data);
                 resolve(data.id);
             }else{
                 reject({message:"Table not valid."});
