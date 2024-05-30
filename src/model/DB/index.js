@@ -1,155 +1,167 @@
-import { DB_NAME, DB_VERSION, OPERATION_TYPES } from "../constants";
-import { debug, levenshteinDistance } from "../utils";
-import schema from "./schema.json";
+import { OPERATION_TYPES } from "../constants";
+import { 
+    debug, 
+    levenshteinDistance, 
+    queryString2Filters,
+    compare, 
+    generateUUID
+} from "../utils";
+import { DB_MODE } from "../constants";
+import migrateDB from "./migrations";
+import schemas from "./schemas.json";
+import { testData } from "./testData";
 
-export const isValidQuery = query => [
-    "getRow",
-    "query",
-    "getPaginatedRows",
-    "getStockOfProduct",
-    "getStockInStore",
-    "searchTerm"
-].includes(query);
+export const DB_VERSION = schemas.length - 1;
+const schema = schemas[DB_VERSION];
 
-export const isValidTable = sectionName => Object.keys(schema).includes(sectionName);
+//export const isValidTable = tableName => Object.keys(schema).includes(tableName);
+export const isValidTable = tableName => tableName in schema;
 
 export default class LocalDatabase {
-    constructor() {
-        this.type = "production";
-        this._db = null;
-        
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-        request.onupgradeneeded = event => {
-            this._db = event.target.result;
-            Object.keys(schema).forEach(key => {
-                const store = this._db.createObjectStore(key, schema[key].options);
-                if (schema[key].indexes)
-                    schema[key].indexes
-                        .forEach(index => store.createIndex(
-                            index.name, 
-                            index.keyPath, 
-                            index.options)
-                        );
-            });
-        };
-
-        this.onReady = []; // List of callbacks
-        request.onsuccess = event => {
-            this._db = event.target.result;
-            this._db.onerror = err => debug(err, "error");
-            this.onReady.forEach(callback => callback());
-            this.onReady = [];
-            debug("DB initialized");
-        };
-
-        request.onerror = event => debug(event.target.error, "error");
-    }
-
-    _performTransaction(callback) { // Check if DB is initialized
-        debug(`DB callback stack len: ${this.onReady.length}`);
-        if (this._db)
-            callback();
-        else // Save callback to execute it after DB opens successfully
-            this.onReady.push(callback); 
+    constructor(onReady) {
+        // Get data from localStorage
+        // Check if migration is needed
+        // If needed, migrate data
+        // Else load all database to memory
+        this._db = {};
+        const version = localStorage.getItem("version");
+        if(version){ // With data
+            const versionCode = parseInt(version);
+            if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
+                debug("Database version changed, migrating data...");
+                const oldSchema = schemas[versionCode];
+                Object.keys(oldSchema).forEach(table => {
+                    const data = localStorage.getItem(table);
+                    this._db[table] = data ? JSON.parse(data) : [];
+                });
+                migrateDB(versionCode, DB_VERSION, this._db)
+                    .then(newData => {
+                        this._db = newData;
+                        localStorage.clear();
+                        localStorage.setItem("version", JSON.stringify(DB_VERSION));
+                        Object.keys(schema).forEach(table => {
+                            localStorage.setItem(table, JSON.stringify(this._db[table]));
+                        });
+                        debug("Migration completed.");
+                        onReady(this)
+                    })
+                    .catch(console.error);
+            }else{ // Load data 
+                debug("Loading data...");
+                Object.keys(schema).forEach(table => {
+                    const data = localStorage.getItem(table);
+                    this._db[table] = data ? JSON.parse(data) : [];
+                });
+                debug("Data loaded.");
+                onReady(this);
+            }
+        }else{ // Empty database
+            if(DB_MODE === "test"){
+                debug("Loading test data...");
+                Object.keys(testData).forEach(table => {
+                    if(table != "version"){
+                        const rows = testData[table];
+                        this._db[table] = rows;
+                        localStorage.setItem(table, JSON.stringify(rows));
+                    }
+                });
+                localStorage.setItem("version", JSON.stringify(DB_VERSION));
+            }else{
+                debug("Empty database, creating tables...");
+                Object.keys(schema).forEach(table => {
+                    this._db[table] = [];
+                    localStorage.setItem(table, "");
+                });
+            }
+            onReady(this);
+        }
     }
 
     insert(data, table) {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
-                this._performTransaction( () => {
-                    const request = this._db
-                        .transaction(table, 'readwrite')
-                        .objectStore(table)
-                        .put(data);
-                    request.onsuccess = () => resolve();
-                    request.onerror = event => reject(event.target.error);
-                });
+                const index = this._db[table].findIndex(r => r.id === data.id);
+                if(index < 0){ // If not found, its a new row
+                    debug("Adding item to "+table);
+                    data.id = generateUUID();
+                    this._db[table].push(data);
+                }else{ // If found, update row data
+                    debug("Editing item in "+table);
+                    this._db[table][index] = data;
+                }
+                localStorage.setItem(table, JSON.stringify(this._db[table]));
+                debug(data);
+                resolve(data.id);
             }else{
                 reject({message:"Table not valid."});
             }
         });
     }
 
-    getRow(rowId, table) {
+    query(table, rowIds = [], queryString = "", page = null, count = null) {
+        // queryString: key:operator:value, example: "stock:gt:10"
         return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                this._performTransaction(() => {
-                    const request = this._db
-                        .transaction(table, 'readonly')
-                        .objectStore(table)
-                        .get(rowId);
-                    request.onsuccess = event => {
-                        const item = event.target.result;
-                        if (item) resolve(item);
-                        else reject({message:`Item with ID ${rowId} not found`});
-                    };
-                    request.onerror = event => reject(event.target.error);
-                });
-            }else{
+            if(!isValidTable(table)){
                 reject({message:"Table not valid."});
+                return;
+            }
+            const filters = queryString ? queryString2Filters(queryString) : []; // [{key, operator, value}]
+            // totalAmount is computed from product data, so filter is applied later
+            let filterByTotalAmount = {apply: false, value: 0, operator: ""}; 
+            // Filter by other properties
+            let rows = this._db[table].filter(it => {
+                const condition = filters.every(filter => {
+                    if(table === "items" && filter.key === "totalAmount"){ 
+                        filterByTotalAmount = {
+                            apply: true,
+                            value: parseInt(filter.value),
+                            operator: filter.operator
+                        };
+                        return true;
+                    }else{
+                        const value = it[filter.key];
+                        return compare(value, filter.value, filter.operator);
+                    }
+                }) && (rowIds.length === 0 || rowIds.includes(it.id));
+                return condition;
+            });
+            if(rows.length > 0){
+                if(table === "items"){ // For items, add product and store data and compute amount of stock
+                    for(let index = 0; index < rows.length; index++){
+                        rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
+                        rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
+                        rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_size;
+                    }
+                    if(filterByTotalAmount.apply){ // Apply filter by totalAmount
+                        const { value, operator } = filterByTotalAmount;
+                        rows = rows.filter(it => compare(it.totalAmount, value, operator));
+                    }
+                }
+                if(page && count){
+                    const startIndex = (page - 1) * count;
+                    const endIndex = startIndex + count;
+                    const paginatedItems = rows.slice(startIndex, endIndex);
+                    resolve(paginatedItems);
+                }
+                resolve(rows);
+            }else{
+                reject({message:"No item was found with given query"});
             }
         });
     }
 
     removeRow(rowId, table) {
+        debug("Removing item "+rowId+" from "+table);
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
-                this._performTransaction(() => {
-                    const request = this._db
-                        .transaction(table, 'readwrite')
-                        .objectStore(table)
-                        .delete(rowId);
-                    request.onsuccess = () => resolve();
-                    request.onerror = event => reject(event.target.error);
-                });
-            }else{
-                reject({message:"Table not valid."});
-            }
-        });
-    }
-
-    query(table) {
-        return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                this._performTransaction(() => {
-                    const request = this._db
-                        .transaction(table, 'readonly')
-                        .objectStore(table)
-                        .getAll();
-                    request.onsuccess = event => resolve(event.target.result);
-                    request.onerror = event => reject(event.target.error);
-                });
-            }else{
-                reject({message:"Table not valid."});
-            }
-        });
-    }
-
-    getPaginatedRows(table, page, count) {
-        return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                this._performTransaction(() => {
-                    const lowerBound = (page - 1) * count;
-                    const upperBound = page * count;
-                    const keyRange = IDBKeyRange.bound(lowerBound, upperBound, false, false);
-                    const data = [];
-                    const request = this._db
-                        .transaction(table, 'readonly')
-                        .objectStore(table)
-                        .openCursor(keyRange);
-                    request.onsuccess = event => {
-                        const cursor = event.target.result;
-                        if (cursor) {
-                            data.push(cursor.value);
-                            cursor.continue();
-                        } else {
-                            resolve(data);
-                        }
-                    };
-                    request.onerror = event => reject(event.target.error);
-                });
-            }else{
+                const index = this._db[table].findIndex(it => it.id === rowId);
+                if(index >= 0){
+                    this._db[table].splice(index,1);
+                    resolve();
+                }else{
+                    reject({message:`Item with ID ${rowId} not found`});
+                }
+            }else{  
                 reject({message:"Table not valid."});
             }
         });
@@ -158,26 +170,10 @@ export default class LocalDatabase {
     searchTerm(table, attr, term, thresh = 3) {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
-                this._performTransaction(() => {
-                    const results = [];
-                    const request = this._db
-                        .transaction(table, 'readonly')
-                        .objectStore(table)
-                        .openCursor();
-                    request.onsuccess = event => {
-                        const cursor = event.target.result;
-                        if (cursor) {
-                            const similarity = levenshteinDistance(term, cursor.value[attr]);
-                            if (similarity <= thresh) 
-                                results.push({id: cursor.value.id, similarity});
-                            cursor.continue();
-                        } else {
-                            results.sort((a, b) => a.similarity - b.similarity);
-                            resolve(results);
-                        }
-                    };
-                    request.onerror = event => reject(event.target.error);
-                });
+                const results = this._db[table]
+                    .filter(it => levenshteinDistance(term, it[attr]) < thresh)
+                    .sort((a, b) => a.similarity - b.similarity);
+                resolve(results);
             }else{
                 reject({message:"Table not valid."});
             }
@@ -186,86 +182,206 @@ export default class LocalDatabase {
 
 
     // Business model specific functions
-
-    getStockOfProduct(productId) {
+    _moveStockOrPacks(itemId, amount, type, toStoreId) { // Move stock or empty packs between stores
         return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const request = this._db
-                    .transaction(['items'], 'readonly')
-                    .objectStore('items')
-                    .index('product_id')
-                    .getAll(IDBKeyRange.only(productId));
-                request.onsuccess = event => {
-                    const itemData = event.target.result;
-                    // For each item, add store data
-                    this.query("stores")
-                        .then(stores => {
-                            resolve(
-                                itemData.map(g => {
-                                    const storeIndex = stores.findIndex(s => s.id === g.store_id);
-                                    return {
-                                        ...g,
-                                        storeData: storeIndex !== -1 ? stores[storeIndex] : {}
-                                    };
-                                })
-                            );
-                        })
-                        .catch(reject);
-                };
-                request.onerror = event => reject(event.target.error);
-            });
-        });
-    }
+            // Validation
+            
+            const itemIndex = this._db.items.findIndex(it => it.id === itemId);
+            if(itemIndex < 0){
+                reject({message: "Item not found"});
+                return;
+            }
 
-    getStockInStore(storeId) {
-        return new Promise((resolve, reject) => {
-            this._performTransaction(() => {
-                const request = this._db
-                    .transaction(['items'], 'readonly')
-                    .objectStore('items')
-                    .index('store_id')
-                    .getAll(IDBKeyRange.only(storeId));
-                request.onsuccess = event => {
-                    const itemData = event.target.result;
-                    this.query("products")
-                        .then(products => {
-                            resolve(
-                                itemData.map(g => {
-                                    const productIndex = products.findIndex(s => s.id === g.product_id);
-                                    return {
-                                        ...g, 
-                                        productData: productIndex !== -1 ? products[productIndex] : {}
-                                    };
-                                })
-                            )
-                        })
+            if(toStoreId){
+                const storeIndex = this._db.stores.findIndex(it => it.id === toStoreId);
+                if(storeIndex < 0){
+                    reject({message: "Store not found"});
+                    return;
                 }
-                request.onerror = event => reject(event.target.error);
-            });
+            }
+
+            if(amount <= 0){
+                reject({message: "Cannot move negative amount"});
+                return;
+            }
+
+            if(type !== "stock" && type !== "packs"){
+                reject({message: "Unknown operation type"});
+                return;
+            }
+
+            const itemData = this._db.items[itemIndex];    
+            if(amount > itemData[type]){ // Not allowed
+                reject({message: "Cannot move greater amount than current stock."});
+                return;
+            }
+
+            const operationData = {
+                timestamp: Date.now(),
+                type: type === "stock" ? OPERATION_TYPES.MOVE_STOCK : OPERATION_TYPES.MOVE_PACKS,
+                item_id: itemId,
+                store_from_id: itemData.store_id,
+                store_to_id: toStoreId,
+                price: 0,
+                stock_amount: type === "stock" ? amount : null,
+                pack_amount: type === "packs" ? amount : null
+            };
+
+            if(amount === itemData[type]){ // Move all stock to another store
+                itemData.store_id = toStoreId;
+                this.insert(itemData, "items")
+                    .then(() => {
+                        this.insert(operationData, "operations")
+                            .then(resolve)
+                            .catch(reject);
+                    })
+                    .catch(reject);
+                return;
+            } 
+            
+            if(amount < itemData[type]){ // Create new item in another store
+                const newItemData = {
+                    ...itemData,
+                    id: null,
+                    store_id: toStoreId,
+                    [type]: amount
+                };
+                this.insert(newItemData, "items")
+                    .then(() => { // Update amount of remaining
+                        itemData[type] -= amount;
+                        this.insert(itemData, "items")
+                            .then(() => {
+                                this.insert(operationData, "operations")
+                                    .then(resolve)
+                                    .catch(reject);
+                            })
+                            .catch(reject);
+                        return;
+                    })
+                    .catch(reject);
+            }
         });
     }
 
-    buyStock(itemId, amount, storeId, price) {
+    _reduceStockOrPacks(itemId, amount, type) { // Update amount but not store
         return new Promise((resolve, reject) => {
+            const itemIndex = this._db.items.findIndex(it => it.id === itemId);
+            if(itemIndex < 0){
+                reject({message: "Item not found"});
+                return;
+            }
 
+            if(amount <= 0){
+                reject({message: "Cannot spend or return negative amount"});
+                return;
+            }
+
+            if(type !== "stock" && type !== "packs"){
+                reject({message: "Unknown operation type"});
+                return;
+            }
+
+            // Update amount of item's stock or packs
+            const itemData = this._db.items[itemIndex];
+            if(amount > itemData[type]){ // Not allowed
+                reject({message: "Cannot spend greater amount than current."});
+                return;
+            }
+            itemData[type] -= amount;
+
+            // If returnable product, update empty packs number
+            const productIndex = this._db.products.findIndex(prod => prod.it === itemData.product_id);
+            if(productIndex < 0){
+                reject({message: "Cannot find item product type"});
+                return;
+            }
+            const productData = this._db.products[productIndex];
+            if(type === "stock" && productData.returnable)
+                itemData.packs += amount;
+
+            // Update database
+            this.insert(itemData, "items")
+                .then(() => {
+                    const operationData = {
+                        timestamp: Date.now(),
+                        type: OPERATION_TYPES.RETURN_PACKS,
+                        item_id: itemId,
+                        store_from_id: itemData.store_id,
+                        price: 0,
+                        stock_amount: type === "stock" ? amount : null,
+                        pack_amount: type === "packs" ? amount : null
+                    };
+                    this.insert(operationData, "operations")
+                        .then(resolve)
+                        .catch(reject);
+                })
+                .catch(reject);
+        });
+    }
+
+    // Operations for stored items (has storeId)
+    buyStock(productId, amount, storeId, price, expirationDate) {
+        return new Promise((resolve, reject) => {
+            
+            // Validation
+            const productIndex = this._db.products.findIndex(it => it.id === productId);
+            if(productIndex < 0){
+                reject({message: "Product not found"});
+                return;
+            }
+
+            if(amount <= 0){
+                reject({message: "Cannot buy negative amount"});
+                return;
+            }
+
+            const storeIndex = this._db.stores.findIndex(it => it.id === storeId);
+            if(storeIndex < 0){
+                reject({message: "Store not found"});
+                return;
+            }
+
+            // New rows
+            const stockData = {
+                product_id: productId,
+                store_id: storeId,
+                stock: amount,
+                packs: 0,
+                expiration_date: expirationDate
+            };
+            const operationData = {
+                timestamp: Date.now(),
+                type: OPERATION_TYPES.BUY,
+                item_id: item.id,
+                store_to_id: storeId,
+                price: price,
+                stock_amount: stockAmount,
+                pack_amount: packAmount 
+            };
+
+            this.insert(stockData, "items")
+                .then(() => { // Register operation
+                    this.insert(operationData, "operations")
+                        .then(resolve)
+                        .catch(reject);
+                })
+                .catch(reject);
         });
     }
 
     moveStock(itemId, amount, toStoreId) {
-        return new Promise((resolve, reject) => {
-
-        });
+        return this._moveStockOrPacks(itemId, amount, "stock", toStoreId);
     }
 
     spendStock(itemId, amount) {
-        return new Promise((resolve, reject) => {
+        return this._reduceStockOrPacks(itemId, amount, "stock");
+    }
 
-        });
+    movePacks(itemId ,amount, toStoreId) {
+        return this._moveStockOrPacks(itemId, amount, "packs", toStoreId);
     }
 
     returnPacks(itemId, amount) {
-        return new Promise((resolve, reject) => {
-
-        });
+        return this._reduceStockOrPacks(itemId, amount, "packs");
     }
 }

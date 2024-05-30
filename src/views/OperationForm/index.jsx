@@ -36,7 +36,7 @@ const View = () => {
             if(opType === "BUY"){  // Buy operation requires product data
                 const productsId = searchParams.get("products");
                 if(Boolean(productsId)){
-                    const pIds = productsId.split("_").map(id => parseInt(id));
+                    const pIds = productsId.split("_");
                     db.query("products", pIds)
                         .then(products => setFormData({
                             ...formData,
@@ -50,7 +50,7 @@ const View = () => {
             }else{ // Other operations require item data (stock and packs)
                 const itemsId = searchParams.get("items");
                 if(Boolean(itemsId)){
-                    const iIds = itemsId.split("_").map(id => parseInt(id));
+                    const iIds = itemsId.split("_");
                     db.query("items", iIds)
                         .then(items => {
                             setFormData({

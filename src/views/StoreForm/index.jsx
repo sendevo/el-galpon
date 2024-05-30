@@ -62,7 +62,7 @@ const View = () => {
     useEffect(() => {
         const id = searchParams.get("id");
         if(Boolean(id)){ // Editing form
-            db.query("stores",[parseInt(id)])
+            db.query("stores",[id])
                 .then(data => {
                     if(data.length === 1){
                         setViewTitle("Edición de depósito");
