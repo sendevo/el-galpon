@@ -18,8 +18,8 @@ const Switch = props => {
         name, 
         value, 
         error, 
-        labelLeft, 
-        labelRight, 
+        labelFalse, 
+        labelTrue, 
         onChange
     } = props;
 
@@ -50,10 +50,10 @@ const Switch = props => {
                         direction="row"
                         alignItems="center" 
                         spacing={1}>
-                        {labelLeft && 
+                        {labelFalse && 
                             <Grid item sm={4}>
                                 <Typography fontWeight={value ? "normal" : "bold"}>
-                                    {labelLeft}
+                                    {labelFalse}
                                 </Typography>
                             </Grid>
                         }
@@ -68,7 +68,7 @@ const Switch = props => {
                         </Grid>
                         <Grid item sm={4}>
                             <Typography fontWeight={value ? "bold" : "normal"}>
-                                {labelRight}
+                                {labelTrue}
                             </Typography>
                         </Grid>
                     </Grid>

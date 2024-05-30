@@ -126,7 +126,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
                                     icon={<FaCalendarDay color={filters.expirable_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}
                                     title=""
-                                    labelRight="Con vencimiento"
+                                    labelTrue="Con vencimiento"
                                     name="expirable"
                                     value={filters.expirable}
                                     onChange={handleInputChange}/>
@@ -138,7 +138,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
                                     icon={<FaRecycle color={filters.returnable_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}
                                     title=""
-                                    labelRight="Retornable"
+                                    labelTrue="Retornable"
                                     name="returnable"
                                     value={filters.returnable}
                                     onChange={handleInputChange}/>

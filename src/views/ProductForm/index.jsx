@@ -128,16 +128,16 @@ const View = () => {
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <Switch 
-                                    labelLeft="Sin vencimiento"
-                                    labelRight="Con vencimiento"
+                                    labelFalse="Sin vencimiento"
+                                    labelTrue="Con vencimiento"
                                     name="expirable"
                                     value={formData.expirable}
                                     onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Switch 
-                                    labelLeft="No retornable"
-                                    labelRight="Retornable"
+                                    labelFalse="No retornable"
+                                    labelTrue="Retornable"
                                     name="returnable"
                                     value={formData.returnable}
                                     onChange={handleInputChange}/>
