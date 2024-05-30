@@ -227,7 +227,7 @@ export const testData = {
         },
         {
             id: "4234-42kjbnk-23gv4k",
-            product_id: "1928-auysd6-aw876d",
+            product_id: "342-fserrt-45234",
             store_id: "000-10283-daifh-hflaksu",
             stock: 2,
             packs: 0,
@@ -243,7 +243,7 @@ export const testData = {
         },
         {
             id: "123-dfads-342351",
-            product_id: "1928-auysd6-aw876d",
+            product_id: "342-fserrt-45234",
             store_id: "124-sdd5yst-543",
             stock: 0,
             packs: 0,

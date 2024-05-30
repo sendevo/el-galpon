@@ -47,6 +47,15 @@ const View = () => {
         }
     }, []);
 
+    const handleInputChange = event => {
+        const {name, value} = event.target;
+        setFormData({
+            ...formData,
+            modified: Date.now(),
+            [name]: name === "categories" ? value.map(v => v.label) : value
+        });
+    };
+
     const handleSubmit = () => {
         if(validateForm(formData)){
             db.insert(formData,'products')
@@ -65,15 +74,6 @@ const View = () => {
             debug("Complete all fields", "error");
             toast("Complete los campos obligatorios", "error");
         }
-    };
-
-    const handleInputChange = event => {
-        const {name, value} = event.target;
-        setFormData({
-            ...formData,
-            modified: Date.now(),
-            [name]: name === "categories" ? value.map(v => v.label) : value
-        });
     };
 
     return(
@@ -102,6 +102,7 @@ const View = () => {
                                     name="pack_size"
                                     type="number"
                                     value={formData.pack_size || ""}
+                                    error={formData.pack_size === ""}
                                     onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={6}>
@@ -110,6 +111,7 @@ const View = () => {
                                     label="Unidad*"
                                     name="pack_unit"
                                     value={formData.pack_unit || ""}
+                                    error={formData.pack_unit === ""}
                                     options={UNITS.map(u => ({label: u, value: u}))}
                                     onChange={handleInputChange}
                                 />

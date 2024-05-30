@@ -10,8 +10,8 @@ import {
     TableRow
 } from "@mui/material";
 import moment from "moment";
+import { DB_SCHEMA, isValidRowData } from "../../model/constants";
 import { componentsStyles } from "../../themes";
-
 
 const ItemList = ({items, ignoredCols, selected, setSelected}) => {
 
@@ -53,7 +53,7 @@ const ItemList = ({items, ignoredCols, selected, setSelected}) => {
                     </TableHead>
                     <TableBody>
                         {items.map(item => (
-                            item && <TableRow key={item.id}>
+                            isValidRowData(item, "items") && <TableRow key={item.id}>
                                 <TableCell sx={componentsStyles.tableCell}>
                                     <Checkbox 
                                         checked={selected.indexOf(item.id) !== -1} 

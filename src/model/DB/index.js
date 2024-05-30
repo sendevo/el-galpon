@@ -6,16 +6,19 @@ import {
     compare, 
     generateUUID
 } from "../utils";
-import { DB_MODE } from "../constants";
+import { 
+    DB_SCHEMA,
+    DB_MODE, 
+    DB_VERSION, 
+    getSchemaVersion 
+} from "../constants";
 import migrateDB from "./migrations";
-import schemas from "./schemas.json";
 import { testData } from "./testData";
 
-export const DB_VERSION = schemas.length - 1;
-const schema = schemas[DB_VERSION];
+const tables = Object.keys(DB_SCHEMA);
+//export const isValidTable = tableName => tables.includes(tableName);
+export const isValidTable = tableName => tableName in DB_SCHEMA;
 
-//export const isValidTable = tableName => Object.keys(schema).includes(tableName);
-export const isValidTable = tableName => tableName in schema;
 
 export default class LocalDatabase {
     constructor(onReady) {
@@ -29,7 +32,7 @@ export default class LocalDatabase {
             const versionCode = parseInt(version);
             if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
                 debug("Database version changed, migrating data...");
-                const oldSchema = schemas[versionCode];
+                const oldSchema = getSchemaVersion(versionCode);
                 Object.keys(oldSchema).forEach(table => {
                     const data = localStorage.getItem(table);
                     this._db[table] = data ? JSON.parse(data) : [];
@@ -39,7 +42,7 @@ export default class LocalDatabase {
                         this._db = newData;
                         localStorage.clear();
                         localStorage.setItem("version", JSON.stringify(DB_VERSION));
-                        Object.keys(schema).forEach(table => {
+                        tables.forEach(table => {
                             localStorage.setItem(table, JSON.stringify(this._db[table]));
                         });
                         debug("Migration completed.");
@@ -48,7 +51,7 @@ export default class LocalDatabase {
                     .catch(console.error);
             }else{ // Load data 
                 debug("Loading data...");
-                Object.keys(schema).forEach(table => {
+                tables.forEach(table => {
                     const data = localStorage.getItem(table);
                     this._db[table] = data ? JSON.parse(data) : [];
                 });
@@ -68,7 +71,7 @@ export default class LocalDatabase {
                 localStorage.setItem("version", JSON.stringify(DB_VERSION));
             }else{
                 debug("Empty database, creating tables...");
-                Object.keys(schema).forEach(table => {
+                tables.forEach(table => {
                     this._db[table] = [];
                     localStorage.setItem(table, "");
                 });
