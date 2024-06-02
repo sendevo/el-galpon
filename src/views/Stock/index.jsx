@@ -8,7 +8,7 @@ import MainView from "../../components/MainView";
 import ProductDetails from "./productDetails";
 import StoreDetails from "./storeDetails";
 import ItemList from "./itemList";
-import ActionsBlock from "./actionsBlock";
+import OperationsBlock from "./operationsBlock";
 import EmptyListSection from "./emptyListSection";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 
@@ -103,7 +103,7 @@ const View = () => {
                         selected={selectedIds}
                         setSelected={setSelectedIds}/>
                     {showActionBlock &&
-                        <ActionsBlock
+                        <OperationsBlock
                             enabledOperations={enabledOperations}
                             onBuy={() => handleOperation('BUY')}
                             onMoveStock={() => handleOperation('MOVE_STOCK')}

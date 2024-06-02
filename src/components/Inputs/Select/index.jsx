@@ -29,7 +29,7 @@ const Select = props => {
     const iconDisplay = icon && iconLoaded || rIcon;
 
     return (
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={2} alignItems="center" sx={{mb:3}}>
             {icon &&
             <Grid item xs={rIcon ? 1 : 2} display={iconDisplay ? 'block':'none'}>
                 {icon && !rIcon && 

@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { componentsStyles } from "../../themes";
 
-const ActionsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePack, onReturn}) => (
+const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePack, onReturn}) => (
     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
         { (enabledOperations.MOVE_STOCK || enabledOperations.SPEND || enabledOperations.BUY) &&
             <Grid container sx={{mb:1}} direction={"column"}>
@@ -80,4 +80,4 @@ const ActionsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePac
     </Paper>
 );
 
-export default ActionsBlock;
+export default OperationsBlock;

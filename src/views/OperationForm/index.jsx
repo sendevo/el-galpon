@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { 
-    Button, 
     Grid,
     Typography,
     Paper
@@ -9,21 +8,19 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
+import ActionsBlock from "../../components/ActionsBlock";
 import { 
-    Input,
-    SuggesterInput,
     Select,
     Switch
 } from "../../components/Inputs";
+import ProductBlock from "./productBlock";
 import { debug } from "../../model/utils";
 import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants";
-import amountIcon from "../../assets/icons/productos.png"
 import { componentsStyles } from "../../themes";
+import storeIcon from "../../assets/icons/barn.png";
 
 // TODO
 const validForm = formData => (false);
-
-const findStoreData = (stores, id) => stores.find(s => s.id === id);
 
 const View = () => {
 
@@ -62,7 +59,7 @@ const View = () => {
                                     ...formData,
                                     products: products.map(p => {
                                         const {id, pack_size, name, pack_unit, brand} = p;
-                                        return {id, pack_size, name, pack_unit, brand};
+                                        return {id, pack_size, name, pack_unit, brand, amount: 0, store: ""};
                                     }),
                                     opType: "BUY"
                                 })
@@ -96,49 +93,30 @@ const View = () => {
         }
     }, []);
 
-    const handleInputChange = event => {
-        const {name, value} = event.target;
-
-        const input = name.split("_");
-        if(input.length === 2){ // Input is a product field
-            switch(input[0]){
-                case "amountp":
-                    const products = [...formData.products];
-                    products[input[1]].amount = value;
-                    setFormData({
-                        ...formData,
-                        products,
-                        modified: Date.now()
-                    });   
-                    break;
-                case "storep":
-                    const stores = [...formData.stores];
-                    stores[input[1]] = value;
-                    setFormData({
-                        ...formData,
-                        stores,
-                        modified: Date.now()
-                    });
-                    break;
-                default: 
-                    break;
-            }
-            return;
-        }
-
-        if(name === "globalStore"){
-            setFormData({
-                ...formData,
-                globalStoreId: value,
-                modified: Date.now()
-            });
-            return;
-        }
-
+    const handleProductPropChange = (prop, index,value) => {
+        const prevProducts = [...formData.products];
+        prevProducts[index][prop] = value;
         setFormData({
             ...formData,
-            modified: Date.now(),
-            [name]: value
+            products: prevProducts,
+            modified: Date.now()
+        });   
+    };
+
+    const handleSwitchChange = value => {
+        setFormData({
+            ...formData,
+            sameStore: value,
+            modified: Date.now()
+        });
+    };
+
+    const handleGlobalStoreSelect = value => {
+        setFormData({
+            ...formData,
+            globalStoreId: value,
+            products: formData.products.map(p => ({...p, store: value})),
+            modified: Date.now()
         });
     };
 
@@ -166,73 +144,48 @@ const View = () => {
                                     labelTrue="Mismo depósito"
                                     name="sameStore"
                                     value={formData.sameStore}
-                                    onChange={handleInputChange}/>
+                                    onChange={e => handleSwitchChange(e.target.value)}/>
                             </Grid>
                             { formData.sameStore &&
                                 <Grid item>
                                     <Select
+                                        icon={storeIcon}
                                         label="Destino*"
                                         name="globalStore"
                                         value={formData.globalStoreId || ""}
                                         error={formData.globalStore === ""}
                                         options={stores.map(s => ({label: s.name, value: s.id}))}
-                                        onChange={handleInputChange}/>
+                                        onChange={e => handleGlobalStoreSelect(e.target.value)}/>
                                 </Grid> 
                             }
                         </Grid>
                     </Paper>
                 </Grid>
-                {formData.products?.map((product, pIndex) => (
-                    <Grid item key={product.id}>
-                        <Paper sx={componentsStyles.paper}>
-                            <Typography lineHeight={"2em"} paddingBottom={"15px"}><b>Producto: </b>{product.name}</Typography>
-                            <Input 
-                                icon={amountIcon}
-                                label="Cantidad*"
-                                name={"amountp_"+pIndex}
-                                type="number"
-                                value={product.amount || ""}
-                                error={formData.name === ""}
-                                onChange={handleInputChange}/>
-                            <Typography sx={{...componentsStyles.hintText, textAlign:"right", p:1}}>
-                                {product.amount ? `Cantidad total = ${product.pack_size*product.amount} ${product.pack_unit}` : ""}
-                            </Typography>
-                            <Select
-                                label="Destino*"
-                                name={"storep_"+pIndex}
-                                value={formData.stores.at(pIndex)?.name || ""}
-                                error={formData.stores.at(pIndex)?.name === ""}
-                                options={formData.stores?.map(s => ({label: s.name, value: s.id}))}
-                                onChange={handleInputChange}/>
-                        </Paper>
-                    </Grid>
-                ))}
+
                 <Grid item>
-                    <Grid container>
-                        <Typography 
+                    {formData.products?.map((product, pIndex) => (
+                        <ProductBlock 
+                            key={product.id}
+                            product={product} 
+                            hideStore={formData.sameStore}
+                            pIndex={pIndex} 
+                            stores={stores} 
+                            onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
+                    ))}
+                </Grid>
+
+                <Grid item sx={{mt:5}}>
+                    <Typography 
                         fontSize="15px"
                         color="rgb(50,50,50)">
                             * Campos obligatorios
-                        </Typography>
-                    </Grid>
-                    <Grid container spacing={2} direction={"row"} justifyContent={"space-around"}>
-                        <Grid item>
-                            <Button 
-                                variant="contained"
-                                color="success"
-                                onClick={handleSubmit}>
-                                Confirmar
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button 
-                                variant="contained"
-                                color="error"
-                                onClick={() => navigate(-1)}>
-                                Cancelar
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    </Typography>
+                </Grid>
+
+                <Grid item>
+                    <ActionsBlock 
+                        onSubmit={handleSubmit} 
+                        onCancel={() => navigate(-1)}/>
                 </Grid>
             </Grid>     
         </MainView>

@@ -35,8 +35,6 @@ const View = () => {
     
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
-
-    const opType = searchParams.get("op-type");
     
     const toast = useToast();
     const confirm = useConfirm();

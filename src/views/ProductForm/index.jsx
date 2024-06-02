@@ -9,6 +9,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
+import ActionsBlock from "../../components/ActionsBlock";
 import { 
     Input,
     SuggesterInput,
@@ -194,27 +195,7 @@ const View = () => {
                         color="rgb(50,50,50)">* Campos obligatorios</Typography>
                 </Grid>
             </Grid>
-            <Grid 
-                container 
-                direction="row" 
-                justifyContent={"space-around"}>
-                <Grid item>
-                    <Button 
-                        color="success"
-                        variant="contained"
-                        onClick={handleSubmit}>
-                        Guardar
-                    </Button>
-                </Grid>
-                <Grid>
-                    <Button 
-                        color="error"
-                        variant="contained"
-                        onClick={() => navigate(-1)}>
-                        Cancelar
-                    </Button>
-                </Grid>
-            </Grid>     
+            <ActionsBlock onSubmit={handleSubmit} onCancel={() => navigate(-1)}/>
         </MainView>
     );
 };
