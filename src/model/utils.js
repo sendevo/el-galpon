@@ -66,6 +66,8 @@ export const generateUUID = () => {
     return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
 
+export const trimString = (name, maxChars) => name.substring(0,maxChars)+(name.length > 30 ? "..." : "");
+
 export const categories2Select = cats => cats?.map(c => ({label: c, key: stringEncode(c)}));
   
 export const randomColorsGenerator = (count, transparency = 0.7) => {

@@ -22,6 +22,28 @@ import storeIcon from "../../assets/icons/barn.png";
 // TODO
 const validForm = formData => (false);
 
+const validateParams = searchParams => {
+    const operation = searchParams.get("type");
+    const itemsId = searchParams.get("items");
+    const productsId = searchParams.get("products");
+    const ids = itemsId ? itemsId.split("_") : productsId ? productsId.split("_") : [];
+    const table = itemsId ? "items" : productsId ? "products" : "";
+    return { 
+        operation,
+        table, 
+        ids, 
+        valid: validOperationType(operation) && ids.length > 0 
+    };
+}
+
+const getMaxAmount = (item, operation) => {
+    if(operation === "MOVE_STOCK" || operation === "SPEND")
+        return item?.stock;
+    if(operation === "MOVE_PACKS" || operation === "RETURN_PACKS")
+        return item?.packs;
+    return -1;
+};
+
 const View = () => {
 
     const [searchParams] = useSearchParams();
@@ -34,66 +56,65 @@ const View = () => {
     const [viewTitle, setViewTitle] = useState("Nuevo movimiento");
     const [stores, setStores] = useState([]);
     const [formData, setFormData] = useState({
-        opType: "",
+        operation: "",
         products: [],
-        items: [],
         stores: [],
         sameStore: true,
         globalStoreId: ""
     });
 
     useEffect(() => {
-        const opType = searchParams.get("type");
-
-        if(validOperationType(opType)){
-            setViewTitle(OPERATION_TYPES_NAMES[opType]);
-            db.query("stores", []).then(stores => {
-                setStores(stores.map(s => ({id: s.id, name: s.name})));
-                if(opType === "BUY"){  // Buy operation requires product data
-                    const productsId = searchParams.get("products");
-                    if(Boolean(productsId)){
-                        const pIds = productsId.split("_");
-                        db.query("products", pIds)
-                            .then(products => {
-                                setFormData({
-                                    ...formData,
-                                    products: products.map(p => {
-                                        const {id, pack_size, name, pack_unit, brand} = p;
-                                        return {id, pack_size, name, pack_unit, brand, amount: 0, store: ""};
-                                    }),
-                                    opType: "BUY"
-                                })
-                            })
-                            .catch(console.error);
-                    }else{
-                        console.error("Product not specified for operation", opType);
-                    }
-                }else{ // Other operations require item data (stock and packs)
-                    const itemsId = searchParams.get("items");
-                    if(Boolean(itemsId)){
-                        const iIds = itemsId.split("_");
-                        db.query("items", iIds)
-                            .then(items => {
-                                setFormData({
-                                    ...formData,
-                                    items,
-                                    opType
-                                });
-                            })
-                            .catch(console.error);
-                    }else{
-                        console.error("Item not specified for operation", opType);
-                        navigate(-1);
-                    }
-                }
+        const queryData = validateParams(searchParams);
+        if(queryData.valid){
+            db.query("stores", []).then(storesData => {
+                const stores = storesData.map(s => ({id: s.id, name: s.name}));
+                const operation = queryData.operation;
+                // Generate list of products to apply operation
+                db.query(queryData.table, queryData.ids) // Get items or products depending on operation
+                    .then(data => {
+                        const products = data.map(row => {
+                            let product, amount, maxAmount, store_id;
+                            if(queryData.table === "items"){
+                                product = row.productData;
+                                maxAmount = getMaxAmount(row, operation);
+                                amount = maxAmount;
+                                store_id = row.store_id;
+                            } else { // products
+                                product = row;
+                                amount = 0;
+                                maxAmount = -1;
+                                store_id = "";
+                            }
+                            const {id, pack_size, name, pack_unit, brand} = product;
+                            return {
+                                id, 
+                                pack_size, 
+                                name, 
+                                pack_unit, 
+                                brand, 
+                                amount, 
+                                maxAmount,
+                                store_id,
+                            };
+                        });
+                        setViewTitle(OPERATION_TYPES_NAMES[operation]);
+                        setStores(stores);
+                        setFormData({
+                            ...formData,
+                            products,
+                            stores,
+                            operation
+                        });
+                    })
+                    .catch(console.error);
             });
         }else{
-            console.error("Unrecognised operation type");
+            console.error("Invalid URL parameters");
             navigate(-1);
         }
     }, []);
 
-    const handleProductPropChange = (prop, index,value) => {
+    const handleProductPropChange = (prop, index, value) => {
         const prevProducts = [...formData.products];
         prevProducts[index][prop] = value;
         setFormData({
@@ -112,21 +133,22 @@ const View = () => {
     };
 
     const handleGlobalStoreSelect = value => {
-        setFormData({
-            ...formData,
+        setFormData(prevForm => ({
+            ...prevForm,
             globalStoreId: value,
-            products: formData.products.map(p => ({...p, store: value})),
+            products: prevForm.products.map(p => ({...p, store_id: value})),
             modified: Date.now()
-        });
+        }));
     };
 
     const handleSubmit = () => {
         if(validForm(formData)){
-            debug(formData);
+            debug("Valid form");
         }else{
             debug("Complete all fields", "error");
             toast("Complete los campos obligatorios", "error");
         }
+        debug(formData);
     };
 
     return(
@@ -165,10 +187,9 @@ const View = () => {
                 <Grid item>
                     {formData.products?.map((product, pIndex) => (
                         <ProductBlock 
-                            key={product.id}
+                            key={pIndex}
                             product={product} 
                             hideStore={formData.sameStore}
-                            pIndex={pIndex} 
                             stores={stores} 
                             onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
                     ))}

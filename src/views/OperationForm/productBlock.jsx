@@ -1,8 +1,11 @@
 import { Typography, Paper } from "@mui/material";
 import { Input, Select } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
+import { trimString } from "../../model/utils";
 import amountIcon from "../../assets/icons/productos.png";
 import storeIcon from "../../assets/icons/barn.png"; 
+
+const prodNameTrim = 30;
 
 const ProductBlock = ({
         product, 
@@ -11,13 +14,13 @@ const ProductBlock = ({
         onPropChange
     }) => (
     <Paper sx={{...componentsStyles.paper, mt:2}}>
-        <Typography lineHeight={"2em"} paddingBottom={"15px"}><b>Producto: </b>{product.name}</Typography>
+        <Typography lineHeight={"2em"} paddingBottom={"15px"}><b>Producto: </b>{trimString(product.name, prodNameTrim)}</Typography>
         <Input 
             icon={amountIcon}
             label="Cantidad*"
             type="number"
             value={product.amount || ""}
-            error={product.name === ""}
+            error={product.amount == ""}
             onChange={e => onPropChange("amount", e.target.value)}/>
         <Typography sx={{...componentsStyles.hintText, textAlign:"right", p:1}}>
             {product.amount ? `Cantidad total = ${product.pack_size*product.amount} ${product.pack_unit}` : ""}
@@ -26,10 +29,10 @@ const ProductBlock = ({
             <Select
                 icon={storeIcon}
                 label="Destino*"
-                value={product.store || ""}
-                error={product.store === ""}
+                value={product.store_id || ""}
+                error={product.store_id === ""}
                 options={stores?.map(s => ({label: s.name, value: s.id}))}
-                onChange={e => onPropChange("store", e.target.value)}/>
+                onChange={e => onPropChange("store_id", e.target.value)}/>
         }
     </Paper>
 );
