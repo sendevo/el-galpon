@@ -20,6 +20,10 @@ import { componentsStyles } from "../../themes";
 import storeIcon from "../../assets/icons/barn.png";
 
 
+const requireStock = ["MOVE_STOCK", "SPEND"];
+const requirePacks = ["MOVE_PACKS", "RETURN_PACKS"];
+const requireStore = ["MOVE_STOCK", "MOVE_PACKS", "BUY"];
+
 const validForm = formData => (false); // TODO
 
 const validateParams = searchParams => {
@@ -34,12 +38,12 @@ const validateParams = searchParams => {
         ids, 
         valid: validOperationType(operation) && ids.length > 0 
     };
-}
+};
 
 const getMaxAmount = (item, operation) => {
-    if(operation === "MOVE_STOCK" || operation === "SPEND")
+    if(requireStock.includes(operation))
         return item?.stock;
-    if(operation === "MOVE_PACKS" || operation === "RETURN_PACKS")
+    if(requirePacks.includes(operation))
         return item?.packs;
     return -1;
 };
@@ -73,17 +77,19 @@ const View = () => {
                 db.query(queryData.table, queryData.ids) // Get items or products depending on operation
                     .then(data => {
                         const products = data.map(row => {
-                            let product, amount, maxAmount, store_id;
+                            let product, amount, maxAmount, store_id, currentStoreId;
                             if(queryData.table === "items"){
                                 product = row.productData;
                                 maxAmount = getMaxAmount(row, operation);
                                 amount = maxAmount;
                                 store_id = row.store_id;
+                                currentStoreId = row.store_id; // Inmutable
                             } else { // products
                                 product = row;
                                 amount = 0;
                                 maxAmount = -1;
                                 store_id = "";
+                                currentStoreId = ""; // Inmutable
                             }
                             const {id, pack_size, name, pack_unit, brand} = product;
                             return {
@@ -95,6 +101,7 @@ const View = () => {
                                 amount, 
                                 maxAmount,
                                 store_id,
+                                currentStoreId
                             };
                         });
                         setViewTitle(OPERATION_TYPES_NAMES[operation]);
@@ -154,48 +161,51 @@ const View = () => {
     return(
         <MainView title={viewTitle}>
             <Grid container spacing={2} direction="column">
-                <Grid item xs={12}>
-                    <Paper sx={componentsStyles.paper}>
-                        <Grid container direction="column" spacing={2}> 
-                            <Grid item>
-                                <Typography lineHeight={"1em"} paddingBottom={"10px"}>Destino del movimiento</Typography>
-                            </Grid>
-                            <Grid item>
-                                <Switch 
-                                    labelFalse="Elegir cada uno"
-                                    labelTrue="Mismo depósito"
-                                    name="sameStore"
-                                    value={formData.sameStore}
-                                    onChange={e => handleSwitchChange(e.target.value)}/>
-                            </Grid>
-                            { formData.sameStore &&
+                {!(formData.operation==="SPEND" || formData.operation==="RETURN_PACKS") &&
+                    <Grid item xs={12}>
+                        <Paper sx={componentsStyles.paper}>
+                            <Grid container direction="column" spacing={2}> 
                                 <Grid item>
-                                    <Select
-                                        icon={storeIcon}
-                                        label="Destino*"
-                                        name="globalStore"
-                                        value={formData.globalStoreId || ""}
-                                        error={formData.globalStore === ""}
-                                        options={stores.map(s => ({label: s.name, value: s.id}))}
-                                        onChange={e => handleGlobalStoreSelect(e.target.value)}/>
-                                </Grid> 
-                            }
-                        </Grid>
-                    </Paper>
-                </Grid>
+                                    <Typography lineHeight={"1em"} paddingBottom={"10px"}>Destino del movimiento</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Switch 
+                                        labelFalse="Elegir cada uno"
+                                        labelTrue="Mismo depósito"
+                                        name="sameStore"
+                                        value={formData.sameStore}
+                                        onChange={e => handleSwitchChange(e.target.value)}/>
+                                </Grid>
+                                { formData.sameStore &&
+                                    <Grid item>
+                                        <Select
+                                            icon={storeIcon}
+                                            label="Destino*"
+                                            name="globalStore"
+                                            value={formData.globalStoreId || ""}
+                                            error={formData.globalStore === ""}
+                                            options={stores.map(s => ({label: s.name, value: s.id}))}
+                                            onChange={e => handleGlobalStoreSelect(e.target.value)}/>
+                                    </Grid> 
+                                }
+                            </Grid>
+                        </Paper>
+                    </Grid>
+                }
 
                 <Grid item>
                     {formData.products?.map((product, pIndex) => (
                         <ProductBlock 
                             key={pIndex}
                             product={product} 
-                            hideStore={formData.sameStore}
+                            hideStoreInput={formData.sameStore}
+                            storeSelectionError={product.store_id === product.currentStoreId && requireStore.includes(formData.operation)}
                             stores={stores} 
                             onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
                     ))}
                 </Grid>
 
-                <Grid item sx={{mt:5}}>
+                <Grid item sx={{mt:1}}>
                     <Typography 
                         fontSize="15px"
                         color="rgb(50,50,50)">
