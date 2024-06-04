@@ -6,19 +6,18 @@ import {
     compare, 
     generateUUID
 } from "../utils";
-import { 
-    DB_SCHEMA,
-    DB_MODE, 
-    DB_VERSION, 
-    getSchemaVersion 
-} from "../constants";
+import schemas from "./schemas.json";
 import migrateDB from "./migrations";
 import { testData } from "./testData";
 
+const DB_NAME = "elgalponDB";
+const DB_MODE = "test";
+const DB_VERSION = schemas.length - 1; // Current version
+const DB_SCHEMA = schemas[DB_VERSION];
 const tables = Object.keys(DB_SCHEMA);
-//export const isValidTable = tableName => tables.includes(tableName);
-export const isValidTable = tableName => tableName in DB_SCHEMA;
 
+export const isValidRowData = (row,table) => DB_SCHEMA[table].attributes.every(attr => attr in row);
+export const isValidTable = tableName => tableName in DB_SCHEMA;
 
 export default class LocalDatabase {
     constructor(onReady) {
@@ -32,7 +31,7 @@ export default class LocalDatabase {
             const versionCode = parseInt(version);
             if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
                 debug("Database version changed, migrating data...");
-                const oldSchema = getSchemaVersion(versionCode);
+                const oldSchema = schemas[versionCode];
                 Object.keys(oldSchema).forEach(table => {
                     const data = localStorage.getItem(table);
                     this._db[table] = data ? JSON.parse(data) : [];

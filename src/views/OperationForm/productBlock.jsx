@@ -6,6 +6,7 @@ import amountIcon from "../../assets/icons/productos.png";
 import storeIcon from "../../assets/icons/barn.png"; 
 
 const prodNameTrim = 30;
+const getProdUnit = product => product.pack_size===1 ? product.pack_unit : `(x ${product.pack_size} ${product.pack_unit})`;
 
 const ProductBlock = ({
         product, 
@@ -21,6 +22,7 @@ const ProductBlock = ({
             type="number"
             value={product.amount || ""}
             error={product.amount == ""}
+            unit={getProdUnit(product)}
             onChange={e => onPropChange("amount", e.target.value)}/>
         <Typography sx={{...componentsStyles.hintText, textAlign:"right", p:1}}>
             {product.amount ? `Cantidad total = ${product.pack_size*product.amount} ${product.pack_unit}` : ""}

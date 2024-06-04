@@ -10,27 +10,22 @@ import {
     TableRow
 } from "@mui/material";
 import moment from "moment";
-import { DB_SCHEMA, isValidRowData } from "../../model/constants";
+import { isValidRowData } from "../../model/DB";
 import { componentsStyles } from "../../themes";
 
-const ItemList = ({items, ignoredCols, selected, setSelected}) => {
+const ItemList = ({items, setItems, ignoredCols}) => {
 
-    const handleSelect = itemId => {
-        const selectedIndex = selected.indexOf(itemId);
-        const newSelected = [...selected];
-        if (selectedIndex === -1)
-            newSelected.push(itemId);
-        else
-            newSelected.splice(selectedIndex, 1);
-        setSelected(newSelected);
+    const selected = items.filter(it => it.selected);
+
+    const toggleSelect = index => {
+        setItems(prevItems => {
+            const newItems = [...prevItems];
+            newItems[index].selected = !newItems[index].selected;
+            return newItems;
+        });
     };
 
-    const handleSelectAll = selected => {
-        if(selected)
-            setSelected(items.map(d => d.id));
-        else 
-            setSelected([]);
-    };
+    const setAllSelected = select => setItems(prevItems => prevItems.map(it => ({...it, selected: select})));
 
     return (
         <Box>
@@ -41,7 +36,7 @@ const ItemList = ({items, ignoredCols, selected, setSelected}) => {
                             <TableCell sx={componentsStyles.headerCell}>
                                 <Checkbox 
                                     checked={selected.length === items.length} 
-                                    onChange={e => handleSelectAll(e.target.checked)} />
+                                    onChange={e => setAllSelected(e.target.checked)} />
                             </TableCell>
                             {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>Producto</TableCell>}
                             {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>}
@@ -52,12 +47,12 @@ const ItemList = ({items, ignoredCols, selected, setSelected}) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {items.map(item => (
+                        {items.map((item, index) => (
                             isValidRowData(item, "items") && <TableRow key={item.id}>
                                 <TableCell sx={componentsStyles.tableCell}>
                                     <Checkbox 
-                                        checked={selected.indexOf(item.id) !== -1} 
-                                        onChange={() => handleSelect(item.id)} />
+                                        checked={item.selected} 
+                                        onChange={() => toggleSelect(index)} />
                                 </TableCell>
                                 {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.name || "S/D"}</TableCell>}
                                 {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}

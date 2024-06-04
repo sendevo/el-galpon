@@ -11,7 +11,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
         { (enabledOperations.MOVE_STOCK || enabledOperations.SPEND || enabledOperations.BUY) &&
             <Grid container sx={{mb:1}} direction={"column"}>
                 <Grid item>
-                    <Typography sx={{fontWeight:"bold"}}>Insumos seleccionados</Typography>
+                    <Typography sx={{fontWeight:"bold", mb:1}}>Stock seleccionado</Typography>
                     <Grid 
                         container 
                         direction="row"
@@ -50,7 +50,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
         }
         { enabledOperations.MOVE_PACKS && enabledOperations.RETURN_PACKS &&
             <Grid container direction={"column"}>
-                <Typography sx={{fontWeight:"bold"}}>Envases seleccionados</Typography>
+                <Typography sx={{fontWeight:"bold", mb:1, mt:1}}>Envases seleccionados</Typography>
                 <Grid 
                     container 
                     direction="row"

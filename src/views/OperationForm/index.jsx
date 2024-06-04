@@ -19,8 +19,8 @@ import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants
 import { componentsStyles } from "../../themes";
 import storeIcon from "../../assets/icons/barn.png";
 
-// TODO
-const validForm = formData => (false);
+
+const validForm = formData => (false); // TODO
 
 const validateParams = searchParams => {
     const operation = searchParams.get("type");

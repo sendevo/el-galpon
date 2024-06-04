@@ -1,5 +1,4 @@
 import moment from "moment";
-import schemas from "../model/DB/schemas.json";
 
 // APP
 export const APP_NAME = "El Galpón";
@@ -11,14 +10,6 @@ export const BUILD_DATE = 1696264323611; // 2-10-2023 13:32 hs
 export const DEBUG_MODE = true;
 export const AVAILABLE_DEBUG_MODES = ["log", "error", "info", "warn", "table"];
 if(DEBUG_MODE) console.log(`Debug mode on. Available functions: ${AVAILABLE_DEBUG_MODES.join(", ")}`);
-
-// Database
-export const DB_NAME = "elgalponDB";
-export const DB_MODE = "test";
-export const DB_VERSION = schemas.length - 1; // Current version
-export const DB_SCHEMA = schemas[DB_VERSION];
-export const getSchemaVersion = versionCode => schemas[versionCode];
-export const isValidRowData = (row,table) => DB_SCHEMA[table].attributes.every(attr => attr in row);
 
 // Operation definitions
 export const OPERATION_TYPES = {
