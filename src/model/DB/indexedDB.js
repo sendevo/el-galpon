@@ -92,7 +92,7 @@ export default class LocalDatabase {
         });
     }
 
-    removeRow(rowId, table) {
+    delete(rowId, table) {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
                 this._performTransaction(() => {

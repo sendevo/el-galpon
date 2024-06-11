@@ -15,6 +15,7 @@ import {
     Box
 } from '@mui/material';
 import moment from "moment";
+import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
@@ -24,6 +25,7 @@ import { componentsStyles } from "../../themes";
 import { debug, latLng2GoogleMap, cropString } from "../../model/utils";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 import { FaExternalLinkAlt } from "react-icons/fa";
+
 
 const View = () => {
 
@@ -38,7 +40,10 @@ const View = () => {
     useEffect(() => {
         db.query("stores")
             .then(setData)
-            .catch(console.error);
+            .catch(error => {
+                toast("Error al cargar depósitos", "error");
+                debug(error, "error");
+            });
     }, []);
 
     const handleSelect = storeId => {
@@ -85,9 +90,8 @@ const View = () => {
             "Confirmar operación", 
             "¿Desea eliminar los ítems seleccionados?",
             () => { // On success
-                const job = selected.map(storeId => db.removeRow(storeId, "stores"));
                 const len = selected.length;
-                Promise.all(job)
+                db.delete("stores", selected)
                     .then(() => {
                         db.query("stores")
                             .then(updatedData => {
@@ -96,7 +100,15 @@ const View = () => {
                                 toast(`Se ${len > 1 ? "eliminaron":"eliminó"} ${len} depósito${len>1 ? "s":""}`, "success");
                             });
                     })
-                    .catch(console.error);
+                    .catch(error => {
+                        toast(
+                            error.type === ERROR_CODES.DB.WITH_ITEMS ? 
+                                    "No se puede eliminar depósitos con stock"
+                                    :
+                                    "Error al eliminar productos"
+                                    , "error");
+                        debug(error, "error");
+                    });
             }
         );
     };

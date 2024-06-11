@@ -15,6 +15,7 @@ import {
     Box 
 } from '@mui/material';
 import moment from "moment";
+import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
@@ -42,7 +43,10 @@ const View = () => {
     useEffect(() => {
         db.query("products")
             .then(setData)
-            .catch(console.error);
+            .catch(error => {
+                toast("Error al cargar depósitos", "error");
+                debug(error, "error");
+            });
     }, []);
 
     const handleSelect = productId => {
@@ -84,18 +88,29 @@ const View = () => {
             "Confirmar operación",
             "¿Desea eliminar los ítems seleccionados?",
             () => { // On success
-                const job = selected.map(productId => db.removeRow(productId, "products"));
                 const len = selected.length;
-                Promise.all(job)
+                db.delete("products", selected)
                     .then(() => {
-                        db.query("products",[])
+                        db.query("products")
                             .then(updatedData => {
                                 setData(updatedData);
                                 setSelected([]);
                                 toast(`Se ${len > 1 ? "eliminaron":"eliminó"} ${len} producto${len>1 ? "s":""}`, "success");
+                            })
+                            .catch(error => {
+                                toast("Error al eliminar productos", "error");
+                                debug(error, "error");
                             });
                     })
-                    .catch(console.error);
+                    .catch(error => {
+                        toast(
+                        error.type === ERROR_CODES.DB.WITH_ITEMS ? 
+                                "No se puede eliminar un producto con stock asociado"
+                                :
+                                "Error al eliminar productos"
+                                , "error");
+                        console.error(error);
+            }       );
             }
         );
     };

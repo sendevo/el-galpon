@@ -1,4 +1,4 @@
-import { OPERATION_TYPES } from "../constants";
+import { OPERATION_TYPES, ERROR_CODES } from "../constants";
 import { 
     debug, 
     levenshteinDistance, 
@@ -18,6 +18,8 @@ const tables = Object.keys(DB_SCHEMA);
 
 export const isValidRowData = (row,table) => DB_SCHEMA[table].attributes.every(attr => attr in row);
 export const isValidTable = tableName => tableName in DB_SCHEMA;
+
+const ERROR_TYPES = ERROR_CODES.DB;
 
 export default class LocalDatabase {
     constructor(onReady) {
@@ -95,7 +97,7 @@ export default class LocalDatabase {
                 debug(data);
                 resolve(data.id);
             }else{
-                reject({message:"Table not valid."});
+                reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});
             }
         });
     }
@@ -104,7 +106,7 @@ export default class LocalDatabase {
         // queryString: key:operator:value, example: "stock:gt:10"
         return new Promise((resolve, reject) => {
             if(!isValidTable(table)){
-                reject({message:"Table not valid."});
+                reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});
                 return;
             }
             const filters = queryString ? queryString2Filters(queryString) : []; // [{key, operator, value}]
@@ -127,45 +129,55 @@ export default class LocalDatabase {
                 }) && (rowIds.length === 0 || rowIds.includes(it.id));
                 return condition;
             });
-            if(rows.length > 0){
-                if(table === "items"){ // For items, add product and store data and compute amount of stock
-                    for(let index = 0; index < rows.length; index++){
-                        rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
-                        rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
-                        rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_size;
-                    }
-                    if(filterByTotalAmount.apply){ // Apply filter by totalAmount
-                        const { value, operator } = filterByTotalAmount;
-                        rows = rows.filter(it => compare(it.totalAmount, value, operator));
-                    }
+            if(table === "items"){ // For items, add product and store data and compute amount of stock
+                for(let index = 0; index < rows.length; index++){
+                    rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
+                    rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
+                    rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_size;
                 }
-                if(page && count){
-                    const startIndex = (page - 1) * count;
-                    const endIndex = startIndex + count;
-                    const paginatedItems = rows.slice(startIndex, endIndex);
-                    resolve(paginatedItems);
+                if(filterByTotalAmount.apply){ // Apply filter by totalAmount
+                    const { value, operator } = filterByTotalAmount;
+                    rows = rows.filter(it => compare(it.totalAmount, value, operator));
                 }
-                resolve(rows);
-            }else{
-                reject({message:"No item was found with given query"});
             }
+            if(page && count){
+                const startIndex = (page - 1) * count;
+                const endIndex = startIndex + count;
+                const paginatedItems = rows.slice(startIndex, endIndex);
+                resolve(paginatedItems);
+            }
+            resolve(rows);
         });
     }
 
-    removeRow(rowId, table) {
-        debug("Removing item "+rowId+" from "+table);
+    delete(table, rowIds = []) {
         return new Promise((resolve, reject) => {
-            if(isValidTable(table)){
-                const index = this._db[table].findIndex(it => it.id === rowId);
-                if(index >= 0){
-                    this._db[table].splice(index,1);
-                    resolve();
-                }else{
-                    reject({message:`Item with ID ${rowId} not found`});
-                }
-            }else{  
-                reject({message:"Table not valid."});
+            if(!isValidTable(table)){
+                reject({message:"Table not valid.", type:ERROR_TYPES.INVALID_TABLE});
+                return;
             }
+            // If table is "stores" or "products", check that there are not rows in table "items" that has this store or product
+            const queryData = {
+                stores: {
+                    message: "Store has items",
+                    key: "store_id"
+                },
+                products: {
+                    message: "There items with this product",
+                    key: "product_id"
+                }
+            }
+            if(Object.keys(queryData).includes(table)){
+                const itemsWithStore = this._db.items.filter(it => rowIds.includes(it[queryData[table].key]));
+                if(itemsWithStore.length > 0){
+                    reject({message: queryData[table].message, items: itemsWithStore, type: ERROR_TYPES.WITH_ITEMS});
+                    return;
+                }
+            }
+            const itemsLeft =  this._db[table].filter(it => !rowIds.includes(it.id));
+            this._db[table] = itemsLeft;
+            localStorage.setItem(table, JSON.stringify(itemsLeft));
+            resolve();
         });
     }
 
@@ -177,7 +189,7 @@ export default class LocalDatabase {
                     .sort((a, b) => a.similarity - b.similarity);
                 resolve(results);
             }else{
-                reject({message:"Table not valid."});
+                reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});
             }
         });
     }

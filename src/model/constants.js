@@ -10,6 +10,12 @@ export const BUILD_DATE = 1696264323611; // 2-10-2023 13:32 hs
 export const DEBUG_MODE = true;
 export const AVAILABLE_DEBUG_MODES = ["log", "error", "info", "warn", "table"];
 if(DEBUG_MODE) console.log(`Debug mode on. Available functions: ${AVAILABLE_DEBUG_MODES.join(", ")}`);
+export const ERROR_CODES = {
+    DB:{
+        INVALID_TABLE: 1,
+        WITH_ITEMS: 2
+    }
+};
 
 // Operation definitions
 export const OPERATION_TYPES = {
