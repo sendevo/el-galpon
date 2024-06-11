@@ -83,7 +83,7 @@ const View = () => {
     const handleSubmit = () => {
         if(validateForm(formData)){
             debug(formData);
-            db.insert(formData,"stores")
+            db.insert("stores",formData)
                 .then(id => {
                     if(formData.id){ // Editing
                         toast("Datos actualizados", "success", 2000);

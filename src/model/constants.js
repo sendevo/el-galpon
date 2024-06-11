@@ -13,7 +13,9 @@ if(DEBUG_MODE) console.log(`Debug mode on. Available functions: ${AVAILABLE_DEBU
 export const ERROR_CODES = {
     DB:{
         INVALID_TABLE: 1,
-        WITH_ITEMS: 2
+        WITH_ITEMS: 2,
+        NOT_FOUND: 3,
+        UNKNOWN_OPERATION: 4
     }
 };
 

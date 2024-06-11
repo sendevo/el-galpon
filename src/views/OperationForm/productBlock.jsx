@@ -16,10 +16,10 @@ const ProductBlock = ({
         hideStoreInput,
         onPropChange
     }) => (
-    <Paper sx={{...componentsStyles.paper, mt:2}}>
+    <Paper sx={{...componentsStyles.paper, mt:1}}>
         <Grid container justifyContent="space-between" direction={"column"}>
             <Grid item xs={12}>
-                <Typography lineHeight={"2em"} paddingBottom={"15px"}><b>Producto: </b>{trimString(product.name, prodNameTrim)}</Typography>
+                <Typography lineHeight={"2em"} paddingBottom={"5px"}><b>Producto: </b>{trimString(product.name, prodNameTrim)}</Typography>
             </Grid>
 
             <Grid item xs={12}>
@@ -44,10 +44,10 @@ const ProductBlock = ({
                     <Select
                         icon={storeIcon}
                         label="Destino*"
-                        value={product.store_id || ""}
-                        error={product.store_id == ""}
+                        value={product.toStoreId || ""}
+                        error={product.toStoreId == ""}
                         options={stores?.map(s => ({label: s.name, value: s.id}))}
-                        onChange={e => onPropChange("store_id", e.target.value)}/>
+                        onChange={e => onPropChange("toStoreId", e.target.value)}/>
                 </Grid>
             }
             

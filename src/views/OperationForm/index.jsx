@@ -5,6 +5,7 @@ import {
     Paper
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
@@ -23,8 +24,22 @@ import storeIcon from "../../assets/icons/barn.png";
 const requireStock = ["MOVE_STOCK", "SPEND"];
 const requirePacks = ["MOVE_PACKS", "RETURN_PACKS"];
 const requireStore = ["MOVE_STOCK", "MOVE_PACKS", "BUY"];
+const requireDestination = ["SPEND", "RETURN_PACKS"];
 
-const validForm = formData => (false); // TODO
+const validForm = formData => {
+    const {operation, products} = formData;
+    switch(operation){
+        case "MOVE_STOCK":
+        case "MOVE_PACKS":
+        case "BUY":
+            return products.every(p => p.amount > 0 && p.toStoreId !== "");
+        case "SPEND":
+        case "RETURN_PACKS":
+            return products.every(p => p.amount > 0);
+        default:
+            return false;
+    }
+}
 
 const validateParams = searchParams => {
     const operation = searchParams.get("type");
@@ -67,6 +82,10 @@ const View = () => {
         globalStoreId: ""
     });
 
+    const hasDestination = requireDestination.includes(formData.operation);
+    const showGlobalStoreBlock = !hasDestination && formData.products.length > 1;
+    const hideStoreInput = (formData.products.length > 1 && formData.sameStore) || hasDestination;
+
     useEffect(() => {
         const queryData = validateParams(searchParams);
         if(queryData.valid){
@@ -74,21 +93,22 @@ const View = () => {
                 const stores = storesData.map(s => ({id: s.id, name: s.name}));
                 const operation = queryData.operation;
                 // Generate list of products to apply operation
+                // For repeated ids, db.query will not return duplicates
                 db.query(queryData.table, queryData.ids) // Get items or products depending on operation
                     .then(data => {
                         const products = data.map(row => {
-                            let product, amount, maxAmount, store_id, currentStoreId;
+                            let product, amount, maxAmount, toStoreId, currentStoreId;
                             if(queryData.table === "items"){
                                 product = row.productData;
                                 maxAmount = getMaxAmount(row, operation);
                                 amount = maxAmount;
-                                store_id = row.store_id;
+                                toStoreId = row.store_id;
                                 currentStoreId = row.store_id; // Inmutable
                             } else { // products
                                 product = row;
                                 amount = 0;
                                 maxAmount = -1;
-                                store_id = "";
+                                toStoreId = "";
                                 currentStoreId = ""; // Inmutable
                             }
                             const {id, pack_size, name, pack_unit, brand} = product;
@@ -100,7 +120,7 @@ const View = () => {
                                 brand, 
                                 amount, 
                                 maxAmount,
-                                store_id,
+                                toStoreId,
                                 currentStoreId
                             };
                         });
@@ -143,30 +163,35 @@ const View = () => {
         setFormData(prevForm => ({
             ...prevForm,
             globalStoreId: value,
-            products: prevForm.products.map(p => ({...p, store_id: value})),
+            products: prevForm.products.map(p => ({...p, toStoreId: value})),
             modified: Date.now()
         }));
     };
 
     const handleSubmit = () => {
         if(validForm(formData)){
-            debug("Valid form");
+            console.log(formData.operation);
+            console.log(formData.products);
+            db.handleOperation(formData.operation, formData.products)
+                .then(result => {
+
+                })
+                .catch(console.error);
         }else{
             debug("Complete all fields", "error");
             toast("Complete los campos obligatorios", "error");
         }
-        debug(formData);
     };
 
     return(
         <MainView title={viewTitle}>
-            <Grid container spacing={2} direction="column">
-                {!(formData.operation==="SPEND" || formData.operation==="RETURN_PACKS") &&
+            <Grid container spacing={1} direction="column">
+                {showGlobalStoreBlock &&
                     <Grid item xs={12}>
                         <Paper sx={componentsStyles.paper}>
                             <Grid container direction="column" spacing={2}> 
                                 <Grid item>
-                                    <Typography lineHeight={"1em"} paddingBottom={"10px"}>Destino del movimiento</Typography>
+                                    <Typography lineHeight={"1em"}>Destino</Typography>
                                 </Grid>
                                 <Grid item>
                                     <Switch 
@@ -180,7 +205,7 @@ const View = () => {
                                     <Grid item>
                                         <Select
                                             icon={storeIcon}
-                                            label="Destino*"
+                                            label="Elegir ubicación*"
                                             name="globalStore"
                                             value={formData.globalStoreId || ""}
                                             error={formData.globalStore === ""}
@@ -198,8 +223,8 @@ const View = () => {
                         <ProductBlock 
                             key={pIndex}
                             product={product} 
-                            hideStoreInput={formData.sameStore}
-                            storeSelectionError={product.store_id === product.currentStoreId && requireStore.includes(formData.operation)}
+                            hideStoreInput={hideStoreInput}
+                            storeSelectionError={product.toStoreId === product.currentStoreId && requireStore.includes(formData.operation)}
                             stores={stores} 
                             onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
                     ))}

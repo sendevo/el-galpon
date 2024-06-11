@@ -81,7 +81,7 @@ export default class LocalDatabase {
         }
     }
 
-    insert(data, table) {
+    insert(table, data) {
         return new Promise((resolve, reject) => {
             if(isValidTable(table)){
                 const index = this._db[table].findIndex(r => r.id === data.id);
@@ -194,208 +194,60 @@ export default class LocalDatabase {
         });
     }
 
+    _storeHasStock(storeId, productId){
 
-    // Business model specific functions
-    _moveStockOrPacks(itemId, amount, type, toStoreId) { // Move stock or empty packs between stores
+    }
+
+    _storeHasPacks(storeId, productId){
+
+    }
+
+    buyStock(productsData) {
         return new Promise((resolve, reject) => {
-            // Validation
-            
-            const itemIndex = this._db.items.findIndex(it => it.id === itemId);
-            if(itemIndex < 0){
-                reject({message: "Item not found"});
-                return;
-            }
 
-            if(toStoreId){
-                const storeIndex = this._db.stores.findIndex(it => it.id === toStoreId);
-                if(storeIndex < 0){
-                    reject({message: "Store not found"});
-                    return;
-                }
-            }
+        });       
+    }
 
-            if(amount <= 0){
-                reject({message: "Cannot move negative amount"});
-                return;
-            }
+    spendStock(productsData) {
+        return new Promise((resolve, reject) => {
 
-            if(type !== "stock" && type !== "packs"){
-                reject({message: "Unknown operation type"});
-                return;
-            }
-
-            const itemData = this._db.items[itemIndex];    
-            if(amount > itemData[type]){ // Not allowed
-                reject({message: "Cannot move greater amount than current stock."});
-                return;
-            }
-
-            const operationData = {
-                timestamp: Date.now(),
-                type: type === "stock" ? OPERATION_TYPES.MOVE_STOCK : OPERATION_TYPES.MOVE_PACKS,
-                item_id: itemId,
-                store_from_id: itemData.store_id,
-                store_to_id: toStoreId,
-                price: 0,
-                stock_amount: type === "stock" ? amount : null,
-                pack_amount: type === "packs" ? amount : null
-            };
-
-            if(amount === itemData[type]){ // Move all stock to another store
-                itemData.store_id = toStoreId;
-                this.insert(itemData, "items")
-                    .then(() => {
-                        this.insert(operationData, "operations")
-                            .then(resolve)
-                            .catch(reject);
-                    })
-                    .catch(reject);
-                return;
-            } 
-            
-            if(amount < itemData[type]){ // Create new item in another store
-                const newItemData = {
-                    ...itemData,
-                    id: null,
-                    store_id: toStoreId,
-                    [type]: amount
-                };
-                this.insert(newItemData, "items")
-                    .then(() => { // Update amount of remaining
-                        itemData[type] -= amount;
-                        this.insert(itemData, "items")
-                            .then(() => {
-                                this.insert(operationData, "operations")
-                                    .then(resolve)
-                                    .catch(reject);
-                            })
-                            .catch(reject);
-                        return;
-                    })
-                    .catch(reject);
-            }
         });
     }
 
-    _reduceStockOrPacks(itemId, amount, type) { // Update amount but not store
+    moveStock(productsData) {
         return new Promise((resolve, reject) => {
-            const itemIndex = this._db.items.findIndex(it => it.id === itemId);
-            if(itemIndex < 0){
-                reject({message: "Item not found"});
-                return;
-            }
 
-            if(amount <= 0){
-                reject({message: "Cannot spend or return negative amount"});
-                return;
-            }
-
-            if(type !== "stock" && type !== "packs"){
-                reject({message: "Unknown operation type"});
-                return;
-            }
-
-            // Update amount of item's stock or packs
-            const itemData = this._db.items[itemIndex];
-            if(amount > itemData[type]){ // Not allowed
-                reject({message: "Cannot spend greater amount than current."});
-                return;
-            }
-            itemData[type] -= amount;
-
-            // If returnable product, update empty packs number
-            const productIndex = this._db.products.findIndex(prod => prod.it === itemData.product_id);
-            if(productIndex < 0){
-                reject({message: "Cannot find item product type"});
-                return;
-            }
-            const productData = this._db.products[productIndex];
-            if(type === "stock" && productData.returnable)
-                itemData.packs += amount;
-
-            // Update database
-            this.insert(itemData, "items")
-                .then(() => {
-                    const operationData = {
-                        timestamp: Date.now(),
-                        type: OPERATION_TYPES.RETURN_PACKS,
-                        item_id: itemId,
-                        store_from_id: itemData.store_id,
-                        price: 0,
-                        stock_amount: type === "stock" ? amount : null,
-                        pack_amount: type === "packs" ? amount : null
-                    };
-                    this.insert(operationData, "operations")
-                        .then(resolve)
-                        .catch(reject);
-                })
-                .catch(reject);
         });
     }
 
-    // Operations for stored items (has storeId)
-    buyStock(productId, amount, storeId, price, expirationDate) {
+    movePacks(productsData) {
         return new Promise((resolve, reject) => {
-            
-            // Validation
-            const productIndex = this._db.products.findIndex(it => it.id === productId);
-            if(productIndex < 0){
-                reject({message: "Product not found"});
-                return;
-            }
 
-            if(amount <= 0){
-                reject({message: "Cannot buy negative amount"});
-                return;
-            }
-
-            const storeIndex = this._db.stores.findIndex(it => it.id === storeId);
-            if(storeIndex < 0){
-                reject({message: "Store not found"});
-                return;
-            }
-
-            // New rows
-            const stockData = {
-                product_id: productId,
-                store_id: storeId,
-                stock: amount,
-                packs: 0,
-                expiration_date: expirationDate
-            };
-            const operationData = {
-                timestamp: Date.now(),
-                type: OPERATION_TYPES.BUY,
-                item_id: item.id,
-                store_to_id: storeId,
-                price: price,
-                stock_amount: stockAmount,
-                pack_amount: packAmount 
-            };
-
-            this.insert(stockData, "items")
-                .then(() => { // Register operation
-                    this.insert(operationData, "operations")
-                        .then(resolve)
-                        .catch(reject);
-                })
-                .catch(reject);
         });
     }
 
-    moveStock(itemId, amount, toStoreId) {
-        return this._moveStockOrPacks(itemId, amount, "stock", toStoreId);
+    returnPacks(products, origins, amount) {
+        return new Promise((resolve, reject) => {
+
+        });
     }
 
-    spendStock(itemId, amount) {
-        return this._reduceStockOrPacks(itemId, amount, "stock");
-    }
-
-    movePacks(itemId ,amount, toStoreId) {
-        return this._moveStockOrPacks(itemId, amount, "packs", toStoreId);
-    }
-
-    returnPacks(itemId, amount) {
-        return this._reduceStockOrPacks(itemId, amount, "packs");
+    handleOperation(operation, products){
+        switch(operation){
+            case OPERATION_TYPES.BUY:
+                return this.buyStock(products);
+            case OPERATION_TYPES.SPEND:
+                return this.spendStock(products);
+            case OPERATION_TYPES.MOVE_STOCK:
+                return this.moveStock(products);
+            case OPERATION_TYPES.MOVE_PACKS:
+                return this.movePacks(products);
+            case OPERATION_TYPES.RETURN_PACKS:
+                return this.returnPacks(products);
+            default:
+                return new Promise((_, reject) => {
+                    reject({message:"Operation not valid.", type: ERROR_TYPES.UNKNOWN_OPERATION});
+                });
+        }
     }
 }

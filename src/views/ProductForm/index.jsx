@@ -59,7 +59,7 @@ const View = () => {
 
     const handleSubmit = () => {
         if(validateForm(formData)){
-            db.insert(formData,'products')
+            db.insert("products", formData)
                 .then(()=>{
                     if(formData.id){ // Editing
                         debug("Product data updated successfully");
