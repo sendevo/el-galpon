@@ -8,7 +8,7 @@ import {
 } from "../utils";
 import schemas from "./schemas.json";
 import migrateDB from "./migrations";
-import { testData } from "./testData";
+import { testData } from "./testData"; // To restore, go to testDataRestoration.js
 
 const DB_NAME = "elgalponDB";
 const DB_MODE = "test";

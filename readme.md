@@ -39,20 +39,31 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   - [ ] Depósitos:  
     - [ ] Listado con filtro.  
     - [x] Creación y edicion.  
-    - [ ] Eliminacion con confirmacion.  
-    - [ ] Consultar insumos.  
-  - [ ] Productos. 
+    - [x] Eliminacion con confirmacion.  
+    - [x] Consultar insumos.  
+  - [ ] Productos
+    - [ ] Listado con filtro.
+    - [ ] Creación y edicion.
+  - [ ] Insumos. 
     - [ ] Listado con filtro.  
     - [x] Creación y edicion.  
-    - [ ] Eliminacion con confirmacion.  
-    - [ ] Consultar insumos.  
-  - [ ] Insumos:  
-    - [ ] Listado con filtro.  
+    - [ ] Operaciones de producto:  
+      - [ ] Comprar.  
+      - [ ] Mover.  
+      - [ ] Usar.  
+      - [ ] Mover envase.  
+      - [ ] Devolver envase.  
   - [ ] Movimientos.  
+    - [ ] Listado con filtro.
   - [ ] Importación y exportación:  
      - [ ] Importación de ubicaciones desde mapa.  
      - [ ] Importación de planilla de depósitos.  
      - [ ] Importacion de planilla de items (genera productos).  
+  - [ ] Base de datos.
+    - [ ] Esquema
+    - [ ] Migraciones.
+    - [ ] LocalStorage a IndexedDB.
+  - [ ] Notificaciones.
      
 
 ### Producción e integración  

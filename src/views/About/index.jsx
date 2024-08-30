@@ -28,7 +28,7 @@ const View = () => (
                     <h3 style={{margin:0, textAlign:"center"}}>{APP_NAME} {VERSION_VALUE}</h3>
                     <h3 style={{margin:0}}>Staff</h3>
                     <Typography><b>Autor:</b> Juan Pablo D'Amico</Typography>
-                    <Typography><b>Desarrollo:</b> Matías J. Micheletto</Typography>
+                    <Typography><b>Desarrollo:</b> <a href="https://sendevosoftware.com.ar" target="_blank" rel="noopener noreferrer">Sendevo Software</a></Typography>
                 </AccordionDetails>
             </Accordion>
 

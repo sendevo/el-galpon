@@ -5,11 +5,12 @@ import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import { OPERATION_TYPES } from "../../model/constants";
 import MainView from "../../components/MainView";
+import SearchForm from "../../components/SearchForm";
 import ProductDetails from "./productDetails";
 import StoreDetails from "./storeDetails";
 import ItemList from "./itemList";
 import OperationsBlock from "./operationsBlock";
-import EmptyListSection from "./emptyListSection";
+import EmptyList from "../../components/EmptyList";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 
 const buyButtonStyle = {
@@ -89,12 +90,25 @@ const View = () => {
         }
     };
 
+    const handleSearch = query => {
+        console.log(query);
+    };
+
+    const handleFilter = filters => {
+        console.log(filters);
+    };
+
     return (
         <MainView title={"Insumos"}>
             {ignoredCols.includes("product_id") && items.length > 0 && <ProductDetails productData={items[0]?.productData}/>}
             {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
             {items.length > 0 ? 
                 <Box>
+                    <SearchForm 
+                        sx={{mb:2}}
+                        fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
+                        onFiltersChange={handleFilter}
+                        onQueryChange={handleSearch}/>
                     <ItemList 
                         items={items} 
                         setItems={setItems}
@@ -110,7 +124,7 @@ const View = () => {
                     }
                 </Box>
                 :
-                <EmptyListSection message={"La lista de insumos está vacía"} icon={iconEmpty} />
+                <EmptyList message={"La lista de insumos está vacía"} icon={iconEmpty} />
             }
             
             { !enabledOperations.BUY &&

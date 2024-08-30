@@ -21,6 +21,7 @@ import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
+import EmptyList from "../../components/EmptyList";
 import { componentsStyles } from "../../themes";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -125,12 +126,13 @@ const View = () => {
 
     return(
         <MainView title={"Productos"}>
-            <SearchForm 
-                fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
-                onFiltersChange={handleFilter}
-                onQueryChange={handleSearch}/>
             {data.length > 0 ?
-                <Box sx={{mt:2}}>
+                <Box>
+                    <SearchForm 
+                        sx={{mb:2}}
+                        fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
+                        onFiltersChange={handleFilter}
+                        onQueryChange={handleSearch}/>
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
                         <Table size="small">
                             <TableHead>
@@ -179,39 +181,56 @@ const View = () => {
                     </TableContainer>
                     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
                         <Grid container sx={{mb:1}} direction={"column"}>
-                            <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
-                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más insumos</Typography>}
-                        </Grid>
-                        <Grid 
-                            container 
-                            direction="row"
-                            spacing={0}
-                            justifyContent="space-between">
                             <Grid item>
-                                <Button 
-                                    color="success"
-                                    disabled={selected.length === 0}
-                                    variant="contained"
-                                    onClick={handleBuy}>
-                                    Comprar
-                                </Button>
+                                <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
+                            </Grid>
+                            <Grid item mb={1}>
+                                {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más insumos</Typography>}
                             </Grid>
                             <Grid item>
-                                <Button
-                                    variant="contained"
-                                    disabled={selected.length !== 1}
-                                    onClick={handleEdit}>
-                                    Editar        
-                                </Button>
+                                <Grid 
+                                    container 
+                                    direction="row"
+                                    spacing={0}
+                                    justifyContent="space-between">
+                                    <Grid item>
+                                        <Button 
+                                            color="success"
+                                            disabled={selected.length === 0}
+                                            variant="contained"
+                                            onClick={handleBuy}>
+                                            Comprar
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button
+                                            variant="contained"
+                                            disabled={selected.length !== 1}
+                                            onClick={handleEdit}>
+                                            Editar        
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button     
+                                            color="red"
+                                            variant="contained"
+                                            disabled={selected.length === 0}
+                                            onClick={handleDelete}>
+                                            Borrar
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Button     
-                                    color="red"
-                                    variant="contained"
-                                    disabled={selected.length === 0}
-                                    onClick={handleDelete}>
-                                    Borrar
-                                </Button>
+                            <Grid container justifyContent={"center"} alignItems={"center"}>
+                                <Grid item>
+                                    <Button 
+                                        sx={{mt: 2}}
+                                        disabled={selected.length !== 0}
+                                        variant="contained"
+                                        onClick={handleNew}>
+                                        Crear nuevo
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Paper>
@@ -220,10 +239,8 @@ const View = () => {
                 <Box 
                     display={"flex"} 
                     flexDirection={"column"} 
-                    alignItems={"center"}
-                    sx={{mt: "50%"}}>
-                    <img src={iconEmpty} height="100px" alt="Sin datos" />
-                    <Typography variant="h5" fontWeight={"bold"}>Aún no hay productos</Typography>
+                    alignItems={"center"}>
+                    <EmptyList message={"La lista de productos está vacía"} icon={iconEmpty} />
                     <Button 
                         sx={{mt: 2}}
                         variant="contained"

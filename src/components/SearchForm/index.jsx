@@ -49,7 +49,7 @@ const isAllFiltersDisabled = filters => Object.keys(filters) // Used for filters
         .map(fka => filters[fka]) // Get values of _active attributes
         .every(fkv => !fkv); // If all values are "false" --> all filters disabled
 
-const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
+const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
 
     const [accExpanded, setAccExpanded] = useState(false);
     const [filters, setFilters] = useState(defaultFilters); // Paralell state to avoid re-renders when editing fields
@@ -79,7 +79,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange}) => {
     };
 
     return (
-        <Box>
+        <Box sx={sx}>
             <Accordion 
                 sx={{
                     ...componentsStyles.paper,
