@@ -2,7 +2,7 @@
 Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad de insumos en un depósito, se debe recorrer la lista de insumos.  
 ```js
 {
-    id: 0, // auto increment
+    id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
     name: "",
     comments: "",
     contact: { // Datos de contacto
@@ -22,7 +22,7 @@ Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad
 Definen productos y sus principales características. Los productos pueden ser herbicidas, semillas, fertilizantes, materiales de construcción, insumos veterinarios y demás. Algunos productos tienen envases retornables y fecha de vencimiento. Para cada tipo de presentación hay que crear un nuevo producto.  
 ```js
 {
-    id: 0, // auto increment
+    id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
     name: "",
     brand: "",
     comments: "",
@@ -43,7 +43,7 @@ Definen productos y sus principales características. Los productos pueden ser h
 Los insumos son instancias de productos que se encuentran almacenadas en un depósito. Hay un stock de productos cerrados (o usados en fracción) y un stock de envases vacíos. Si el producto tiene fecha de vencimiento, se puede cargar.    
 ```js
 {
-    id: 0, // auto increment
+    id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
     product_id: 0,
     store_id: 0,
     stock: 0,
@@ -56,7 +56,7 @@ Los insumos son instancias de productos que se encuentran almacenadas en un dep�
 Los movimientos tienen fechas editables pero el resto son datos inmutables, permiten llevar un registro de las operaciones sobre las cantidades de insumos en cada lugar. 
 ```js
 {
-    id: 0, // auto increment
+    id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
     timestamp: 0,
     type: "", // keywords: BUY, MOVE_STOCK, SPEND, MOVE_PACKS, RETURN_PACKS
     item_id: 0,

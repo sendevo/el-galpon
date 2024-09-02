@@ -202,48 +202,69 @@ export default class LocalDatabase {
 
     }
 
-    buyStock(productsData) {
+    buyStock(itemsData) {
+        // http://localhost:5173/operation-form?type=BUY&products=0394-jfuqgtdh4-23hj2h4
         return new Promise((resolve, reject) => {
-
-        });       
+            const job = [];
+            itemsData.forEach(item => {
+                const amt = parseInt(item.amount);
+                const operation = {
+                    timestamp: Date.now(),
+                    type: OPERATION_TYPES.BUY,
+                    item_id: item.id,
+                    store_from_id: item.currentStoreId || null,
+                    store_to_id: item.toStoreId || null,
+                    price: 0,
+                    stock_amount: amt,
+                    pack_amount: item.returnable ? amt : 0
+                };
+                job.push(this.insert("operations", operation));
+            });
+            Promise.all(job)
+                .then(ids => {
+                    resolve(ids);
+                })
+                .catch(reject);
+        });
     }
 
-    spendStock(productsData) {
+    spendStock(itemsData) {
         return new Promise((resolve, reject) => {
 
         });
     }
 
-    moveStock(productsData) {
+    moveStock(itemsData) {
         return new Promise((resolve, reject) => {
 
         });
     }
 
-    movePacks(productsData) {
+    movePacks(itemsData) {
         return new Promise((resolve, reject) => {
 
         });
     }
 
-    returnPacks(products, origins, amount) {
+    returnPacks(items, origins, amount) {
         return new Promise((resolve, reject) => {
 
         });
     }
 
-    handleOperation(operation, products){
+    handleOperation(operation_key, items){
+        const operation = OPERATION_TYPES[operation_key];
         switch(operation){
             case OPERATION_TYPES.BUY:
-                return this.buyStock(products);
+                return this.buyStock(items);
             case OPERATION_TYPES.SPEND:
-                return this.spendStock(products);
+                return this.spendStock(items);
             case OPERATION_TYPES.MOVE_STOCK:
-                return this.moveStock(products);
+                return this.moveStock(items);
             case OPERATION_TYPES.MOVE_PACKS:
-                return this.movePacks(products);
+                return this.movePacks(items);
             case OPERATION_TYPES.RETURN_PACKS:
-                return this.returnPacks(products);
+                return this.returnPacks(items);
             default:
                 return new Promise((_, reject) => {
                     reject({message:"Operation not valid.", type: ERROR_TYPES.UNKNOWN_OPERATION});

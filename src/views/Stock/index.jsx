@@ -22,7 +22,7 @@ const buyButtonStyle = {
 
 const itemAttrs = ["store_id", "product_id", "stock", "totalAmount", "packs", "expiration_date"];
 
-const isOperationAllowed = (operation, selectedItems) => {
+const isOperationAllowed = (operation, selectedItems) => { // Button status based on selected items
     const moreThanOne = selectedItems.length > 0;
     return operation === "BUY" && moreThanOne || // When BUY = true: buy selected products else go to product list (enable other buy button)
         operation === "SPEND" && moreThanOne && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
@@ -31,11 +31,12 @@ const isOperationAllowed = (operation, selectedItems) => {
         operation === "RETURN_PACKS" && moreThanOne && selectedItems.every(it => it.packs > 0); // Enabled if all selected items have packs
 };
 
-const getEnabledOperations = (selectedItems) => {
-    return Object.keys(OPERATION_TYPES).reduce((enabledOp, op) => {
+const getEnabledOperations = (selectedItems) => { // Get enabled operations based on selected items
+    const enabledOperations = Object.keys(OPERATION_TYPES).reduce((enabledOp, op) => {
         enabledOp[op] = isOperationAllowed(op, selectedItems);
         return enabledOp;
     }, {});
+    return enabledOperations;
 };
 
 const View = () => {

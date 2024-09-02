@@ -98,16 +98,16 @@ const View = () => {
                     .then(data => {
                         const products = data.map(row => {
                             let product, amount, maxAmount, toStoreId, currentStoreId;
-                            if(queryData.table === "items"){
+                            if(queryData.table === "items"){ // Selected from existing stock
                                 product = row.productData;
                                 maxAmount = getMaxAmount(row, operation);
                                 amount = maxAmount;
                                 toStoreId = row.store_id;
                                 currentStoreId = row.store_id; // Inmutable
-                            } else { // products
+                            } else { // Selected from product list
                                 product = row;
                                 amount = 0;
-                                maxAmount = -1;
+                                maxAmount = -1; // No limit
                                 toStoreId = "";
                                 currentStoreId = ""; // Inmutable
                             }
@@ -173,8 +173,9 @@ const View = () => {
             console.log(formData.operation);
             console.log(formData.products);
             db.handleOperation(formData.operation, formData.products)
-                .then(result => {
-
+                .then(ids => {
+                    toast("Movimiento registrado", "success", 2000);
+                    navigate(-1);
                 })
                 .catch(console.error);
         }else{

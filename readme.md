@@ -70,3 +70,8 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   - [x] Compilación web -> vercel (sinc con rama main).  
   - [ ] Compilación Android ->  PlayStore.  
   - [ ] Migraciones de base de datos.  
+
+
+### Refactor
+
+  - [ ] La lógica de operaciones está implementada en la vista de formulario de compra/movimiento

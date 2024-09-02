@@ -11,16 +11,17 @@ export const DEBUG_MODE = true;
 export const AVAILABLE_DEBUG_MODES = ["log", "error", "info", "warn", "table"];
 if(DEBUG_MODE) console.log(`Debug mode on. Available functions: ${AVAILABLE_DEBUG_MODES.join(", ")}`);
 export const ERROR_CODES = {
+    NOT_IMPLEMENTED: 0,
     DB:{
         INVALID_TABLE: 1,
         WITH_ITEMS: 2,
         NOT_FOUND: 3,
-        UNKNOWN_OPERATION: 4
+        UNKNOWN_OPERATION: 4,
     }
 };
 
 // Operation definitions
-export const OPERATION_TYPES = {
+export const OPERATION_TYPES = { // Inmutable (migrate DB if changed)
     BUY: 1,
     MOVE_STOCK: 2,
     SPEND: 3,

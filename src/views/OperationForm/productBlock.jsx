@@ -27,7 +27,7 @@ const ProductBlock = ({
                     icon={amountIcon}
                     label="Cantidad*"
                     type="number"
-                    value={product.amount || ""}
+                    value={product.amount > 0 ? product.amount : ""}
                     error={product.amount == ""}
                     unit={getProdUnit(product)}
                     onChange={e => onPropChange("amount", e.target.value)}/>
