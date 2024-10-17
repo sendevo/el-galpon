@@ -72,7 +72,7 @@ const styles = {
 };
 
 const View = () => {
-    const { t } = useTranslation('homeView');
+    const { t } = useTranslation('home');
 
     const switchLanguage = () => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es');
 

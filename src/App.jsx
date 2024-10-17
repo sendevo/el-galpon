@@ -10,7 +10,7 @@ import UIUtilsProvider from './context/UIFeedback';
 import DatabaseProvider from "./context/Database";
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import translations from './model/translations.js';
+import translations from './model/translations';
 import Home from "./views/Home";
 import views from "./views";
 import theme, { globalStyles } from "./themes";

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { 
     Box, 
     Paper, 
@@ -16,6 +17,7 @@ import { componentsStyles } from "../../themes";
 const ItemList = ({items, setItems, ignoredCols}) => {
 
     const selected = items.filter(it => it.selected);
+    const { t } = useTranslation('itemList');
 
     const toggleSelect = index => {
         setItems(prevItems => {
@@ -38,12 +40,12 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                                     checked={selected.length === items.length} 
                                     onChange={e => setAllSelected(e.target.checked)} />
                             </TableCell>
-                            {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>Producto</TableCell>}
-                            {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>}
+                            {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>{t('product')}</TableCell>}
+                            {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>}
                             {/*<TableCell sx={componentsStyles.headerCell}>Stock</TableCell>*/}
-                            {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.headerCell}>Stock</TableCell>}
-                            {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.headerCell}>Envases</TableCell>}
-                            {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>Vencimiento</TableCell>}
+                            {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.headerCell}>{t('stock')}</TableCell>}
+                            {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
+                            {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>{t('expiration')}</TableCell>}
                         </TableRow>
                     </TableHead>
                     <TableBody>

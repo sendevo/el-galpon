@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { 
     Grid, 
     Button, 
@@ -33,6 +34,7 @@ const View = () => {
     const db = useDatabase();   
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
+    const {t} = useTranslation('storesList');
 
     const toast = useToast();
     const confirm = useConfirm();
@@ -122,7 +124,7 @@ const View = () => {
     };
 
     return(
-        <MainView title={"Depósitos"}>
+        <MainView title={t('title')}>
             <SearchForm 
                 fields={["dateFrom", "dateTo"]} 
                 onFiltersChange={handleFilter}
@@ -138,11 +140,11 @@ const View = () => {
                                             checked={selected.length === data.length} 
                                             onChange={e => handleSelectAll(e.target.checked)} />
                                     </TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Nombre</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Ubicación</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Comentarios</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Creado</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Modificado</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>{t('name')}</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>{t('comments')}</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>{t('created')}</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>{t('modified')}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -153,7 +155,7 @@ const View = () => {
                                             checked={selected.indexOf(store.id) !== -1} 
                                             onChange={() => handleSelect(store.id)} />
                                     </TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{store.name || "Sin nombre"}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{store.name || t('noname')}</TableCell>
                                     <TableCell sx={{...componentsStyles.tableCell, textAlign:"center"}}>
                                         <Link 
                                             target="_blank"
@@ -172,8 +174,8 @@ const View = () => {
                     </TableContainer>
                     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
                         <Grid container sx={{mb:1}} direction={"column"}>
-                            <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
-                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más insumos</Typography>}
+                            <Typography sx={{fontWeight:"bold"}}>{t('actions')}</Typography>
+                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>{t('selection')}</Typography>}
                         </Grid>
                         <Grid 
                             container 
@@ -185,7 +187,7 @@ const View = () => {
                                     color="success"
                                     variant="contained"
                                     onClick={handleNew}>
-                                    Crear
+                                    {t('create')}
                                 </Button>
                             </Grid>
                             <Grid item>
@@ -193,7 +195,7 @@ const View = () => {
                                     variant="contained"
                                     disabled={selected.length !== 1}
                                     onClick={handleEdit}>
-                                    Editar        
+                                    {t('edit')}    
                                 </Button>
                             </Grid>
                             <Grid item>
@@ -202,7 +204,7 @@ const View = () => {
                                     variant="contained"
                                     disabled={selected.length !== 1}
                                     onClick={handleStock}>
-                                    Insumos
+                                    {t('stock')}
                                 </Button>
                             </Grid>
                             <Grid item>
@@ -211,7 +213,7 @@ const View = () => {
                                     variant="contained"
                                     disabled={selected.length === 0}
                                     onClick={handleDelete}>
-                                    Borrar
+                                    {t('delete')}
                                 </Button>
                             </Grid>
                         </Grid>

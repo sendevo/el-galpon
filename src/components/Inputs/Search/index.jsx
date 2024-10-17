@@ -1,4 +1,5 @@
 import{ useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import { FaSearch } from 'react-icons/fa';
 import classes from '../style.module.css';
@@ -6,6 +7,7 @@ import classes from '../style.module.css';
 const SearchInput = ({submit, onChange}) => {
 
     const [value, setValue] = useState("");
+    const {t} = useTranslation('search');
 
     const handleValueChange = e => {
         setValue(e.target.value);
@@ -19,7 +21,7 @@ const SearchInput = ({submit, onChange}) => {
             size="small" 
             className={classes.Input}
             type="text"
-            label="Buscar"
+            label={t('text')}
             value={value}
             onChange={handleValueChange}                
             InputProps={{

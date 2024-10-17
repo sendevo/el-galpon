@@ -4,8 +4,7 @@ import {
     AccordionSummary,
     AccordionDetails, 
     Box,
-    Typography,
-    Button
+    Typography
 } from "@mui/material";
 import MainView from "../../components/MainView";
 import { APP_NAME, VERSION_VALUE } from "../../model/constants";

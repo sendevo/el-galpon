@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { 
     Accordion, 
     AccordionSummary, 
@@ -53,6 +54,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
 
     const [accExpanded, setAccExpanded] = useState(false);
     const [filters, setFilters] = useState(defaultFilters); // Paralell state to avoid re-renders when editing fields
+    const {t} = useTranslation('search');
 
     const handleInputChange = e => {
         const {name, value} = e.target;
@@ -103,7 +105,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                 </AccordionSummary>
                 <AccordionDetails sx={{pt:0}}>
                     <Typography fontWeight="bold" sx={{mt: 0, mb: 2}}>
-                            Filtrar resultados
+                        {t('filter')}
                     </Typography>
                     <Grid container spacing={3}>
                         {fields.includes("categories") && 
@@ -111,7 +113,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                 <SuggesterInput 
                                     multiple
                                     type="text"                                
-                                    label="Categorías"
+                                    label={t('categories')}
                                     name="categories"
                                     value={filters.categories}
                                     onChange={handleInputChange}
@@ -126,7 +128,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     icon={<FaCalendarDay color={filters.expirable_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}
                                     title=""
-                                    labelTrue="Con vencimiento"
+                                    labelTrue={t('expirable')}
                                     name="expirable"
                                     value={filters.expirable}
                                     onChange={handleInputChange}/>
@@ -138,7 +140,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     icon={<FaRecycle color={filters.returnable_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}
                                     title=""
-                                    labelTrue="Retornable"
+                                    labelTrue={t('returnable')}
                                     name="returnable"
                                     value={filters.returnable}
                                     onChange={handleInputChange}/>
@@ -149,7 +151,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                 <Input 
                                     type="text"
                                     value={filters.brand}
-                                    label="Marca"
+                                    label={t('brand')}
                                     name="brand"
                                     onChange={handleInputChange}
                                     icon={<FaShoppingBag color={filters.brand_active ? "green":"gray"} size={20}/>}
@@ -161,7 +163,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                 <Input 
                                     type="date"
                                     value={moment(filters.dateFrom).format("YYYY-MM-DD")} 
-                                    label="Fecha desde"
+                                    label={t('dateFrom')}
                                     name="dateFrom"
                                     onChange={handleInputChange}
                                     icon={<FaCalendarAlt color={filters.dateFrom_active ? "green":"gray"} size={20} />}
@@ -173,7 +175,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                 <Input 
                                     type="date"
                                     value={moment(filters.dateTo).format("YYYY-MM-DD")}
-                                    label="Fecha hasta"
+                                    label={t('dateTo')}
                                     name="dateTo"
                                     onChange={handleInputChange}
                                     icon={<FaCalendarAlt color={filters.dateTo_active ? "green":"gray"} size={20} />}
@@ -193,7 +195,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                 variant="contained" 
                                 color="error"
                                 onClick={handleFiltersReset}>
-                                    Limpiar filtros
+                                    {t('clear')}
                             </Button>
                         </Grid>
                         <Grid item>
@@ -202,7 +204,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleFiltersApply}>
-                                Aplicar
+                                {t('apply')}
                             </Button>
                         </Grid>
                     </Grid>

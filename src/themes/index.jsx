@@ -18,7 +18,7 @@ export const componentsStyles = {
         lineHeight: "1em",
         color: "rgb(100,100,100)"
     },
-    headerCell: {fontWeight: "bold",p: '2px 10px'},
+    headerCell: {fontWeight: "bold", p: '2px 10px', lineHeight: "1em"},
     tableCell: {
         padding: '2px 10px',
         whiteSpace: "nowrap",

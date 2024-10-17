@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { Box, Button } from "@mui/material";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
@@ -50,6 +51,8 @@ const View = () => {
     const [items, setItems] = useState([]);
     const [ignoredCols, setIgnoredCols] = useState([]);
 
+    const { t } = useTranslation('itemList');
+
     const selectedItems = items.filter(it => it.selected);
 
     const enabledOperations = getEnabledOperations(selectedItems);
@@ -85,7 +88,7 @@ const View = () => {
                 const urlItemList = (selectedItems.length > 0 && operationType !=="BUY") ? `&items=${selectedItems.map(it => it.id).join("_")}` : "";
                 navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
             } else {
-                toast("Operación no permitida", "error");
+                toast(t('operationError'), "error");
                 console.error("Operation not allowed:", operationType);
             }
         }
@@ -100,7 +103,7 @@ const View = () => {
     };
 
     return (
-        <MainView title={"Insumos"}>
+        <MainView title={t('title')}>
             {ignoredCols.includes("product_id") && items.length > 0 && <ProductDetails productData={items[0]?.productData}/>}
             {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
             {items.length > 0 ? 
@@ -134,7 +137,7 @@ const View = () => {
                         color="success"
                         variant="contained"
                         onClick={()=>handleOperation("BUY")}>
-                        Comprar insumos
+                        {t('buy')}
                     </Button>
                 </Box>
             }
