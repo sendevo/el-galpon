@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 import { 
     Box, 
     Button, 
@@ -12,6 +15,8 @@ import background from "../../assets/backgrounds/background1.jpg";
 import logo from "../../assets/logo_el_galpon.png";
 import leftImage from "../../assets/logo_inta_white.png";
 import rightImage from "../../assets/logo_ministerio_white.png";
+import argFlag from "../../assets/icons/argentina_flag.png";
+import engFlag from "../../assets/icons/uk_flag.png";
 
 
 const styles = {
@@ -29,6 +34,14 @@ const styles = {
         position: "absolute",
         padding: "0px", 
         height: "50px"
+    },
+    langIcon: {
+        margin:"5px 5px 0px 5px",
+        position: "absolute",
+        padding: "0px", 
+        height: "40px",
+        right: "0",
+        top: "0"
     },
     mainIcon: {
         textAlign: "center", 
@@ -58,45 +71,57 @@ const styles = {
     }
 };
 
-const View = () => (
-    <MainView background={background}>
-        <Box sx={styles.mainIcon}>
-            <img src={logo} height="25%" width="25%" alt="logo"/>
-        </Box>
-        <Box style={{textAlign: "center", marginTop:"5px"}}>
-            <Typography variant="h4" sx={styles.title}>{APP_NAME}</Typography>
-        </Box>
-        <Grid 
-            sx={styles.buttonsContainer}
-            container 
-            direction="column"
-            spacing={1} 
-            alignItems="center">
-                {
-                    views
-                        .filter(p => Boolean(p.homeTitle))
-                        .map((p,k) => (
-                            <Grid item key={k}>
-                                <Button
-                                    component={Link} 
-                                    to={p.path}
-                                    variant="contained" 
-                                    sx={styles.button}>
-                                    {p.homeTitle}
-                                </Button>
-                            </Grid>            
-                        ))
-                }
-        </Grid>
-        <Box sx={styles.bottomBox}>
+const View = () => {
+    const { t } = useTranslation('homeView');
+
+    const switchLanguage = () => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es');
+
+    return (
+        <MainView background={background}>
+
             <img 
-                src={leftImage} 
-                style={{...styles.logo,left: "0"}} />
-            <img 
-                src={rightImage}
-                style={{...styles.logo,right: "0"}} />
-        </Box>
-    </MainView>
-);
+                src={i18n.language === 'es' ? argFlag : engFlag} 
+                style={styles.langIcon} 
+                onClick={switchLanguage}/>
+
+            <Box sx={styles.mainIcon}>
+                <img src={logo} height="25%" width="25%" alt="logo"/>
+            </Box>
+            <Box style={{textAlign: "center", marginTop:"5px"}}>
+                <Typography variant="h4" sx={styles.title}>{APP_NAME}</Typography>
+            </Box>
+            <Grid 
+                sx={styles.buttonsContainer}
+                container 
+                direction="column"
+                spacing={1} 
+                alignItems="center">
+                    {
+                        views
+                            .filter(p => Boolean(p.homeTitle))
+                            .map((p,k) => (
+                                <Grid item key={k}>
+                                    <Button
+                                        component={Link} 
+                                        to={p.path}
+                                        variant="contained" 
+                                        sx={styles.button}>
+                                        {t(p.homeTitle)}
+                                    </Button>
+                                </Grid>            
+                            ))
+                    }
+            </Grid>
+            <Box sx={styles.bottomBox}>
+                <img 
+                    src={leftImage} 
+                    style={{...styles.logo,left: "0"}} />
+                <img 
+                    src={rightImage}
+                    style={{...styles.logo,right: "0"}} />
+            </Box>
+        </MainView>
+    )
+};
 
 export default View;

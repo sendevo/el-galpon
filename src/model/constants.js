@@ -4,7 +4,7 @@ import moment from "moment";
 export const APP_NAME = "El Galpón";
 export const VERSION_CODE = "1";
 export const VERSION_VALUE = "1.0.0";
-export const BUILD_DATE = 1696264323611; // 2-10-2023 13:32 hs
+export const BUILD_DATE = 1729202895351; // 17-10-2024 19:08 hs
 
 // Debugging
 export const DEBUG_MODE = true;

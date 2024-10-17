@@ -10,12 +10,12 @@ import About from "./About";
 const views = [
     {
         path: "/stock",
-        homeTitle: "Insumos",
+        homeTitle: "items",
         component: <Stock />
     },
     {
         path: "/stores-list",
-        homeTitle: "Depósitos",
+        homeTitle: "stores",
         component: <StoresList />
     },
     {
@@ -32,7 +32,7 @@ const views = [
     },
     {
         path: "/operations-list",
-        homeTitle: "Historial",
+        homeTitle: "operations",
         component: <OperationsList />
     },
     {
@@ -41,7 +41,7 @@ const views = [
     },
     {
         path: "/about",
-        homeTitle: "Información y ayuda",
+        homeTitle: "menu_info",
         component: <About />
     }
 ];
