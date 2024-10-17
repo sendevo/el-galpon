@@ -50,7 +50,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
         }
         { enabledOperations.MOVE_PACKS && enabledOperations.RETURN_PACKS &&
             <Grid container direction={"column"}>
-                <Typography sx={{fontWeight:"bold", mb:1, mt:1}}>Envases seleccionados</Typography>
+                <Typography sx={{fontWeight:"bold", mb:1, mt:1}}>Envases vacíos</Typography>
                 <Grid 
                     container 
                     direction="row"

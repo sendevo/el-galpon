@@ -143,9 +143,9 @@ const View = () => {
                                             onChange={e => handleSelectAll(e.target.checked)} />
                                     </TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Nombre</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Capacidad</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>Presentación</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Unidad</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Expirable</TableCell>
+                                    <TableCell sx={componentsStyles.headerCell}>C/vencimiento</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Retornable</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>Marca/Fabricante</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>SKU</TableCell>

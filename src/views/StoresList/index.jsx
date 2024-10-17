@@ -185,7 +185,7 @@ const View = () => {
                                     color="success"
                                     variant="contained"
                                     onClick={handleNew}>
-                                    Nuevo
+                                    Crear
                                 </Button>
                             </Grid>
                             <Grid item>

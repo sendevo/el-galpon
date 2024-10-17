@@ -99,7 +99,7 @@ const View = () => {
                             <Grid item xs={6}>
                                 <Input 
                                     disabled={Boolean(formData.id)}
-                                    label="Capacidad*"
+                                    label="Presentación*"
                                     name="pack_size"
                                     type="number"
                                     value={formData.pack_size || ""}

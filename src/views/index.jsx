@@ -9,6 +9,11 @@ import About from "./About";
 
 const views = [
     {
+        path: "/stock",
+        homeTitle: "Insumos",
+        component: <Stock />
+    },
+    {
         path: "/stores-list",
         homeTitle: "Depósitos",
         component: <StoresList />
@@ -19,7 +24,6 @@ const views = [
     },
     {
         path: "/products-list",
-        //homeTitle: "Productos",
         component: <ProductsList />
     },
     {
@@ -28,17 +32,12 @@ const views = [
     },
     {
         path: "/operations-list",
-        homeTitle: "Movimientos",
+        homeTitle: "Historial",
         component: <OperationsList />
     },
     {
         path: "/operation-form",
         component: <OperationForm />
-    },
-    {
-        path: "/stock",
-        homeTitle: "Insumos",
-        component: <Stock />
     },
     {
         path: "/about",

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { 
     Grid,
     Typography,
-    Paper
+    Paper,
+    TextField
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ERROR_CODES } from "../../model/constants";
@@ -12,13 +13,15 @@ import MainView from "../../components/MainView";
 import ActionsBlock from "../../components/ActionsBlock";
 import { 
     Select,
-    Switch
+    Switch,
+    Input
 } from "../../components/Inputs";
 import ProductBlock from "./productBlock";
 import { debug } from "../../model/utils";
 import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 import storeIcon from "../../assets/icons/barn.png";
+import { FaEdit } from "react-icons/fa";
 
 
 const requireStock = ["MOVE_STOCK", "SPEND"];
@@ -79,7 +82,8 @@ const View = () => {
         products: [],
         stores: [],
         sameStore: true,
-        globalStoreId: ""
+        globalStoreId: "",
+        obs: ""
     });
 
     const hasDestination = requireDestination.includes(formData.operation);
@@ -229,6 +233,19 @@ const View = () => {
                             stores={stores} 
                             onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
                     ))}
+                </Grid>
+
+                <Grid item>
+                    <Paper sx={componentsStyles.paper}>
+                        <Input
+                            rIcon={true}
+                            icon={<FaEdit size={20} />}
+                            label="Observaciones"
+                            name="obs"
+                            type="text"
+                            value={formData.obs || ""}
+                            error={formData.obs === ""}/>
+                    </Paper>
                 </Grid>
 
                 <Grid item sx={{mt:1}}>
