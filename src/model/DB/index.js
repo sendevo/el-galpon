@@ -8,6 +8,7 @@ import {
 } from "../utils";
 import schemas from "./schemas.json";
 import migrateDB from "./migrations";
+import testData from "./testData";
 
 const DB_NAME = "elgalponDB";
 const DB_MODE = "test";
@@ -46,7 +47,7 @@ export default class LocalDatabase {
                             localStorage.setItem(table, JSON.stringify(this._db[table]));
                         });
                         debug("Migration completed.");
-                        onReady(this)
+                        onReady(this);
                     })
                     .catch(console.error);
             }else{ // Load data 
@@ -59,10 +60,15 @@ export default class LocalDatabase {
                 onReady(this);
             }
         }else{ // Empty database
-            if(DB_MODE === "test"){
-                //
-                /// TODO: run testDataRestoration.js
-                //
+            if(DB_MODE === "test"){ // Load test data
+                this._db = testData;
+                localStorage.clear();
+                localStorage.setItem("version", JSON.stringify(DB_VERSION));
+                tables.forEach(table => {
+                    localStorage.setItem(table, JSON.stringify(this._db[table]));
+                });
+                debug("Test data loaded.");
+                onReady(this);
             }else{
                 debug("Empty database, creating tables...");
                 tables.forEach(table => {

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import i18n from "i18next";
 import { 
     Box, 
     Button, 
@@ -15,8 +14,12 @@ import background from "../../assets/backgrounds/background1.jpg";
 import logo from "../../assets/logo_el_galpon.png";
 import leftImage from "../../assets/logo_inta_white.png";
 import rightImage from "../../assets/logo_ministerio_white.png";
+import NotificationIcon from "../../components/NotificationIcon";
+
+/*
 import argFlag from "../../assets/icons/argentina_flag.png";
 import engFlag from "../../assets/icons/uk_flag.png";
+*/
 
 
 const styles = {
@@ -35,13 +38,13 @@ const styles = {
         padding: "0px", 
         height: "50px"
     },
-    langIcon: {
+    notificationIcon: {
         margin:"5px 5px 0px 5px",
         position: "absolute",
         padding: "0px", 
         height: "40px",
-        right: "0",
-        top: "0"
+        right: "12px",
+        top: "12px"
     },
     mainIcon: {
         textAlign: "center", 
@@ -54,9 +57,23 @@ const styles = {
         lineHeight: "1em",
         width: "60vw",
         maxWidth: "400px",
-        backgroundColor: "rgba(250,250,250,.75)",
+        height: "60px",
+        backgroundColor: "rgba(250,250,250,.75)"
+    },
+    buttonIcon: {
+        position: "absolute",
+        left: "15px",
+        width: "30px",
+        height: "30px"
+    },
+    buttonText: {
+        left: "60px",
+        maxWidth: "calc(100% - 60px)",
+        textAlign: "center",
         color: "#000000",
-        fontWeight: "bold"
+        fontWeight: "bold",
+        lineHeight: "1em",
+        textTransform: "uppercase"
     },
     bottomBox: {
         backgroundColor: "#2D6F94",
@@ -71,18 +88,19 @@ const styles = {
     }
 };
 
+
 const View = () => {
     const { t } = useTranslation('home');
 
-    const switchLanguage = () => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es');
+    // TODO check notifications
+    const [notifications, setNotifications] = useState(2);
 
     return (
         <MainView background={background}>
 
-            <img 
-                src={i18n.language === 'es' ? argFlag : engFlag} 
-                style={styles.langIcon} 
-                onClick={switchLanguage}/>
+            <Link to="/alerts" style={styles.notificationIcon}>
+                <NotificationIcon unreadCount={notifications} />
+            </Link>
 
             <Box sx={styles.mainIcon}>
                 <img src={logo} height="25%" width="25%" alt="logo"/>
@@ -106,7 +124,10 @@ const View = () => {
                                         to={p.path}
                                         variant="contained" 
                                         sx={styles.button}>
-                                        {t(p.homeTitle)}
+                                        <img src={p.icon} style={styles.buttonIcon} />
+                                        <Typography style={styles.buttonText}>
+                                            {t(p.homeTitle)}
+                                        </Typography>
                                     </Button>
                                 </Grid>            
                             ))

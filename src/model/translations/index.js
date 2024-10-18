@@ -1,6 +1,8 @@
 import home from "./views/home";
 import itemList from "./views/itemsList";
 import storesList from "./views/storesList";
+import returns from "./views/returns";
+import operations from "./views/operations";
 import about from "./views/about";
 
 import search from "./components/search";
@@ -15,6 +17,8 @@ const dictionaries = {
     home, 
     itemList,
     storesList, 
+    returns,
+    operations,
     about, 
 
     // Components
