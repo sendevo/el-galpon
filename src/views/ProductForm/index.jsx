@@ -16,7 +16,7 @@ import {
     Select,
     Switch
 } from "../../components/Inputs";
-import { debug, categories2Select } from "../../model/utils";
+import { debug, options2Select } from "../../model/utils";
 import { UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 
@@ -173,9 +173,9 @@ const View = () => {
                                     type="text"                                
                                     label="Categorías"
                                     name="categories"
-                                    value={categories2Select(formData.categories) || []}
+                                    value={options2Select(formData.categories) || []}
                                     onChange={handleInputChange}
-                                    options={categories2Select(CATEGORIES)}/>
+                                    options={options2Select(CATEGORIES)}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Input 

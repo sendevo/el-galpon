@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { 
     Grid, 
     Button, 
@@ -25,7 +26,15 @@ import EmptyList from "../../components/EmptyList";
 import { componentsStyles } from "../../themes";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
-import iconEmpty from "../../assets/icons/empty_folder.png";
+
+const attributes = ["name", "presentation", "unit", "expirable", "returnable", "brand", "sku", "comments", "categories", "created", "modified"];
+const HeaderCell = ({ attribute }) => {
+    return (
+        <TableCell sx={componentsStyles.headerCell}>
+            {attribute}
+        </TableCell>
+    );
+};
 
 
 const View = () => {
@@ -34,6 +43,8 @@ const View = () => {
     const navigate = useNavigate();
     
     const db = useDatabase();   
+
+    const { t } = useTranslation('productsList');
     
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -142,17 +153,9 @@ const View = () => {
                                             checked={selected.length === data.length} 
                                             onChange={e => handleSelectAll(e.target.checked)} />
                                     </TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Nombre</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Presentación</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Unidad</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>C/vencimiento</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Retornable</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Marca/Fabricante</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>SKU</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Comentarios</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Categorías</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Creado</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>Modificado</TableCell>
+                                    {attributes.map((attr, index) => (
+                                        <HeaderCell key={index} attribute={t(attr)} />
+                                    ))}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -240,7 +243,7 @@ const View = () => {
                     display={"flex"} 
                     flexDirection={"column"} 
                     alignItems={"center"}>
-                    <EmptyList message={"La lista de productos está vacía"} icon={iconEmpty} />
+                    <EmptyList message={"La lista de productos está vacía"}/>
                     <Button 
                         sx={{mt: 2}}
                         variant="contained"

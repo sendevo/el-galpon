@@ -1,23 +1,55 @@
-import { Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Box } from "@mui/material";
+import SearchForm from "../../components/SearchForm";
 import MainView from "../../components/MainView";
-import image from "../../assets/working_monkey.jpg";
+import EmptyList from "../../components/EmptyList";
+import OperationsTable from "./operationsTable";
+import { useDatabase } from "../../context/Database";
+import useToast from "../../hooks/useToast";
+import { debug } from "../../model/utils";
+
 
 const View = () => {
+    const db =       useDatabase();
+    const toast =    useToast();
+    const { t } =    useTranslation('operations');
+
+    const [operations, setOperations] = useState([]);
+
+    useEffect(() => {
+        db.query("operations")
+            .then(data => {
+                setOperations(data);
+            })
+            .catch(error => {
+                toast(t('errorLoading'), "error");
+                debug(error, "error");
+            });
+    }, []);
+
+    const handleSearch = query => {
+        console.log(query);
+    };
+
+    const handleFilter = filters => {
+        console.log(filters);
+    };
+
     return(
-        <MainView title={"Movimientos"}>
-            <Typography 
-                sx={{mb:2}}
-                textAlign={"center"}
-                fontStyle={"italic"}
-                fontSize={"20px"}
-                color={"rgb(100,100,100)"}>
-                    Esta sección se encuentra en desarrollo...
-            </Typography>
-            <img src={image} style={{
-                width: "100%",
-                top: "50%",
-                borderRadius: "10%"
-            }}/>
+        <MainView title={t('title')}>
+            {operations.length > 0 ? 
+            <Box>
+                <SearchForm 
+                        sx={{mb:2}}
+                        fields={["types", "productsIds", "storesIds", "dateFrom", "dateTo"]} 
+                        onFiltersChange={handleFilter}
+                        onQueryChange={handleSearch}/>
+                <OperationsTable operations={operations}/>
+            </Box>
+            :
+                <EmptyList message={"Aún no se realizaron movimientos"}/>
+            }
         </MainView>
     );
 };

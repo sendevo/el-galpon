@@ -4,8 +4,9 @@ import {
     Typography
 } from "@mui/material";
 import { componentsStyles } from "../../themes";
+import iconEmpty from "../../assets/icons/empty_folder.png";
 
-const EmptyListSection = ({message, icon}) => (
+const EmptyListSection = ({message}) => (
     <Box
         component={Paper} 
         sx={{
@@ -21,7 +22,7 @@ const EmptyListSection = ({message, icon}) => (
                 flexDirection={"column"} 
                 alignItems={"center"}
                 sx={{mt: 2, p:2}}>
-                <img style={{marginTop: "20px"}} src={icon} height="100px" alt="Sin datos" />
+                <img style={{marginTop: "20px"}} src={iconEmpty} height="100px" alt="Sin datos" />
                 <Typography 
                     sx={{m:3, textAlign:"center"}}
                     variant="h5" 
@@ -29,7 +30,6 @@ const EmptyListSection = ({message, icon}) => (
                         {message}
                 </Typography>
             </Box>
-        
     </Box>
     
 );

@@ -306,7 +306,7 @@ const testData = {
             store_to_id: getId("stores", "Galpón"),
             price: 0,
             stock_amount: 2,
-            pack_amount: 10,
+            pack_amount: 2,
             presentation_index: 0,
             observations: ""
         },
@@ -319,7 +319,7 @@ const testData = {
             store_to_id: getId("stores", "Silo IV"),
             price: 0,
             stock_amount: 2,
-            pack_amount: 10,
+            pack_amount: 0,
             presentation_index: 0,
             observations: ""
         },
@@ -341,11 +341,11 @@ const testData = {
             timestamp: getDate(),
             type: "RETURN_PACKS",
             product_id: getId("products", "Glifosato"),
-            store_from_id: getId("stores", "Agronomia"),
-            store_to_id: getId("stores", "Agronomia"),
+            store_from_id: getId("stores", "Galpón"),
+            store_to_id: null,
             price: 0,
-            stock_amount: 10,
-            pack_amount: 0,
+            stock_amount: 0,
+            pack_amount: 10,
             presentation_index: 0,
             observations: ""
         },
@@ -358,11 +358,10 @@ const testData = {
             store_to_id: getId("stores", "Silo I"),
             price: 0,
             stock_amount: 5.5,
-            pack_amount: 10,
+            pack_amount: 0,
             presentation_index: 1,
             observations: ""
         },
-        ,
         {
             id: generateId(),
             timestamp: getDate(),
@@ -372,12 +371,58 @@ const testData = {
             store_to_id: null,
             price: 0,
             stock_amount: 5.5,
-            pack_amount: 10,
+            pack_amount: 0,
             presentation_index: 1,
             observations: "Sembrado en lote 3"
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "RETURN_PACKS",
+            product_id: getId("products", "2,4D"),
+            store_from_id: getId("stores", "Galpón"),
+            store_to_id: null,
+            price: 0,
+            stock_amount: 0,
+            pack_amount: 2,
+            presentation_index: 0,
+            observations: ""
         }
     ],
-    alerts: []
+    alerts: [
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "STOCK",
+            alt_message: "",
+            seen: true,
+            link: "stock?id:eq:stpgfumlr"
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "STOCK",
+            alt_message: "",
+            seen: true,
+            link: "stock?id:eq:Maiz"
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "EXPIRATION",
+            alt_message: "",
+            seen: false,
+            link: "stock?id:eq:catapjs23"
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "EXPIRATION",
+            alt_message: "",
+            seen: false,
+            link: "stock?id:eq:djbhhwy34"
+        }
+    ]
 };
 
 export default testData;

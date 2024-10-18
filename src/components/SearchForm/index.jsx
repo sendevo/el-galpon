@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { 
     Accordion, 
@@ -17,8 +17,13 @@ import {
     Switch
 } from "../Inputs";
 import { componentsStyles } from "../../themes";
-import { CATEGORIES } from "../../model/constants";
-import { categories2Select } from "../../model/utils";
+import { 
+    CATEGORIES, 
+    OPERATION_TYPES, 
+    OPERATION_TYPES_NAMES 
+} from "../../model/constants";
+import { options2Select } from "../../model/utils";
+import { useDatabase } from "../../context/Database";
 import { 
     FaFilter,
     FaCalendarAlt,
@@ -28,21 +33,30 @@ import {
     FaShoppingBag
 } from "react-icons/fa";
 
-const defaultFilters = {
-    // Values
+const defaultFilters = { // Filter values
+    // Common
     dateFrom: Date.now() - 1296000000,
     dateTo: Date.now(),
+    // For stock
     categories: [],
     expirable: false,
     returnable: false,
     brand: "",
+    // For operations
+    types: [],
+    productsIds: [],
+    storesIds: [],
+
     // States
     dateFrom_active: false,
     dateTo_active: false,
     categories_active: false,
     expirable_active: false,
     returnable_active: false,
-    brand_active: false
+    brand_active: false,
+    types_active: false,
+    productsIds_active: false,
+    storesIds_active: false
 };
 
 const isAllFiltersDisabled = filters => Object.keys(filters) // Used for filters icon state in query table
@@ -50,12 +64,36 @@ const isAllFiltersDisabled = filters => Object.keys(filters) // Used for filters
         .map(fka => filters[fka]) // Get values of _active attributes
         .every(fkv => !fkv); // If all values are "false" --> all filters disabled
 
+
+const OPERATIONS = Object.keys(OPERATION_TYPES).map(op => OPERATION_TYPES_NAMES[op]);
+
 const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
+
+    const db = useDatabase();
+    const {t} = useTranslation('search');
 
     const [accExpanded, setAccExpanded] = useState(false);
     const [filters, setFilters] = useState(defaultFilters); // Paralell state to avoid re-renders when editing fields
-    const {t} = useTranslation('search');
-
+    const [products, setProducts] = useState([]);
+    const [stores, setStores] = useState([]);
+    
+    useEffect(() => {
+        if(fields.includes("productsIds")){
+            db.query("products")
+                .then(data => {
+                    const names = data.map(item => item.name);
+                    setProducts(names);
+                });
+        }
+        if(fields.includes("storesIds")){
+            db.query("stores")
+                .then(data => {
+                    const names = data.map(item => item.name);
+                    setStores(names);
+                });
+        }
+    }, []);
+        
     const handleInputChange = e => {
         const {name, value} = e.target;
         setFilters({
@@ -98,7 +136,10 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                             onClick={()=>setAccExpanded(!accExpanded)} 
                             color={ isAllFiltersDisabled(filters) ? "gray" : "green"}
                             size={25} 
-                            style={{padding:"2px"}}
+                            style={{
+                                padding:"1px",
+                                margin:`0px ${accExpanded ? "10px" : "0px"} 0px ${accExpanded ? "0px" : "10px"}`
+                            }}
                         />
                     }>
                     <Search submit={onQueryChange}/>
@@ -117,7 +158,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     name="categories"
                                     value={filters.categories}
                                     onChange={handleInputChange}
-                                    options={categories2Select(CATEGORIES)}
+                                    options={options2Select(CATEGORIES)}
                                     icon={<FaRegHandPointRight color={filters.categories_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}/>
                             </Grid>
@@ -155,6 +196,48 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     name="brand"
                                     onChange={handleInputChange}
                                     icon={<FaShoppingBag color={filters.brand_active ? "green":"gray"} size={20}/>}
+                                    rIcon={true}/>
+                            </Grid>
+                        }
+                        {fields.includes("types") && 
+                            <Grid item xs={12}>
+                                <SuggesterInput 
+                                    multiple
+                                    type="text"                                
+                                    label={t('type')}
+                                    name="types"
+                                    value={filters.types}
+                                    onChange={handleInputChange}
+                                    options={options2Select(OPERATIONS)}
+                                    icon={<FaRegHandPointRight color={filters.types_active ? "green":"gray"} size={20}/>}
+                                    rIcon={true}/>
+                            </Grid>
+                        }
+                        {fields.includes("productsIds") && 
+                            <Grid item xs={12}>
+                                <SuggesterInput 
+                                    multiple
+                                    type="text"                                
+                                    label={t('productsIds')}
+                                    name="productsIds"
+                                    value={filters.productsIds}
+                                    onChange={handleInputChange}
+                                    options={options2Select(products)}
+                                    icon={<FaRegHandPointRight color={filters.productsIds_active ? "green":"gray"} size={20}/>}
+                                    rIcon={true}/>
+                            </Grid>
+                        }
+                        {fields.includes("storesIds") && 
+                            <Grid item xs={12}>
+                                <SuggesterInput 
+                                    multiple
+                                    type="text"                                
+                                    label={t('storesIds')}
+                                    name="storesIds"
+                                    value={filters.storesIds}
+                                    onChange={handleInputChange}
+                                    options={options2Select(stores)}
+                                    icon={<FaRegHandPointRight color={filters.storesIds_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}/>
                             </Grid>
                         }

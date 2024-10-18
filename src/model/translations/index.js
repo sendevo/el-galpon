@@ -5,6 +5,8 @@ import returns from "./views/returns";
 import operations from "./views/operations";
 import about from "./views/about";
 
+import productsList from "./views/productsList";
+
 import search from "./components/search";
 import operationsBlock from "./components/operationsBlock";
 
@@ -13,13 +15,16 @@ import operationsBlock from "./components/operationsBlock";
 // {t('')}
 
 const dictionaries = {
-    // Views
+    // Primary views
     home, 
     itemList,
     storesList, 
     returns,
     operations,
     about, 
+
+    // Secondary views
+    productsList,
 
     // Components
     search,

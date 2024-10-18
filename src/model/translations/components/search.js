@@ -9,6 +9,9 @@ const search = {
         brand: "Brand",
         returnable: "Returnable",
         categories: "Categories",
+        type: "Type",
+        productsIds: "Products",
+        storesIds: "Stores"
     },
     es: {
         text: "Buscar",
@@ -20,7 +23,10 @@ const search = {
         brand: "Marca",
         expirable: "Con vencimiento",
         returnable: "Retornable",
-        categories: "Categorías"
+        categories: "Categorías",
+        type: "Tipo",
+        productsIds: "Productos",
+        storesIds: "Depósitos"
     }
 };
 

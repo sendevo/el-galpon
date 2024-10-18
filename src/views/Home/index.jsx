@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { 
@@ -10,6 +10,7 @@ import {
 import MainView from "../../components/MainView";
 import views from "../index";
 import { APP_NAME } from "../../model/constants";
+import { useDatabase } from "../../context/Database";
 import background from "../../assets/backgrounds/background1.jpg";
 import logo from "../../assets/logo_el_galpon.png";
 import leftImage from "../../assets/logo_inta_white.png";
@@ -90,10 +91,22 @@ const styles = {
 
 
 const View = () => {
+    
+    const [notifications, setNotifications] = useState(0);
+
+    const db = useDatabase();
     const { t } = useTranslation('home');
 
-    // TODO check notifications
-    const [notifications, setNotifications] = useState(2);
+    useEffect(() => {
+        db.query("alerts")
+            .then(alerts => {
+                const alertCount = alerts.filter(a => a.seen === false).length;
+                setNotifications(alertCount);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
 
     return (
         <MainView background={background}>

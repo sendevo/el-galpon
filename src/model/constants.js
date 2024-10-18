@@ -30,12 +30,12 @@ export const OPERATION_TYPES = { // Inmutable (migrate DB if changed)
     UNDEFINED: 6
 };
 export const OPERATION_TYPES_NAMES = {
-    BUY: "Compra de insumos",
-    MOVE_STOCK: "Traslado de insumos",
-    SPEND: "Gasto de insumos",
+    BUY: "Compra",
+    MOVE_STOCK: "Traslado",
+    SPEND: "Uso/aplicación",
     MOVE_PACKS: "Traslado de envases",
     RETURN_PACKS: "Devolución de envases",
-    UNDEFINED: "Operación no definida"
+    UNDEFINED: "S/D"
 };
 export const validOperationType = type => Object.keys(OPERATION_TYPES).includes(type);
 

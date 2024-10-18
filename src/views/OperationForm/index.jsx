@@ -21,7 +21,7 @@ import { debug } from "../../model/utils";
 import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 import storeIcon from "../../assets/icons/barn.png";
-import { FaEdit } from "react-icons/fa";
+import observationsIcoon from "../../assets/icons/observations.png";
 
 
 const requireStock = ["MOVE_STOCK", "SPEND"];
@@ -150,16 +150,21 @@ const View = () => {
         prevProducts[index][prop] = value;
         setFormData({
             ...formData,
-            products: prevProducts,
-            modified: Date.now()
+            products: prevProducts
         });   
+    };
+
+    const handleObservationsChange = value => {
+        setFormData({
+            ...formData,
+            obs: value
+        });
     };
 
     const handleSwitchChange = value => {
         setFormData({
             ...formData,
-            sameStore: value,
-            modified: Date.now()
+            sameStore: value
         });
     };
 
@@ -167,8 +172,7 @@ const View = () => {
         setFormData(prevForm => ({
             ...prevForm,
             globalStoreId: value,
-            products: prevForm.products.map(p => ({...p, toStoreId: value})),
-            modified: Date.now()
+            products: prevForm.products.map(p => ({...p, toStoreId: value}))
         }));
     };
 
@@ -238,13 +242,12 @@ const View = () => {
                 <Grid item>
                     <Paper sx={componentsStyles.paper}>
                         <Input
-                            rIcon={true}
-                            icon={<FaEdit size={20} />}
+                            icon={observationsIcoon}
                             label="Observaciones"
                             name="obs"
                             type="text"
                             value={formData.obs || ""}
-                            error={formData.obs === ""}/>
+                            onChange={e => handleObservationsChange(e.target.value)}/>
                     </Paper>
                 </Grid>
 

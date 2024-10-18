@@ -9,10 +9,9 @@ import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import ProductDetails from "./productDetails";
 import StoreDetails from "./storeDetails";
-import ItemList from "./itemList";
+import ItemsTable from "./itemsTable";
 import OperationsBlock from "./operationsBlock";
 import EmptyList from "../../components/EmptyList";
-import iconEmpty from "../../assets/icons/empty_folder.png";
 
 const buyButtonStyle = {
     marginTop: "20px",
@@ -113,7 +112,7 @@ const View = () => {
                         fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
                         onFiltersChange={handleFilter}
                         onQueryChange={handleSearch}/>
-                    <ItemList 
+                    <ItemsTable 
                         items={items} 
                         setItems={setItems}
                         ignoredCols={ignoredCols}/>
@@ -128,7 +127,7 @@ const View = () => {
                     }
                 </Box>
                 :
-                <EmptyList message={"La lista de insumos está vacía"} icon={iconEmpty} />
+                <EmptyList message={"La lista de insumos está vacía"}/>
             }
             
             { !enabledOperations.BUY &&
