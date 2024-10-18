@@ -15,7 +15,7 @@
             }
         },
         "items": {
-            "attributes": ["product_id", "store_id", "stock", "packs", "expiration_date"],
+            "attributes": ["product_id", "store_id", "stock", "packs", "presentation_index", "expiration_date"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true
@@ -37,14 +37,14 @@
             ]
         },
         "operations": {
-            "attributes": ["timestamp", "type", "item_id", "store_from_id", "store_to_id", "stock_amount", "empty_amount"],
+            "attributes": ["timestamp", "type", "product_id", "store_from_id", "store_to_id", "stock_amount", "pack_amount", "observations"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true
             },
             "indexes": [{
-                    "name": "item_id",
-                    "keyPath": "item_id",
+                    "name": "product_id",
+                    "keyPath": "product_id",
                     "options": {
                         "unique": false
                     }
@@ -57,6 +57,27 @@
                     }
                 }
             ]
+        },
+        "alerts":{
+            "attributes": ["timestamp", "type", "alt_message", "seen", "link"],
+            "options": {
+                "keyPath": "id",
+                "autoIncrement": true
+            },
+            "indexes": [{
+                "name": "timestamp",
+                "keyPath": "timestamp",
+                "options": {
+                    "unique": false
+                }
+            },
+            {
+                "name": "seen",
+                "keyPath": "seen",
+                "options": {
+                    "unique": false
+                }
+            }]
         }
     }
 ]

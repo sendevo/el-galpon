@@ -1,5 +1,6 @@
 # Depósitos (stores)
 Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad de insumos en un depósito, se debe recorrer la lista de insumos.  
+Los depositos no se pueden eliminar si tienen existencias (items).
 ```js
 {
     id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
@@ -19,7 +20,12 @@ Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad
 ```
 
 # Productos/Artículos (products)
-Definen productos y sus principales características. Los productos pueden ser herbicidas, semillas, fertilizantes, materiales de construcción, insumos veterinarios y demás. Algunos productos tienen envases retornables y fecha de vencimiento. Para cada tipo de presentación hay que crear un nuevo producto.  
+Definen productos y sus principales características. Los productos pueden ser herbicidas, semillas, fertilizantes, materiales de construcción, insumos veterinarios y demás. Algunos productos tienen envases retornables y fecha de vencimiento. 
+
+??Para cada tipo de presentación hay que crear un nuevo producto??
+
+Los productos no se pueden eliminar si hay stock asociado.
+
 ```js
 {
     id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
@@ -30,12 +36,13 @@ Definen productos y sus principales características. Los productos pueden ser h
         {label: "Herbicidas", key: 0},
         {label: "Fumigacion", key: 1}
     ],
-    pack_size: 20,
-    pack_unit: "l",
+    pack_size: [20], // Varias presentaciones
+    pack_unit: ["l"], // Cada presentacion tiene unidad
     expirable: false,
     returnable: false,
     created: 0,
-    modified: 0
+    modified: 0,
+    sku: ""
 }
 ```
 
@@ -48,6 +55,7 @@ Los insumos son instancias de productos que se encuentran almacenadas en un dep�
     store_id: 0,
     stock: 0,
     packs: 0 || null, // Si returnable = true
+    presentation_index: 0,
     expiration_date: 0 || null // Si expirable = true
 }
 ```
@@ -59,11 +67,26 @@ Los movimientos tienen fechas editables pero el resto son datos inmutables, perm
     id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
     timestamp: 0,
     type: "", // keywords: BUY, MOVE_STOCK, SPEND, MOVE_PACKS, RETURN_PACKS
-    item_id: 0,
+    product_id: 0,
     store_from_id: 0 || null,
     store_to_id: 0 || null,
     price: 0, // Costo de operacion (compra, movimiento o devolucion)
     stock_amount: 0, // Siempre positivo o 0
-    pack_amount: 0 // Siempre positivo o 0
+    pack_amount: 0, // Siempre positivo o 0
+    presentation_index: 0,
+    observations: "" // Mensaje con detalles adicionales
+}
+```
+
+# Alertas (alerts)
+Son mensajes que indican informacion sobre productos por vencerse o por agotarse. El tipo de alerta preconfigura el texto que se muestra en la vista, pero se puede agregar mensajes configurables que tienen mas prioridad que el defecto. El enlace redirige a una vista particular con filtros.
+```js
+{
+    id: 0,
+    timestamp: 0,
+    type: "", // keywords: EXPIRATION, STOCK, OTHER
+    alt_message: "",
+    seen: false,
+    link: ""
 }
 ```

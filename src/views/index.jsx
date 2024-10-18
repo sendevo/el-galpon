@@ -1,13 +1,18 @@
+// Menu views
+import Stock from "./Stock";
 import StoresList from "./StoresList";
+import Returns from "./Returns";
+import OperationsList from "./OperationsList";
+import About from "./About";
+// Secondary views
 import StoreForm from "./StoreForm";
 import ProductsList from "./ProductsList";
 import ProductForm from "./ProductForm";
-import OperationsList from "./OperationsList";
 import OperationForm from "./OperationForm";
-import Stock from "./Stock";
-import About from "./About";
+
 
 const views = [
+    // Menu views
     {
         path: "/stock",
         homeTitle: "items",
@@ -18,6 +23,22 @@ const views = [
         homeTitle: "stores",
         component: <StoresList />
     },
+    {
+        path: "/returns",
+        homeTitle: "returns",
+        component: <Returns />
+    },
+    {
+        path: "/operations-list",
+        homeTitle: "operations",
+        component: <OperationsList />
+    },
+    {
+        path: "/about",
+        homeTitle: "menu_info",
+        component: <About />
+    },
+    // Secondary views
     {
         path: "/store-form",
         component: <StoreForm />
@@ -31,18 +52,8 @@ const views = [
         component: <ProductForm />
     },
     {
-        path: "/operations-list",
-        homeTitle: "operations",
-        component: <OperationsList />
-    },
-    {
         path: "/operation-form",
         component: <OperationForm />
-    },
-    {
-        path: "/about",
-        homeTitle: "menu_info",
-        component: <About />
     }
 ];
 

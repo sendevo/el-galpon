@@ -1,15 +1,16 @@
 const home = {
     en: {
-        stores: "Stores",
         items: "Items",
-        products: "Products",
+        stores: "Stores",
+        returns: "Returns",
         operations: "History",
-        menu_info: "Help and information"
+        menu_info: "Help and information",
     },
     es: {
-        stores: "Depósitos",
+        
         items: "Insumos",
-        products: "Productos",
+        stores: "Depósitos",
+        returns: "Devoluciones",
         operations: "Historial",
         menu_info: "Información y ayuda"
     }

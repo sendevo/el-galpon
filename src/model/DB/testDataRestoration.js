@@ -1,10 +1,36 @@
 localStorage.clear();
 localStorage.setItem("version", 0);
-const testData = {
-    version: 0,
+const generateId = () => Math.random().toString(36).substr(2, 9);
+const getId = (table, name) => products_stores[table].find(r => r.name === name)?.id || null;
+
+// To generate random dates in increasing order
+const startDate = new Date("2024-03-02").getTime();
+const maxPeriod = 1000 * 60 * 60 * 24 * 200; // 200 days
+const getDate = () => new Date(startDate + Math.random() * maxPeriod).getTime();
+
+/* Nombres:
+
+Productos:
+    Glifosato
+    Urea granulada
+    Trigo
+    Maíz
+    Girasol
+    Silobolsa2,4D
+    Suplemento vitamínico
+
+Depositos:
+    Agronomia 
+    Galpón
+    Silo IV
+    Silo III
+    Tinglado
+*/
+
+const products_stores = {
     products: [ 
         {
-            id: "0394-jfuqgtdh4-23hj2h4",
+            id: generateId(),
             name: "Glifosato",
             sku: "10-01111-0",
             pack_size: 20,
@@ -14,11 +40,11 @@ const testData = {
             brand: "Estrella",
             comments: "",
             categories: ["Herbicidas"],
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "9763-ghfjg-3hj4-3hj4",
+            id: generateId(),
             name: "Urea granulada",
             sku: "03-1234-1",
             pack_size: 1,
@@ -28,11 +54,11 @@ const testData = {
             brand: "Profertil",
             comments: "",
             categories: ["Fertilizantes"],
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "342-fserrt-45234",
+            id: generateId(),
             name: "Trigo",
             sku: "",
             pack_size: 25,
@@ -42,11 +68,11 @@ const testData = {
             brand: "ACA 304",
             comments: "Cosecha 2021",
             categories: ["Semillas"],
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "123b-1lk2j3-k123",
+            id: generateId(),
             name: "Maíz",
             sku: "",
             pack_size: 80000,
@@ -56,11 +82,11 @@ const testData = {
             brand: "ACA 477",
             comments: "",
             categories: ["Semillas"],
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "1123-4jkhg1gfy-1da57-3412",
+            id: generateId(),
             name: "Girasol",
             sku: "",
             pack_size: 180000,
@@ -70,11 +96,11 @@ const testData = {
             brand: "ACA 220",
             comments: "",
             categories: ["Semillas"],
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "6123-dfase4a-r3wa",
+            id: generateId(),
             name: "Silobolsa",
             sku: "MA-0000",
             pack_size: 50,
@@ -84,11 +110,11 @@ const testData = {
             brand: "Pentasilo Manta",
             comments: "Film de polietileno pentacapa (5 capas), bicolor (exterior blanco e interior negro), coextrusado con plástico virgen de altísima calidad",
             categories: ["Silobolsas"],
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "8750-abudtyeu-123jg",
+            id: generateId(),
             name: "2,4D",
             sku: "RD-0021",
             pack_size: 20,
@@ -98,11 +124,11 @@ const testData = {
             brand: "Monsanto",
             comments: "",
             categories: ["Herbicidas"],
-            created: Date.now(),
-            modified: Date.now()
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "9120-dfasert4-a34afda",
+            id: generateId(),
             name: "Suplemento vitamínico",
             sku: "16-023008",
             pack_size: 25,
@@ -112,27 +138,13 @@ const testData = {
             brand: "AF Mix ADQ Preparto Aniónica",
             comments: "Recomendamos ingresar las vacas al lote y dosificar en la ración 21 días antes del parto",
             categories: ["Nutrición animal"],
-            created: 1693683312000,
-            modified: 1693683312000
-        },
-        {
-            id: "251-dta34-4q2wedfa",
-            name: "Suplemento vitamínico",
-            sku: "16-023008",
-            pack_size: 25,
-            pack_unit: "kg",
-            expirable: true,
-            returnable: false,
-            brand: "AF Mix ADQ Preparto Aniónica",
-            comments: "Recomendamos ingresar las vacas al lote y dosificar en la ración 21 días antes del parto",
-            categories: ["Nutrición animal"],
-            created: 1693683312000,
-            modified: 1693683312000
-        },
+            created: getDate(),
+            modified: getDate()
+        }
     ],
     stores: [
         {
-            id: "000-10283-daifh-hflaksu",
+            id: generateId(),
             name: "Agronomia",
             lat: -39.4993953,
             lng: -62.6767609,
@@ -141,117 +153,235 @@ const testData = {
                 phone: "299 - 235 15123",
                 address: "Calle 38 1231"
             },
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
             
         },
         {
-            id: "1029-fad7f-35va",
+            id: generateId(),
             name: "Galpón",
             lat: -39.363867,
             lng: -62.685075,
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "124-sdd5yst-543",
+            id: generateId(),
+            name: "Silo I",
+            lat: -39.365102,
+            lng: -62.680214,
+            created: getDate(),
+            modified: getDate()
+        },
+        {
+            id: generateId(),
             name: "Silo IV",
             lat: -39.365102,
             lng: -62.680214,
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "77345-fgsdf-23425",
+            id: generateId(),
             name: "Silo III",
             lat: -39.365102,
             lng: -62.680214,
-            created: 1693683312000,
-            modified: 1693683312000
+            created: getDate(),
+            modified: getDate()
         },
         {
-            id: "7231-fddr6hs-345fas3",
+            id: generateId(),
             name: "Tinglado",
             lat: -39.363867,
             lng: -62.685075,
-            created: 1693683312000,
-            modified: 1693683312000
-        }
-    ],
-    items: [
-        {
-            id: "2412-f9a8dsf-3452wdfa",
-            product_id: "0394-jfuqgtdh4-23hj2h4",
-            store_id: "1029-fad7f-35va",
-            stock: 10,
-            packs: 10,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "41234-fasdgf-34232",
-            product_id: "0394-jfuqgtdh4-23hj2h4",
-            store_id: "000-10283-daifh-hflaksu",
-            stock: 0,
-            packs: 5,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "7209-fadsifaa-3rawd",
-            product_id: "9763-ghfjg-3hj4-3hj4",
-            store_id: "124-sdd5yst-543",
-            stock: 5.5,
-            packs: 0,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "7634-34v23c2-va345a",
-            product_id: "9763-ghfjg-3hj4-3hj4",
-            store_id: "77345-fgsdf-23425",
-            stock: 2,
-            packs: 0,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "453-fcasdf-a45s",
-            product_id: "9763-ghfjg-3hj4-3hj4",
-            store_id: "1029-fad7f-35va",
-            stock: 2,
-            packs: 0,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "1241-gtfsr-3453-6",
-            product_id: "123b-1lk2j3-k123",
-            store_id: "000-10283-daifh-hflaksu",
-            stock: 2,
-            packs: 0,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "4234-42kjbnk-23gv4k",
-            product_id: "342-fserrt-45234",
-            store_id: "000-10283-daifh-hflaksu",
-            stock: 2,
-            packs: 0,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "2342-23lj42-23ku4g",
-            product_id: "8750-abudtyeu-123jg",
-            store_id: "000-10283-daifh-hflaksu",
-            stock: 3,
-            packs: 5,
-            expiration_date: 1731151088080
-        },
-        {
-            id: "123-dfads-342351",
-            product_id: "342-fserrt-45234",
-            store_id: "124-sdd5yst-543",
-            stock: 0,
-            packs: 0,
-            expiration_date: 1731151088080
+            created: getDate(),
+            modified: getDate()
         }
     ]
 };
+
+const testData = {
+    version: 0,
+    products: products_stores.products,
+    stores: products_stores.stores,
+    items: [
+        {
+            id: generateId(),
+            product_id: getId("products", "Glifosato"),
+            store_id: getId("stores", "Galpón"),
+            stock: 10,
+            packs: 10,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Glifosato"),
+            store_id: getId("stores", "Agronomia"),
+            stock: 0,
+            packs: 5,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Urea granulada"),
+            store_id: getId("stores", "Silo  IV"),
+            stock: 5.5,
+            packs: 0,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Urea granulada"),
+            store_id: getId("stores", "Silo III"),
+            stock: 2,
+            packs: 0,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Urea granulada"),
+            store_id: getId("stores", "Agronomia"),
+            stock: 2,
+            packs: 0,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Maíz"),
+            store_id: getId("stores", "Agronomia"),
+            stock: 2,
+            packs: 0,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Trigo"),
+            store_id: getId("stores", "Agronomia"),
+            stock: 2,
+            packs: 0,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "2,4D"),
+            store_id: getId("stores", "Agronomia"),
+            stock: 3,
+            packs: 5,
+            presentation_index: 0,
+            expiration_date: getDate()
+        },
+        {
+            id: generateId(),
+            product_id: getId("products", "Trigo"),
+            store_id: getId("stores", "Silo I"),
+            stock: 0,
+            packs: 0,
+            presentation_index: 0,
+            expiration_date: getDate()
+        }
+    ],
+    operations: [
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "BUY",
+            product_id: getId("products", "Glifosato"),
+            store_from_id: null,
+            store_to_id: getId("stores", "Agronomia"),
+            price: 0,
+            stock_amount: 10,
+            pack_amount: 10,
+            presentation_index: 0,
+            observations: ""
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "BUY",
+            product_id: getId("products", "Glifosato"),
+            store_from_id: null,
+            store_to_id: getId("stores", "Galpón"),
+            price: 0,
+            stock_amount: 2,
+            pack_amount: 10,
+            presentation_index: 0,
+            observations: ""
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "BUY",
+            product_id: getId("products", "Urea granulada"),
+            store_from_id: null,
+            store_to_id: getId("stores", "Silo IV"),
+            price: 0,
+            stock_amount: 2,
+            pack_amount: 10,
+            presentation_index: 0,
+            observations: ""
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "SPEND",
+            product_id: getId("products", "Glifosato"),
+            store_from_id: getId("stores", "Agronomia"),
+            store_to_id: null,
+            price: 0,
+            stock_amount: 10,
+            pack_amount: 0,
+            presentation_index: 0,
+            observations: "Aplicado por fulano"
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "RETURN_PACKS",
+            product_id: getId("products", "Glifosato"),
+            store_from_id: getId("stores", "Agronomia"),
+            store_to_id: getId("stores", "Agronomia"),
+            price: 0,
+            stock_amount: 10,
+            pack_amount: 0,
+            presentation_index: 0,
+            observations: ""
+        },
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "BUY",
+            product_id: getId("products", "Trigo"),
+            store_from_id: null,
+            store_to_id: getId("stores", "Silo I"),
+            price: 0,
+            stock_amount: 5.5,
+            pack_amount: 10,
+            presentation_index: 1,
+            observations: ""
+        },
+        ,
+        {
+            id: generateId(),
+            timestamp: getDate(),
+            type: "SPEND",
+            product_id: getId("products", "Trigo"),
+            store_from_id: getId("stores", "Silo I"),
+            store_to_id: null,
+            price: 0,
+            stock_amount: 5.5,
+            pack_amount: 10,
+            presentation_index: 1,
+            observations: "Sembrado en lote 3"
+        }
+    ]
+};
+
 for(let table in testData)
     localStorage.setItem(table, JSON.stringify(testData[table]));

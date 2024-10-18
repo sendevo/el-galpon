@@ -8,7 +8,6 @@ import {
 } from "../utils";
 import schemas from "./schemas.json";
 import migrateDB from "./migrations";
-import { testData } from "./testData"; // To restore, go to testDataRestoration.js
 
 const DB_NAME = "elgalponDB";
 const DB_MODE = "test";
@@ -61,15 +60,9 @@ export default class LocalDatabase {
             }
         }else{ // Empty database
             if(DB_MODE === "test"){
-                debug("Loading test data...");
-                Object.keys(testData).forEach(table => {
-                    if(table != "version"){
-                        const rows = testData[table];
-                        this._db[table] = rows;
-                        localStorage.setItem(table, JSON.stringify(rows));
-                    }
-                });
-                localStorage.setItem("version", JSON.stringify(DB_VERSION));
+                //
+                /// TODO: run testDataRestoration.js
+                //
             }else{
                 debug("Empty database, creating tables...");
                 tables.forEach(table => {
