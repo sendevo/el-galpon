@@ -16,11 +16,12 @@ import { isValidRowData } from "../../model/DB";
 import { OPERATION_TYPES_NAMES } from '../../model/constants';
 import { componentsStyles } from "../../themes";
 
-const attributes = ["type", "product", "presentation", "stock_amount", "pack_amount", "store_from", "store_to", "date", "observations"];
-const HeaderCell = ({ attribute }) => {
+
+const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
+    const sorted = sortedDirection ? (sortedDirection === "asc" ? "▲" : "▼") : "";
     return (
-        <TableCell sx={componentsStyles.headerCell}>
-            {attribute}
+        <TableCell sx={componentsStyles.headerCell} onClick={onClick}>
+            {attribute + sorted}
         </TableCell>
     );
 };
@@ -30,8 +31,18 @@ const OperationsTable = ({ operations }) => {
     const db = useDatabase();
     const { t } = useTranslation('operations');
 
-    const [products, setProducts] = useState([]);
-    const [stores, setStores] = useState([]);
+    const [data, setData] = useState({
+        products: {},
+        stores: {}
+    });
+
+    // The following keys must match the keys defined in the translations file. This is to sepparate data attributes from it converstions,
+    // for example: date (unix) -> date (formatted) or product (ID) -> product (name).
+    const fields = ["date", "type", "product", "presentation", "stock_amount", "pack_amount", "store_from", "store_to", "observations"];    
+    const sortableFields = ["date", "type", "product", "stock_amount", "pack_amount", "store_from", "store_to"];
+    
+    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "asc" });
+
 
     useEffect(() => {
         const productsIds = operations.map(op => op.product_id);
@@ -41,7 +52,7 @@ const OperationsTable = ({ operations }) => {
                     acc[item.id] = item.name;
                     return acc;
                 }, {});
-                setProducts(names);
+                setData(data => ({ ...data, products: names }));
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
@@ -54,7 +65,7 @@ const OperationsTable = ({ operations }) => {
                     acc[item.id] = item.name;
                     return acc;
                 }, {});
-                setStores(names);
+                setData(data => ({ ...data, stores: names }));
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
@@ -63,28 +74,79 @@ const OperationsTable = ({ operations }) => {
     }, [operations]);
 
 
+    const requestSort = (key) => {
+        if(!sortableFields.includes(key)) return;
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+          direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortingFunction = (op1, op2) => {
+        let cond = false;
+        switch(sortConfig.key) {
+            case "date":
+                cond = op1.timestamp > op2.timestamp;
+                break;
+            case "type":
+                cond = OPERATION_TYPES_NAMES[op1.type] > OPERATION_TYPES_NAMES[op2.type];
+                break;
+            case "product":
+                cond = data.products[op1.product_id] > data.products[op2.product_id];
+                break;
+            case "stock_amount":
+                cond = op1.stock_amount > op2.stock_amount;
+                break;
+            case "pack_amount":
+                cond = op1.pack_amount > op2.pack_amount;
+                break;
+            case "store_from":
+                cond = data.stores[op1.store_from_id] > data.stores[op2.store_from_id];
+                break;
+            case "store_to":
+                cond = data.stores[op1.store_to_id] > data.stores[op2.store_to_id];
+                break;
+            default:
+                return 0;
+        };
+        return cond ? 1 : -1;
+    };
+
+    const sortedOperations = [...operations].sort((a, b) => {
+        if(sortConfig.direction === "asc") {
+            return sortingFunction(a, b);
+        }
+        return sortingFunction(b, a);
+    });
+
+
     return (
         <Box>
             <TableContainer component={Paper} sx={componentsStyles.paper}>
                 <Table size="small">
                     <TableHead>
                         <TableRow>
-                            {attributes.map((attr, index) => (
-                                <HeaderCell key={index} attribute={t(attr)} />
+                            {fields.map((attr, index) => (
+                                <HeaderCell 
+                                    sortedDirection={sortConfig.key === attr ? sortConfig.direction : ""}
+                                    onClick={() => requestSort(attr)}
+                                    key={index} 
+                                    attribute={t(attr)}/>
                             ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {operations.map((item, index) => (
+                        {sortedOperations.map((item, index) => (
                             isValidRowData(item, "operations") && <TableRow key={item.id}>
+                                <TableCell sx={componentsStyles.tableCell}>{moment(item.timestamp).format("DD/MM/YYYY")}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{OPERATION_TYPES_NAMES[item.type]}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{products[item.product_id] || "S/D"}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{data.products[item.product_id] || "S/D"}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.presentation_id}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.stock_amount}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.pack_amount}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{stores[item.store_from_id] || "-"}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{stores[item.store_to_id] || "-"}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{moment(item.timestamp).format("DD/MM/YYYY")}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{data.stores[item.store_from_id] || "-"}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{data.stores[item.store_to_id] || "-"}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.observations}</TableCell>
                             </TableRow>
                         ))}
