@@ -36,12 +36,18 @@ const OperationsTable = ({ operations }) => {
         stores: {}
     });
 
+    // Combine stock_amount and pack_amount into amount
+    operations = operations.map(op => {
+        op.amount = op.stock_amount || op.pack_amount;
+        return op;
+    });
+
     // The following keys must match the keys defined in the translations file. This is to sepparate data attributes from it converstions,
     // for example: date (unix) -> date (formatted) or product (ID) -> product (name).
-    const fields = ["date", "type", "product", "presentation", "stock_amount", "pack_amount", "store_from", "store_to", "observations"];    
-    const sortableFields = ["date", "type", "product", "stock_amount", "pack_amount", "store_from", "store_to"];
+    const fields = ["date", "type", "product", "presentation", "amount", "store_from", "store_to", "observations"];    
+    const sortableFields = ["date", "type", "product", "amount", "store_from", "store_to"];
     
-    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "asc" });
+    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
 
 
     useEffect(() => {
@@ -58,7 +64,10 @@ const OperationsTable = ({ operations }) => {
                 toast(t('errorLoading'), "error");
                 debug(error, "error");
             });
-        const storesIds = operations.map(op => op.store_from_id).concat(operations.map(op => op.store_to_id));
+        
+        const storesFromIds = operations.map(op => op.store_from_id);
+        const storesToIds = operations.map(op => op.store_to_id);
+        const storesIds = [...new Set([...storesFromIds, ...storesToIds])];
         db.query("stores", storesIds)
             .then(data => {
                 const names = data.reduce((acc, item) => {
@@ -71,7 +80,7 @@ const OperationsTable = ({ operations }) => {
                 toast(t('errorLoading'), "error");
                 debug(error, "error");
             });
-    }, [operations]);
+    }, []);
 
 
     const requestSort = (key) => {
@@ -95,16 +104,15 @@ const OperationsTable = ({ operations }) => {
             case "product":
                 cond = data.products[op1.product_id] > data.products[op2.product_id];
                 break;
-            case "stock_amount":
-                cond = op1.stock_amount > op2.stock_amount;
-                break;
-            case "pack_amount":
-                cond = op1.pack_amount > op2.pack_amount;
+            case "amount":
+                cond = op1.amount > op2.amount;
                 break;
             case "store_from":
+                if(!op1.store_from_id) return 1;
                 cond = data.stores[op1.store_from_id] > data.stores[op2.store_from_id];
                 break;
             case "store_to":
+                if(!op1.store_to_id) return 1;
                 cond = data.stores[op1.store_to_id] > data.stores[op2.store_to_id];
                 break;
             default:
@@ -143,8 +151,7 @@ const OperationsTable = ({ operations }) => {
                                 <TableCell sx={componentsStyles.tableCell}>{OPERATION_TYPES_NAMES[item.type]}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{data.products[item.product_id] || "S/D"}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.presentation_id}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{item.stock_amount}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{item.pack_amount}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{item.amount}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{data.stores[item.store_from_id] || "-"}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{data.stores[item.store_to_id] || "-"}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.observations}</TableCell>

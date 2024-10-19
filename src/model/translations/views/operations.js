@@ -8,8 +8,7 @@ const operations = {
         presentation: "Presentation",
         store_from: "Origin store",
         store_to: "Destination store",
-        stock_amount: "Amount",
-        pack_amount: "Packs",
+        stockAmount: "Amount",
         observations: "Observations"
     },
     es: {
@@ -21,8 +20,7 @@ const operations = {
         presentation: "Presentación",
         store_from: "Depósito origen",
         store_to: "Depósito destino",
-        stock_amount: "Cantidad",
-        pack_amount: "Envases",
+        amount: "Cantidad",
         observations: "Observaciones"
     }
 };
