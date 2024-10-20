@@ -21,7 +21,9 @@ const Confirm = ({open, title, message, onConfirm, onCancel, okLabel, cancelLabe
             </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button onClick={onCancel}>{cancelLabel || "Cancelar"}</Button>
+            <Button onClick={onCancel}>
+                {cancelLabel !== undefined && cancelLabel !== null ? cancelLabel : "Cancelar"}
+            </Button>
             <Button onClick={onConfirm} autoFocus>{okLabel || "Aceptar"}</Button>
         </DialogActions>
     </Dialog>

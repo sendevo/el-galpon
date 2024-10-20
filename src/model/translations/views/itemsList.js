@@ -7,7 +7,9 @@ const itemList = {
         emptyPacks: "Empty packs",
         expiration: "Expiration",
         buy: "Buy items",
-        operationError: "Operation not allowed"
+        export: "Export data",
+        operationError: "Operation not allowed",
+        not_available: "Not available function"
     },
     es: {
         title: "Insumos",
@@ -17,7 +19,9 @@ const itemList = {
         emptyPacks: "Envases vacíos",
         expiration: "Vencimiento",
         buy: "Comprar insumos",
-        operationError: "Operación no permitida"
+        export: "Exportar datos",
+        operationError: "Operación no permitida",
+        not_available: "Función no disponible"
     }
 };
 

@@ -20,8 +20,6 @@ const buyButtonStyle = {
     justifyContent:"center"
 };
 
-const itemAttrs = ["store_id", "product_id", "stock", "totalAmount", "packs", "expiration_date"];
-
 const isOperationAllowed = (operation, selectedItems) => { // Button status based on selected items
     const moreThanOne = selectedItems.length > 0;
     return operation === "BUY" && moreThanOne || // When BUY = true: buy selected products else go to product list (enable other buy button)
@@ -57,6 +55,8 @@ const View = () => {
     const enabledOperations = getEnabledOperations(selectedItems);
     const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
 
+    const itemAttrs = ["id", "store_id", "product_id", "stock", "totalAmount", "packs", "expiration_date"];
+
     useEffect(() => {
         const ignored = [];
         searchParams.forEach((value, key) => {
@@ -67,8 +67,9 @@ const View = () => {
                     ignored.push(paramKey);
                 else
                     console.log("Invalid param: ", paramKey, value);
-            }else
+            }else{
                 console.log("Invalid param: ", key, value);
+            }
         });
         db.query("items", [], searchParams.toString())
             .then(iData => {
@@ -99,6 +100,10 @@ const View = () => {
 
     const handleFilter = filters => {
         console.log(filters);
+    };
+
+    const handleExport = () => {
+        toast(t('not_available'), "info");
     };
 
     return (
@@ -140,6 +145,14 @@ const View = () => {
                     </Button>
                 </Box>
             }
+            <Box sx={buyButtonStyle}>
+                <Button
+                    color="info"
+                    variant="contained"
+                    onClick={()=>navigate("/items-form")}>
+                    {t('export')}
+                </Button>
+            </Box>
         </MainView>
     );
 };

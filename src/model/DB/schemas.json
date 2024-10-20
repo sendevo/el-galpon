@@ -59,7 +59,7 @@
             ]
         },
         "alerts":{
-            "attributes": ["timestamp", "type", "alt_message", "seen", "link"],
+            "attributes": ["timestamp", "type", "message", "ref", "seen", "link"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true

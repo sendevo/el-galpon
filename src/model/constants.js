@@ -29,15 +29,22 @@ export const OPERATION_TYPES = { // Inmutable (migrate DB if changed)
     RETURN_PACKS: 5,
     UNDEFINED: 6
 };
-export const OPERATION_TYPES_NAMES = {
-    BUY: "Compra",
-    MOVE_STOCK: "Traslado",
-    SPEND: "Uso/aplicación",
-    MOVE_PACKS: "Traslado de envases",
-    RETURN_PACKS: "Devolución de envases",
-    UNDEFINED: "S/D"
+export const OPERATION_TYPES_NAMES = { // Uses translations keywords
+    BUY: "buy",
+    MOVE_STOCK: "move_stock",
+    SPEND: "spend",
+    MOVE_PACKS: "move_packs",
+    RETURN_PACKS: "return_packs",
+    UNDEFINED: "undef"
 };
 export const validOperationType = type => Object.keys(OPERATION_TYPES).includes(type);
+
+// Alert definitions
+export const ALERT_TYPES = { // Inmutable (migrate DB if changed)
+    STOCK: 1,
+    EXPIRATION: 2,
+    OTHER: 3
+};
 
 // Model related constants
 export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u", "semillas"];

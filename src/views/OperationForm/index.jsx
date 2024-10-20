@@ -6,7 +6,7 @@ import {
     TextField
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ERROR_CODES } from "../../model/constants";
+import { useTranslation } from "react-i18next";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
@@ -71,6 +71,8 @@ const View = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     
+    const { t } = useTranslation("operations");
+
     const toast = useToast();
     
     const db = useDatabase();
@@ -193,7 +195,7 @@ const View = () => {
     };
 
     return(
-        <MainView title={viewTitle}>
+        <MainView title={t(viewTitle)}>
             <Grid container spacing={1} direction="column">
                 {showGlobalStoreBlock &&
                     <Grid item xs={12}>

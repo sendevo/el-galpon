@@ -4,7 +4,7 @@ import StoresList from "./StoresList";
 import Returns from "./Returns";
 import OperationsList from "./OperationsList";
 import About from "./About";
-import Alerts from "./Alerts";
+import AlertsList from "./AlertsList";
 // Menu icons
 import stockIcon from "../assets/icons/stock.png";
 import storesIcon from "../assets/icons/barn.png";
@@ -70,7 +70,7 @@ const views = [
     },
     {
         path: "/alerts",
-        component: <Alerts />
+        component: <AlertsList />
     }
 ];
 

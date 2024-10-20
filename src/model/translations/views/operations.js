@@ -21,7 +21,13 @@ const operations = {
         store_from: "Depósito origen",
         store_to: "Depósito destino",
         amount: "Cantidad",
-        observations: "Observaciones"
+        observations: "Observaciones",
+        buy: "Compra",
+        move_stock: "Translado",
+        spend: "Uso/Aplicación",
+        move_packs: "Translado",
+        return_packs: "Devolución de envases",
+        undef: "Indefinido"
     }
 };
 

@@ -36,8 +36,10 @@ const theme = createTheme({
         primary: { main: "#0066FF", contrastText: "#FFFFFF" },
         secondary: { main: "#806034", contrastText: "#FFFFFF" },
         red: {main: "#DD0000", contrastText: "#FFFFFF"},
+        lightRed: {main: "#F67B7B", contrastText: "#FFFFFF"},
         darkRed: {main:"#8A0808", contrastText: "#FFFFFF"},
         green: {main: "#007700", contrastText: "#FFFFFF"},
+        lightGreen: {main: "#85E98F", contrastText: "#FFFFFF"},
         darkGreen: {main: "#088A29", contrastText: "#FFFFFF"}
     }
 });

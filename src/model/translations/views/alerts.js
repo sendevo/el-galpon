@@ -1,7 +1,9 @@
 const alerts = {
     en: {
-        EXPIRATION: "Product will expire soon",
-        STOCK: "Product with low stock",
+        title: "Notifications and alerts",
+        EXPIRATION: "Expiration",
+        STOCK: "Low stock",
+        OTHER: "Other",
         discard: "Discard",
         delete: "Delete",
         reason: "Reason",
@@ -9,8 +11,10 @@ const alerts = {
         actions: "Actions"
     },
     es: {
-        EXPIRATION: "Producto pronto a vencer",
-        STOCK: "Producto con stock bajo",
+        title: "Notificaciones y alertas",
+        EXPIRATION: "Vencimientos",
+        STOCK: "Stock bajo",
+        OTHER: "Otros",
         discard: "Descartar",
         delete: "Eliminar",
         reason: "Motivo",

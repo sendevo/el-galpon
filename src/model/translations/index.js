@@ -4,6 +4,7 @@ import storesList from "./views/storesList";
 import returns from "./views/returns";
 import operations from "./views/operations";
 import about from "./views/about";
+import alerts from "./views/alerts";
 
 import productsList from "./views/productsList";
 
@@ -22,6 +23,7 @@ const dictionaries = {
     returns,
     operations,
     about, 
+    alerts,
 
     // Secondary views
     productsList,

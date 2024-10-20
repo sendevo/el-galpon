@@ -85,7 +85,8 @@ Son mensajes que indican informacion sobre productos por vencerse o por agotarse
     id: 0,
     timestamp: 0,
     type: "", // keywords: EXPIRATION, STOCK, OTHER -> Ver translations
-    alt_message: "",
+    ref: "",
+    message: "",
     seen: false,
     link: ""
 }
