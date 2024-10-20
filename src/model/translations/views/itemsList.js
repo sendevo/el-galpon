@@ -2,6 +2,7 @@ const itemList = {
     en: {
         title: "Items",
         product: "Product",
+        presentation: "Presentation",
         location: "Location",
         stock: "Stock",
         emptyPacks: "Empty packs",
@@ -14,6 +15,7 @@ const itemList = {
     es: {
         title: "Insumos",
         product: "Producto",
+        presentation: "Presentación",
         location: "Ubicación",
         stock: "Stock",
         emptyPacks: "Envases vacíos",

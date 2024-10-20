@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { 
     Grid, 
@@ -18,6 +18,7 @@ import {
 import moment from "moment";
 import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
+import { BULK_UNITS } from "../../model/constants";
 import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
@@ -27,7 +28,7 @@ import { componentsStyles } from "../../themes";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
-const attributes = ["name", "presentation", "unit", "expirable", "returnable", "brand", "sku", "comments", "categories", "created", "modified"];
+const attributes = ["name", "presentation", "expirable", "returnable", "brand", "sku", "comments", "categories", "created", "modified"];
 const HeaderCell = ({ attribute }) => {
     return (
         <TableCell sx={componentsStyles.headerCell}>
@@ -36,10 +37,8 @@ const HeaderCell = ({ attribute }) => {
     );
 };
 
-
 const View = () => {
 
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     
     const db = useDatabase();   
@@ -51,6 +50,19 @@ const View = () => {
     
     const toast = useToast();
     const confirm = useConfirm();
+
+    const getPresentation = product => {
+        let presentation = "";
+        for(let p = 0; p < product.pack_sizes.length; p++){
+            if(!BULK_UNITS.includes(product.pack_units[p])) {
+                presentation = `${product.pack_sizes[p]} ${product.pack_units[p]}`;
+                break;
+            }else{
+                presentation = t('bulk');
+            }
+        }
+        return presentation;
+    };
 
     useEffect(() => {
         db.query("products")
@@ -167,8 +179,7 @@ const View = () => {
                                             onChange={() => handleSelect(product.id)} />
                                     </TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.name || "Sin nombre"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_sizes.join(",")}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_units.join(",")}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{getPresentation(product)}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.expirable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.returnable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>

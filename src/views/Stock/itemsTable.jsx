@@ -12,8 +12,22 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { isValidRowData } from "../../model/DB";
+import { BULK_UNITS } from '../../model/constants';
 import { componentsStyles } from "../../themes";
 
+
+const getItemPresentation = item => {
+    if("productData" in item) {
+        if("pack_sizes" in item.productData && "pack_units" in item.productData) {
+            let pSize="";
+            if(!BULK_UNITS.includes(item.productData.pack_units[item.presentation_index])) {
+                pSize = item.productData.pack_sizes[item.presentation_index];
+            }
+            return `${pSize} ${item.productData.pack_units[item.presentation_index]}`;
+        }
+    }
+    return "S/D";
+}
 const ItemList = ({items, setItems, ignoredCols}) => {
 
     const selected = items.filter(it => it.selected);
@@ -42,8 +56,8 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                             </TableCell>
                             {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>{t('product')}</TableCell>}
                             {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>}
-                            {/*<TableCell sx={componentsStyles.headerCell}>Stock</TableCell>*/}
                             {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.headerCell}>{t('stock')}</TableCell>}
+                            {!ignoredCols.includes("presentation") && <TableCell sx={componentsStyles.headerCell}>{t('presentation')}</TableCell>}
                             {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
                             {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>{t('expiration')}</TableCell>}
                         </TableRow>
@@ -58,9 +72,9 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                                 </TableCell>
                                 {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.name || "S/D"}</TableCell>}
                                 {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}
-                                {/*<TableCell sx={componentsStyles.tableCell}>{item.stock} unidades</TableCell>*/}
-                                {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.totalAmount} {item.productData?.pack_units}</TableCell>}
-                                {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : 0}</TableCell>}
+                                {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock}</TableCell>}
+                                {!ignoredCols.includes("presentation") && <TableCell sx={componentsStyles.tableCell}>{getItemPresentation(item)}</TableCell>}
+                                {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : ""}</TableCell>}
                                 {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.expiration_date ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                             </TableRow>
                         ))}

@@ -47,10 +47,16 @@ export const ALERT_TYPES = { // Inmutable (migrate DB if changed)
 };
 
 // Model related constants
-export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u", "semillas"];
+export const UNITS = {
+    es: ["granel", "semillas", "l", "ml", "m", "tn", "kg", "g", "u"],
+    en: ["bulk", "seeds", "l", "ml", "m", "tn", "kg", "g", "u"]
+};
+// Used to hide presentation size if selected unit is "bulk"
+export const BULK_UNITS = ["bulk","granel"];
+
 export const CATEGORIES = {
-    es: ["Semillas", "Herbicidas", "Insecticidas", "Fungicidas",  "Inoculantes", "Coadyuvantes", "Fertilizantes", "Sanidad animal", "Nutrición animal", "Materiales de construcción", "Repuestos", "Combustible", "Herramientas", "Silobolsas", "Neumáticos", "Lubricantes", "Protección personal", "Otra"],
-    en: ["Seeds", "Herbicides", "Pesticides", "Fungicides",  "Inoculants", "Adjuvants", "Fertilizers", "Animal health", "Animal nutrition", "Construction materials", "Spare parts", "Fuel", "Tools", "Silobags", "Tires", "Lubricants", "Personal protection", "Other"]
+    es: ["Semillas", "Herbicidas", "Insecticidas", "Fungicidas",  "Inoculantes", "Coadyuvantes", "Fertilizantes", "Sanidad animal", "Nutrición animal", "Materiales de construcción", "Alambrados", "Mangas", "Tranqueras", "Repuestos", "Combustible", "Herramientas", "Silobolsas", "Neumáticos", "Lubricantes", "Protección personal", "Otra"],
+    en: ["Seeds", "Herbicides", "Pesticides", "Fungicides",  "Inoculants", "Adjuvants", "Fertilizers", "Animal health", "Animal nutrition", "Construction materials", "Wired fences" , "Cattle chute", "Gates", "Spare parts", "Fuel", "Tools", "Silobags", "Tires", "Lubricants", "Personal protection", "Other"]
 };
 
 // Moment configuration for spanish

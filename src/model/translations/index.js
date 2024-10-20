@@ -1,5 +1,6 @@
 import home from "./views/home";
 import itemList from "./views/itemsList";
+import productForm from "./views/productForm";
 import storesList from "./views/storesList";
 import returns from "./views/returns";
 import operations from "./views/operations";
@@ -27,6 +28,7 @@ const dictionaries = {
 
     // Secondary views
     productsList,
+    productForm,
 
     // Components
     search,

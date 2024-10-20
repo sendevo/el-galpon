@@ -109,22 +109,12 @@ export default class LocalDatabase {
                 return;
             }
             const filters = queryString ? queryString2Filters(queryString) : []; // [{key, operator, value}]
-            // totalAmount is computed from product data, so filter is applied later
-            let filterByTotalAmount = {apply: false, value: 0, operator: ""}; 
-            // Filter by other properties
+            
+            // Filter by properties
             let rows = this._db[table].filter(it => {
                 const condition = filters.every(filter => {
-                    if(table === "items" && filter.key === "totalAmount"){ 
-                        filterByTotalAmount = {
-                            apply: true,
-                            value: parseInt(filter.value),
-                            operator: filter.operator
-                        };
-                        return true;
-                    }else{
-                        const value = it[filter.key];
-                        return compare(value, filter.value, filter.operator);
-                    }
+                    const value = it[filter.key];
+                    return compare(value, filter.value, filter.operator);
                 }) && (rowIds.length === 0 || rowIds.includes(it.id));
                 return condition;
             });
@@ -132,11 +122,6 @@ export default class LocalDatabase {
                 for(let index = 0; index < rows.length; index++){
                     rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
                     rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
-                    rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_sizes;
-                }
-                if(filterByTotalAmount.apply){ // Apply filter by totalAmount
-                    const { value, operator } = filterByTotalAmount;
-                    rows = rows.filter(it => compare(it.totalAmount, value, operator));
                 }
             }
             if(page && count){

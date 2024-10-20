@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import {  
     Paper,
     Grid,
-    Typography 
+    Typography,
+    Button,
+    Fab,
+    Box
 } from "@mui/material";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
@@ -18,11 +21,31 @@ import {
     Switch
 } from "../../components/Inputs";
 import { debug, options2Select } from "../../model/utils";
-import { UNITS, CATEGORIES } from "../../model/constants";
+import { UNITS, BULK_UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
+import { FaPlus, FaMinus } from "react-icons/fa";
 
 // Required fields: name, pack_sizes, pack_units
-const validateForm = formData => Boolean(formData.name && formData.pack_sizes && formData.pack_units);
+const validateForm = formData => {
+    const missingFields = [];
+    if(!formData.name) missingFields.push("name");
+    if(formData.pack_sizes.some(s => !s) || formData.pack_sizes.length === 0) missingFields.push("pack_sizes");
+    if(formData.pack_units.some(u => !u) || formData.pack_units.length === 0) missingFields.push("pack_units");
+    return missingFields;
+};
+
+const removeContainerStyle = {
+    display: "flex",
+    justifyContent: "center"
+};
+
+const removeButtonStyle = {
+    minWidth: "30px",
+    minHeight: "30px",
+    padding: "0px",
+    bottom: "2px",
+    borderRadius: "50%"
+};
 
 const View = () => {
 
@@ -37,68 +60,111 @@ const View = () => {
         pack_sizes: [],
         pack_units: [],
     });
-    
+
+    // Hide presentation size if selected unit is "bulk"
+    const [hiddenPresentationSize, setHiddenPresentationSize] = useState([false]);
+
     useEffect(() => {
         const id = searchParams.get("id");
         if(Boolean(id)){ // Editing product
             db.query('products', [id])
                 .then(data => {
-                    if(data.length === 1) 
-                        setFormData(data[0]);
-                    setViewTitle("Edición de producto");
+                    if(data.length === 1) {
+                        const product = data[0];
+                        const hidden = product.pack_units.map(u => BULK_UNITS.includes(u));
+                        setFormData(product);
+                        setHiddenPresentationSize(hidden);
+                    }
+                    setViewTitle(t('edit_title'));
                 })
                 .catch(console.error);
         }else{
-            setViewTitle("Creación de producto");
+            setViewTitle(t('creation_title'));
         }
     }, []);
 
+    const canEditPresentations = !Boolean(formData.id);
+
     const handleInputChange = event => {
-        const {name, value} = event.target;
+        let {name, value} = event.target;
+
+        // For category input, value is an array of objects
+        if(name === "categories"){ 
+            value = value.map(v => v.label);
+        }
         
-        let val = value;
-        if(name === "categories"){
-            val = value.map(v => v.label);
-        }else if(name.includes("pack_sizes")){
-            const index = parseInt(name.split("_")[1]);
-            const sizes = [...formData.pack_sizes];
-            sizes[index] = value;
-            val = sizes;
-        }else if(name.includes("pack_units")){
-            const index = parseInt(name.split("_")[1]);
-            const units = [...formData.pack_units];
-            units[index] = value;
-            val = units;
+        // For presentation fields, values are set in pairs of sizes and units
+        if(name.includes("pack_sizes") || name.includes("pack_units")){
+            // Parse name, value and presentation index
+            const str = name.split("_");
+            if(str.length !== 3) {
+                debug("Invalid name for presentation field", "error");
+                return;
+            }
+            name = "pack_" + str[1]; // sizes or units depending on field
+            const presentationIndex = parseInt(str[2]);
+            const values = [...formData[name]];
+            values[presentationIndex] = value;
+            value = values;
+
+            // Bulk unit selected, hide presentation size
+            if(name === "pack_units"){
+                setHiddenPresentationSize(currentValue => {
+                    const newValues = [...currentValue];
+                    newValues[presentationIndex] = BULK_UNITS.includes(value[presentationIndex]);
+                    return newValues;
+                });
+            };
         }
 
         setFormData({
             ...formData,
             modified: Date.now(),
-            [name]: val
+            [name]: value
+        });
+    };
+
+    const handleAddPresentation = () => {
+        setFormData({
+            ...formData,
+            pack_sizes: [...formData.pack_sizes, undefined],
+            pack_units: [...formData.pack_units, undefined]
+        });
+    };
+
+    const handleRemovePresentation = index => {
+        setFormData({
+            ...formData,
+            pack_sizes: formData.pack_sizes.filter((_, i) => i !== index),
+            pack_units: formData.pack_units.filter((_, i) => i !== index)
+        });
+        setHiddenPresentationSize(currentValue => {
+            const newValues = [...currentValue];
+            newValues.splice(index, 1);
+            return newValues;
         });
     };
 
     const handleSubmit = () => {
-        if(validateForm(formData)){
-            console.log(formData);
-            /*
-            db.insert("products", formData)
-                .then(()=>{
-                    if(formData.id){ // Editing
-                        debug("Product data updated successfully");
-                        toast(t(updated_data), "success", 2000);
-                    }else{ // Create new
-                        debug("New product created successfully");
-                        toast(t(new_product_created), "success", 2000);
-                    }
-                    navigate(-1);
-                })
-                .catch(console.error);
-            */
-        }else{
-            debug("Complete all fields", "error");
-            toast(t(complete_all_fields), "error");
+        const missingFields = validateForm(formData);
+        if(missingFields.length > 0){
+            missingFields.forEach(f => {
+                toast(t('missing_field') + t(f), "error");
+            })
+            return;
         }
+        db.insert("products", formData)
+            .then(()=>{
+                if(formData.id){ // Editing
+                    debug("Product data updated successfully");
+                    toast(t(updated_data), "success", 2000);
+                }else{ // Create new
+                    debug("New product created successfully");
+                    toast(t(new_product_created), "success", 2000);
+                }
+                navigate(-1);
+            })
+            .catch(console.error);
     };
 
     return(
@@ -106,7 +172,7 @@ const View = () => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Producto</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>{t('product')}</Typography>
                         <Input 
                             label="Nombre*"
                             name="name"
@@ -118,57 +184,80 @@ const View = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Presentaciones</Typography>
-                        <Grid container spacing={2} direction={"column"}>
+                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>{t('presentations')}</Typography>
+                        <Grid container spacing={0} direction={"column"}>
                             {formData.pack_units.map((_, index) => (
-                                <Grid item key={index}>
-                                    <Grid container spacing={2}>
+                                <Grid item key={index} sx={{mt:1}}>
+                                    <Grid container spacing={1}>
                                         <Grid item xs={6}>
+                                            {hiddenPresentationSize[index] ? 
+                                            <Typography sx={{color: "#666"}}>
+                                                {t('bulk_presentation')}
+                                            </Typography>
+                                            :
                                             <Input 
-                                                disabled={Boolean(formData.id)}
-                                                label="Presentación*"
+                                                disabled={!canEditPresentations}
+                                                label={t('presentation')+"*"}
                                                 name={"pack_sizes_"+index}
                                                 type="number"
                                                 value={formData.pack_sizes[index] || ""}
                                                 error={formData.pack_sizes[index] === ""}
                                                 onChange={handleInputChange}/>
+                                            }
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={canEditPresentations ? 5:6}>
                                             <Select
-                                                disabled={Boolean(formData.id)}
-                                                label="Unidad*"
+                                                disabled={!canEditPresentations}
+                                                label={t('unit')+"*"}
                                                 name={"pack_units_"+index}
                                                 value={formData.pack_units[index] || ""}
                                                 error={formData.pack_units[index] === ""}
-                                                options={UNITS.map(u => ({label: u, value: u}))}
+                                                options={UNITS[i18next.language].map(u => ({label: t(u), value: u}))}
                                                 onChange={handleInputChange}
                                             />
                                         </Grid>
+                                        {canEditPresentations && <Grid item xs={1}>
+                                            <Box sx={removeContainerStyle}>
+                                                <Button  
+                                                    sx={removeButtonStyle}
+                                                    size="small"
+                                                    color="red" 
+                                                    variant="contained"
+                                                    onClick={() => handleRemovePresentation(index)}>
+                                                    <FaMinus/>
+                                                </Button>
+                                            </Box>
+                                        </Grid>}
                                     </Grid>
                                 </Grid>
                             ))}
+                            {canEditPresentations && <Grid item container justifyContent="flex-end">
+                                <Fab size="small" color="primary" onClick={handleAddPresentation}>
+                                    <FaPlus/>
+                                </Fab>
+                            </Grid>}
                         </Grid>
-                        {Boolean(formData.id) && <Typography sx={{...componentsStyles.hintText, textAlign:"center", p:1}}>
-                            - Estos campos no se pueden editar en productos creados -
+                        {!canEditPresentations && <Typography sx={{...componentsStyles.hintText, textAlign:"center", p:1}}>
+                            - {t('not_allowed_edit_fields')} -
                         </Typography>}
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"10px"}>Reciclaje y caducidad de envases</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"10px"}>{t('expiration')}</Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
                                 <Switch 
-                                    labelFalse="Sin vencimiento"
-                                    labelTrue="Con vencimiento"
+                                    labelFalse={t('not_expirable')}
+                                    labelTrue={t('expirable')}
                                     name="expirable"
                                     value={formData.expirable}
                                     onChange={handleInputChange}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Switch 
-                                    labelFalse="No retornable"
-                                    labelTrue="Retornable"
+                                    labelFalse={t('not_returnable')}
+                                    labelTrue={t('returnable')}
                                     name="returnable"
                                     value={formData.returnable}
                                     onChange={handleInputChange}/>
@@ -178,11 +267,11 @@ const View = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>Detalles adicionales</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"20px"}>{t('aditional_details')}</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Input 
-                                    label={"Marca/Fabricante"}
+                                    label={t('brand')}
                                     name="brand"
                                     type="text"
                                     value={formData.brand || ""}
@@ -191,7 +280,7 @@ const View = () => {
                             <Grid item xs={12}>
                                 <Input 
                                     multiline
-                                    label="SKU"
+                                    label={t('sku')}
                                     name="sku"
                                     type="text"
                                     value={formData.sku || ""}
@@ -201,7 +290,7 @@ const View = () => {
                                 <SuggesterInput 
                                     multiple
                                     type="text"                                
-                                    label="Categorías"
+                                    label={t('categories')}
                                     name="categories"
                                     value={options2Select(formData.categories) || []}
                                     onChange={handleInputChange}
@@ -210,7 +299,7 @@ const View = () => {
                             <Grid item xs={12}>
                                 <Input 
                                     multiline
-                                    label="Comentarios"
+                                    label={t('comments')}
                                     name="comments"
                                     type="text"
                                     value={formData.comments || ""}
@@ -222,7 +311,7 @@ const View = () => {
                 <Grid item xs={12} sx={{mb:1}}>
                     <Typography 
                         fontSize="15px"
-                        color="rgb(50,50,50)">* Campos obligatorios</Typography>
+                        color="rgb(50,50,50)">* {t('mandatory_fields')}</Typography>
                 </Grid>
             </Grid>
             <ActionsBlock onSubmit={handleSubmit} onCancel={() => navigate(-1)}/>

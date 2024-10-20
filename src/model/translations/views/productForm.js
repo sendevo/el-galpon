@@ -8,11 +8,13 @@ const productForm = {
         // Labels
         product: "Product",
         name: "Name",
-        presentations: "Presentations",
-        unit: "Unit",
+        presentations: "Product presentations",
+        presentation: "Presentation",
+        unit: "Package",
+        bulk_presentation: "Bulk sale",
         expiration: "Packaging recycling and expiration",
-        with_expiration: "With expiration",
-        without_expiration: "Without expiration",
+        expirable: "With expiration",
+        not_expirable: "Without expiration",
         returnable: "Returnable",
         not_returnable: "Not returnable",
         aditional_details: "Aditional details",
@@ -20,12 +22,15 @@ const productForm = {
         sku: "SKU",
         categories: "Categories",
         comments: "Comments",
+        not_allowed_edit_fields: "These fields can't be edited for created products",
         mandatory_fields: "Mandatory fields",
         confirm: "Confirm",
         cancel: "Cancel",
 
         // Messages
-        complete_all_fields: "Complete mandatory fields",
+        missing_field: "Missing field: ",
+        pack_sizes: "Presentation",
+        pack_units: "Package",
         updated_data: "Data updated",
         new_product_created: "New product created",
     },
@@ -38,11 +43,13 @@ const productForm = {
         // Labels
         product: "Producto",
         name: "Nombre",
-        presentations: "Presentaciones",
-        unit: "Unidad",
+        presentations: "Presentaciones del producto",
+        presentation: "Presentación",
+        unit: "Envase",
+        bulk_presentation: "Venta a granel",
         expiration: "Reciclaje y caducidad de envases",
-        with_expiration: "Con vencimiento",
-        without_expiration: "Sin vencimiento",
+        expirable: "Con vencimiento",
+        not_expirable: "Sin vencimiento",
         returnable: "Retornable",
         not_returnable: "No retornable",
         aditional_details: "Detalles adicionales",
@@ -50,13 +57,18 @@ const productForm = {
         sku: "SKU",
         categories: "Categorías",
         comments: "Comentarios",
+        not_allowed_edit_fields: "Estos campos no se pueden editar en productos creados",
         mandatory_fields: "Campos obligatorios",
         confirm: "Confirmar",
         cancel: "Cancelar",
 
         // Messages
-        complete_all_fields: "Complete los campos obligatorios",
+        missing_field: "Campo faltante: ",
+        pack_sizes: "Presentación",
+        pack_units: "Envase",
         updated_data: "Datos actualizados",
         new_product_created: "Producto creado",
     }
-}
+};
+
+export default productForm;

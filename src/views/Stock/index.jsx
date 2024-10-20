@@ -55,7 +55,7 @@ const View = () => {
     const enabledOperations = getEnabledOperations(selectedItems);
     const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
 
-    const itemAttrs = ["id", "store_id", "product_id", "stock", "totalAmount", "packs", "expiration_date"];
+    const itemAttrs = ["id", "store_id", "product_id", "stock", "packs", "expiration_date"];
 
     useEffect(() => {
         const ignored = [];
