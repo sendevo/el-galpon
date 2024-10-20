@@ -30,7 +30,7 @@ const ProductDetails = ({productData}) => (
                 </TableRow>}
                 <TableRow>
                     <TableCell sx={componentsStyles.headerCell}>Presentación</TableCell>
-                    <TableCell sx={componentsStyles.tableCell}>{productData.pack_size} {productData.pack_unit}</TableCell>
+                    <TableCell sx={componentsStyles.tableCell}>{productData.pack_sizes} {productData.pack_units}</TableCell>
                 </TableRow>
                 {productData.comments && 
                 <TableRow>

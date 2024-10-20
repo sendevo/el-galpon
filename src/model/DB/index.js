@@ -10,7 +10,7 @@ import schemas from "./schemas.json";
 import migrateDB from "./migrations";
 import testData from "./testData";
 
-const DB_NAME = "elgalponDB";
+const DB_NAME = "elgalponDB"; // Used for indexedDB
 const DB_MODE = "test";
 const DB_VERSION = schemas.length - 1; // Current version
 const DB_SCHEMA = schemas[DB_VERSION];
@@ -132,7 +132,7 @@ export default class LocalDatabase {
                 for(let index = 0; index < rows.length; index++){
                     rows[index].productData = this._db.products.find(prod => prod.id === rows[index].product_id);
                     rows[index].storeData = this._db.stores.find(store => store.id === rows[index].store_id);
-                    rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_size;
+                    rows[index].totalAmount = rows[index]?.stock * rows[index].productData?.pack_sizes;
                 }
                 if(filterByTotalAmount.apply){ // Apply filter by totalAmount
                     const { value, operator } = filterByTotalAmount;
@@ -229,7 +229,8 @@ export default class LocalDatabase {
 
     spendStock(itemsData) {
         return new Promise((resolve, reject) => {
-
+            console.log("Spending stock...");
+            console.log(itemsData);
         });
     }
 

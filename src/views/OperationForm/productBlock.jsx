@@ -6,7 +6,7 @@ import amountIcon from "../../assets/icons/productos.png";
 import storeIcon from "../../assets/icons/barn.png"; 
 
 const prodNameTrim = 30;
-const getProdUnit = product => product.pack_size===1 ? product.pack_unit : `(x ${product.pack_size} ${product.pack_unit})`;
+const getProdUnit = product => product.pack_sizes===1 ? product.pack_units : `(x ${product.pack_sizes} ${product.pack_units})`;
 const getStoreData = (stores, storeId) => stores.find(s => s.id === storeId);
 
 const ProductBlock = ({
@@ -35,7 +35,7 @@ const ProductBlock = ({
             
             <Grid item xs={12}>
                 <Typography sx={{...componentsStyles.hintText, textAlign:"right", mb:1}}>
-                    {product.amount ? `Cantidad total = ${product.pack_size*product.amount} ${product.pack_unit}` : ""}
+                    {product.amount ? `Cantidad total = ${product.pack_sizes*product.amount} ${product.pack_units}` : ""}
                 </Typography>
             </Grid>
 

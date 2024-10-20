@@ -29,7 +29,7 @@ export const OPERATION_TYPES = { // Inmutable (migrate DB if changed)
     RETURN_PACKS: 5,
     UNDEFINED: 6
 };
-export const OPERATION_TYPES_NAMES = { // Uses translations keywords
+export const OPERATION_TYPES_NAMES = { // If change, update translations keywords
     BUY: "buy",
     MOVE_STOCK: "move_stock",
     SPEND: "spend",
@@ -48,15 +48,18 @@ export const ALERT_TYPES = { // Inmutable (migrate DB if changed)
 
 // Model related constants
 export const UNITS = ["l", "ml", "m", "ton", "kg", "g", "u", "semillas"];
-export const CATEGORIES = ["Semillas", "Herbicidas", "Insecticidas", "Fungicidas",  "Inoculantes", "Coadyuvantes", "Fertilizantes", "Sanidad animal", "Nutrición animal", "Materiales de construcción", "Repuestos", "Combustible", "Herramientas", "Silobolsas", "Neumáticos", "Lubricantes", "Protección personal", "Otra"];
+export const CATEGORIES = {
+    es: ["Semillas", "Herbicidas", "Insecticidas", "Fungicidas",  "Inoculantes", "Coadyuvantes", "Fertilizantes", "Sanidad animal", "Nutrición animal", "Materiales de construcción", "Repuestos", "Combustible", "Herramientas", "Silobolsas", "Neumáticos", "Lubricantes", "Protección personal", "Otra"],
+    en: ["Seeds", "Herbicides", "Pesticides", "Fungicides",  "Inoculants", "Adjuvants", "Fertilizers", "Animal health", "Animal nutrition", "Construction materials", "Spare parts", "Fuel", "Tools", "Silobags", "Tires", "Lubricants", "Personal protection", "Other"]
+};
 
-// Moment configuration
+// Moment configuration for spanish
 export const MONTHS = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 const MONTHS_SHORT = ["Ene.", "Feb.", "Mar", "Abr.", "May", "Jun.", "Jul.", "Ago.", "Sept.", "Oct.", "Nov.", "Dic."];
 const WEEK_DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const WEEK_DAYS_SHORT = ["Dom.", "Lun.", "Mar.", "Miér.", "Jue.", "Vier.", "Sáb."];
 const WEEK_DAYS_MIN = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
-export const MOMENT_LOCALE_CONFIG = {
+export const MOMENT_LOCALE_ES = {
     months: MONTHS,
     monthsShort: MONTHS_SHORT,
     weekdays: WEEK_DAYS,
@@ -78,4 +81,4 @@ export const MOMENT_LOCALE_CONFIG = {
         yy : '%d años'
     }
 };
-moment.updateLocale('es', MOMENT_LOCALE_CONFIG);
+moment.updateLocale('es', MOMENT_LOCALE_ES);

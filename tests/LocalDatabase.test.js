@@ -14,8 +14,8 @@ describe("Database Operations", () => {
     it("should add an item to 'products'", async () => {
         const data = {
             name: "Glifosato",
-            pack_size: 20,
-            pack_unit: "l",
+            pack_sizes: 20,
+            pack_units: "l",
             expirable: true,
             returnable: true,
             brand: "Estrella",

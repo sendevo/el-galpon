@@ -41,26 +41,6 @@ const hsv2rgb = (h, s, v) => {
     return [f(5) * 255, f(3) * 255, f(1) * 255];
 };
 
-export const colorRangeGenerator = (count, hue, satFrom = 0.1, satTo = 0.9, transparency = 0.7) => {
-    const colors = [];
-    const step = (satTo - satFrom) / count;
-    for (let s = satFrom; s < satTo; s += step) {
-        const [r, g, b] = h > sv2rgb(hue, s, 0.9);
-        colors.push(`rgba(${r}, ${g}, ${b}, ${transparency})`);
-    }
-    return colors;
-};
-
-export const stringEncode = str => {
-    if (str.length === 0) return "";
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-    }
-    return String(hash).replace(/-/g, '0').replace(/^-/, '');
-};
-
 export const generateUUID = () => {
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
@@ -68,7 +48,7 @@ export const generateUUID = () => {
 
 export const trimString = (name, maxChars) => name.substring(0,maxChars)+(name.length > 30 ? "..." : "");
 
-export const options2Select = opts => opts?.map(c => ({label: c, key: stringEncode(c)}));
+export const options2Select = opts => opts?.map((c, index) => ({label: c, key: index}));
   
 export const randomColorsGenerator = (count, transparency = 0.7) => {
     const colors = [];

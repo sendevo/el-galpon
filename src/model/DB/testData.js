@@ -41,8 +41,8 @@ const products = [
         id: generateId(),
         name: "Glifosato",
         sku: "10-01111-0",
-        pack_size: 20,
-        pack_unit: "l",
+        pack_sizes: [20],
+        pack_units: ["l"],
         expirable: true,
         returnable: true,
         brand: "Estrella",
@@ -55,8 +55,8 @@ const products = [
         id: generateId(),
         name: "Urea granulada",
         sku: "03-1234-1",
-        pack_size: 1,
-        pack_unit: "ton",
+        pack_sizes: [1],
+        pack_units: ["ton"],
         expirable: true,
         returnable: false,
         brand: "Profertil",
@@ -69,8 +69,8 @@ const products = [
         id: generateId(),
         name: "Trigo",
         sku: "",
-        pack_size: 25,
-        pack_unit: "kg",
+        pack_sizes: [25],
+        pack_units: ["kg"],
         expirable: true,
         returnable: false,
         brand: "ACA 304",
@@ -83,8 +83,8 @@ const products = [
         id: generateId(),
         name: "Maíz",
         sku: "",
-        pack_size: 80000,
-        pack_unit: "semillas",
+        pack_sizes: [80000],
+        pack_units: ["semillas"],
         expirable: false,
         returnable: false,
         brand: "ACA 477",
@@ -97,8 +97,8 @@ const products = [
         id: generateId(),
         name: "Girasol",
         sku: "",
-        pack_size: 180000,
-        pack_unit: "semillas",
+        pack_sizes: [180000],
+        pack_units: ["semillas"],
         expirable: true,
         returnable: false,
         brand: "ACA 220",
@@ -111,8 +111,8 @@ const products = [
         id: generateId(),
         name: "Silobolsa",
         sku: "MA-0000",
-        pack_size: 50,
-        pack_unit: "m",
+        pack_sizes: [50],
+        pack_units: ["m"],
         expirable: false,
         returnable: false,
         brand: "Pentasilo Manta",
@@ -125,8 +125,8 @@ const products = [
         id: generateId(),
         name: "2,4D",
         sku: "RD-0021",
-        pack_size: 20,
-        pack_unit: "l",
+        pack_sizes: [20],
+        pack_units: ["l"],
         expirable: true,
         returnable: true,
         brand: "Monsanto",
@@ -139,8 +139,8 @@ const products = [
         id: generateId(),
         name: "Suplemento vitamínico",
         sku: "16-023008",
-        pack_size: 25,
-        pack_unit: "kg",
+        pack_sizes: [25],
+        pack_units: ["kg"],
         expirable: true,
         returnable: false,
         brand: "AF Mix ADQ Preparto Aniónica",
@@ -215,7 +215,7 @@ const items = [
         stock: 10,
         packs: 10,
         presentation_index: 0,
-        expiration_date: timeAgo(5*MONTH)
+        expiration_date: timeAgo(-5*DAY)
     },
     {
         id: generateId(),
@@ -450,13 +450,27 @@ const alerts = [
     }
 ];
 
+const unvisitedViews = [ // Used for introduction messages
+    "about",
+    "alertsList",
+    "operationForm",
+    "operationsList",
+    "productsList",
+    "productForm",
+    "stock",
+    "storesList",
+    "storeForm",
+    "returns"
+];
+
 const testData = {
     version: 0,
     products,
     stores,
     items,
     operations,
-    alerts 
+    alerts,
+    unvisitedViews 
 };
 
 export default testData;

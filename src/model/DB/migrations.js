@@ -1,3 +1,5 @@
+// Migrations should take into account the case where data is shared between users.
+
 
 const migrations = [
     oldData => oldData // v0

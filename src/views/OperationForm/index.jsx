@@ -117,12 +117,12 @@ const View = () => {
                                 toStoreId = "";
                                 currentStoreId = ""; // Inmutable
                             }
-                            const {id, pack_size, name, pack_unit, brand} = product;
+                            const {id, pack_sizes, name, pack_units, brand} = product;
                             return {
                                 id, 
-                                pack_size, 
+                                pack_sizes, 
                                 name, 
-                                pack_unit, 
+                                pack_units, 
                                 brand, 
                                 amount, 
                                 maxAmount,
@@ -183,7 +183,7 @@ const View = () => {
             console.log(formData.operation);
             console.log(formData.products);
             db.handleOperation(formData.operation, formData.products)
-                .then(ids => {
+                .then(() => {
                     toast("Movimiento registrado", "success", 2000);
                     navigate(-1);
                 })

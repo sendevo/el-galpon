@@ -10,8 +10,8 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
 ## Backlog versión 1.0.0 (alpha)  
 
   [x] Listado de movimientos.  
-  [ ] Listado de notificaciones.  
-  [ ] Modificar CATEGORIES para no usar options2Select(). 
+  [x] Listado de notificaciones.  
+  [x] Modificar CATEGORIES para no usar options2Select(). 
   [ ] Logica de operaciones.  
   [ ] Productos con distintas presentaciones.  
   [ ] Configuración de notificaciones en productos o items.  

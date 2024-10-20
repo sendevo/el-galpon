@@ -9,7 +9,13 @@ const operations = {
         store_from: "Origin store",
         store_to: "Destination store",
         stockAmount: "Amount",
-        observations: "Observations"
+        observations: "Observations",
+        buy: "Buy",
+        move_stock: "Stock move",
+        spend: "Use/Application",
+        move_packs: "Packs move",
+        return_packs: "Packs return",
+        undef: "Undef"
     },
     es: {
         title: "Movimientos",

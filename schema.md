@@ -32,12 +32,9 @@ Los productos no se pueden eliminar si hay stock asociado.
     name: "",
     brand: "",
     comments: "",
-    categories: [
-        {label: "Herbicidas", key: 0},
-        {label: "Fumigacion", key: 1}
-    ],
-    pack_size: [20], // Varias presentaciones
-    pack_unit: ["l"], // Cada presentacion tiene unidad
+    categories: ["Herbicidas","Fumigacion"],
+    pack_sizes: [20], // Varias presentaciones
+    pack_units: ["l"], // Cada presentacion tiene unidad
     expirable: false,
     returnable: false,
     created: 0,

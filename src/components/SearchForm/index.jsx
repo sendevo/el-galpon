@@ -18,7 +18,7 @@ import {
 } from "../Inputs";
 import { componentsStyles } from "../../themes";
 import { 
-    CATEGORIES, 
+    CATEGORIES,
     OPERATION_TYPES, 
     OPERATION_TYPES_NAMES 
 } from "../../model/constants";
@@ -32,6 +32,7 @@ import {
     FaCalendarDay,
     FaShoppingBag
 } from "react-icons/fa";
+import i18next from "i18next";
 
 const defaultFilters = { // Filter values
     // Common
@@ -106,7 +107,10 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
     const handleFiltersApply = () => {
         onFiltersChange({
             ...filters,
-            categories: filters.categories.map(c => c.label)
+            categories: filters.categories.map(c => c.label),
+            types: filters.types.map(ty => ty.label),
+            productsIds: filters.productsIds.map(p => p.label),
+            storesIds: filters.storesIds.map(st => st.label)
         }); 
         setAccExpanded(false); // Collapse the query card on filter apply
     };
@@ -158,7 +162,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     name="categories"
                                     value={filters.categories}
                                     onChange={handleInputChange}
-                                    options={options2Select(CATEGORIES)}
+                                    options={options2Select(CATEGORIES[i18next.language])}
                                     icon={<FaRegHandPointRight color={filters.categories_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}/>
                             </Grid>
@@ -208,7 +212,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     name="types"
                                     value={filters.types}
                                     onChange={handleInputChange}
-                                    options={options2Select(OPERATIONS)}
+                                    options={options2Select(OPERATIONS.map(op => t(op)))}
                                     icon={<FaRegHandPointRight color={filters.types_active ? "green":"gray"} size={20}/>}
                                     rIcon={true}/>
                             </Grid>

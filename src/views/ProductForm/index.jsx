@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { 
-    Button, 
+import {  
     Paper,
     Grid,
     Typography 
 } from "@mui/material";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
@@ -20,18 +21,23 @@ import { debug, options2Select } from "../../model/utils";
 import { UNITS, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 
-
-const validateForm = formData => Boolean(formData.name && formData.pack_size);
+// Required fields: name, pack_sizes, pack_units
+const validateForm = formData => Boolean(formData.name && formData.pack_sizes && formData.pack_units);
 
 const View = () => {
 
     const navigate = useNavigate();
     const db = useDatabase();
     const [searchParams] = useSearchParams();    
-    const [viewTitle, setViewTitle] = useState("Productos");
-    const [formData, setFormData] = useState({});
     const toast = useToast();
+    const { t } = useTranslation("productForm");
 
+    const [viewTitle, setViewTitle] = useState(t('default_title'));
+    const [formData, setFormData] = useState({
+        pack_sizes: [],
+        pack_units: [],
+    });
+    
     useEffect(() => {
         const id = searchParams.get("id");
         if(Boolean(id)){ // Editing product
@@ -39,7 +45,6 @@ const View = () => {
                 .then(data => {
                     if(data.length === 1) 
                         setFormData(data[0]);
-
                     setViewTitle("Edición de producto");
                 })
                 .catch(console.error);
@@ -50,35 +55,54 @@ const View = () => {
 
     const handleInputChange = event => {
         const {name, value} = event.target;
+        
+        let val = value;
+        if(name === "categories"){
+            val = value.map(v => v.label);
+        }else if(name.includes("pack_sizes")){
+            const index = parseInt(name.split("_")[1]);
+            const sizes = [...formData.pack_sizes];
+            sizes[index] = value;
+            val = sizes;
+        }else if(name.includes("pack_units")){
+            const index = parseInt(name.split("_")[1]);
+            const units = [...formData.pack_units];
+            units[index] = value;
+            val = units;
+        }
+
         setFormData({
             ...formData,
             modified: Date.now(),
-            [name]: name === "categories" ? value.map(v => v.label) : value
+            [name]: val
         });
     };
 
     const handleSubmit = () => {
         if(validateForm(formData)){
+            console.log(formData);
+            /*
             db.insert("products", formData)
                 .then(()=>{
                     if(formData.id){ // Editing
                         debug("Product data updated successfully");
-                        toast("Datos actualizados", "success", 2000);
+                        toast(t(updated_data), "success", 2000);
                     }else{ // Create new
                         debug("New product created successfully");
-                        toast("Producto creado", "success", 2000);
+                        toast(t(new_product_created), "success", 2000);
                     }
                     navigate(-1);
                 })
                 .catch(console.error);
+            */
         }else{
             debug("Complete all fields", "error");
-            toast("Complete los campos obligatorios", "error");
+            toast(t(complete_all_fields), "error");
         }
     };
 
     return(
-        <MainView title={viewTitle}>
+        <MainView title={t(viewTitle)}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
@@ -94,29 +118,35 @@ const View = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Presentación</Typography>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Input 
-                                    disabled={Boolean(formData.id)}
-                                    label="Presentación*"
-                                    name="pack_size"
-                                    type="number"
-                                    value={formData.pack_size || ""}
-                                    error={formData.pack_size === ""}
-                                    onChange={handleInputChange}/>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Select
-                                    disabled={Boolean(formData.id)}
-                                    label="Unidad*"
-                                    name="pack_unit"
-                                    value={formData.pack_unit || ""}
-                                    error={formData.pack_unit === ""}
-                                    options={UNITS.map(u => ({label: u, value: u}))}
-                                    onChange={handleInputChange}
-                                />
-                            </Grid>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Presentaciones</Typography>
+                        <Grid container spacing={2} direction={"column"}>
+                            {formData.pack_units.map((_, index) => (
+                                <Grid item key={index}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <Input 
+                                                disabled={Boolean(formData.id)}
+                                                label="Presentación*"
+                                                name={"pack_sizes_"+index}
+                                                type="number"
+                                                value={formData.pack_sizes[index] || ""}
+                                                error={formData.pack_sizes[index] === ""}
+                                                onChange={handleInputChange}/>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Select
+                                                disabled={Boolean(formData.id)}
+                                                label="Unidad*"
+                                                name={"pack_units_"+index}
+                                                value={formData.pack_units[index] || ""}
+                                                error={formData.pack_units[index] === ""}
+                                                options={UNITS.map(u => ({label: u, value: u}))}
+                                                onChange={handleInputChange}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            ))}
                         </Grid>
                         {Boolean(formData.id) && <Typography sx={{...componentsStyles.hintText, textAlign:"center", p:1}}>
                             - Estos campos no se pueden editar en productos creados -
@@ -175,7 +205,7 @@ const View = () => {
                                     name="categories"
                                     value={options2Select(formData.categories) || []}
                                     onChange={handleInputChange}
-                                    options={options2Select(CATEGORIES)}/>
+                                    options={options2Select(CATEGORIES[i18next.language])}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Input 

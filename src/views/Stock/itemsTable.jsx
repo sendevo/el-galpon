@@ -59,7 +59,7 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                                 {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.name || "S/D"}</TableCell>}
                                 {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}
                                 {/*<TableCell sx={componentsStyles.tableCell}>{item.stock} unidades</TableCell>*/}
-                                {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.totalAmount} {item.productData?.pack_unit}</TableCell>}
+                                {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.totalAmount} {item.productData?.pack_units}</TableCell>}
                                 {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : 0}</TableCell>}
                                 {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.expiration_date ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                             </TableRow>

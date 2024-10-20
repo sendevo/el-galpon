@@ -167,8 +167,8 @@ const View = () => {
                                             onChange={() => handleSelect(product.id)} />
                                     </TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.name || "Sin nombre"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_size}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_unit}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_sizes.join(",")}</TableCell>
+                                    <TableCell sx={componentsStyles.tableCell}>{product.pack_units.join(",")}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.expirable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.returnable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>
