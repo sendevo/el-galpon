@@ -1,4 +1,5 @@
 import { Typography, Paper, Grid } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { Input, Select } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
 import { trimString } from "../../model/utils";
@@ -15,55 +16,60 @@ const ProductBlock = ({
         storeSelectionError,
         hideStoreInput,
         onPropChange
-    }) => (
-    <Paper sx={{...componentsStyles.paper, mt:1}}>
-        <Grid container justifyContent="space-between" direction={"column"}>
-            <Grid item xs={12}>
-                <Typography lineHeight={"2em"} paddingBottom={"5px"}><b>Producto: </b>{trimString(product.name, prodNameTrim)}</Typography>
-            </Grid>
+    }) => {
 
-            <Grid item xs={12}>
-                <Input 
-                    icon={amountIcon}
-                    label="Cantidad*"
-                    type="number"
-                    value={product.amount > 0 ? product.amount : ""}
-                    error={product.amount == ""}
-                    unit={getProdUnit(product)}
-                    onChange={e => onPropChange("amount", e.target.value)}/>
-            </Grid>
-            
-            <Grid item xs={12}>
-                <Typography sx={{...componentsStyles.hintText, textAlign:"right", mb:1}}>
-                    {product.amount ? `Cantidad total = ${product.pack_sizes*product.amount} ${product.pack_units}` : ""}
-                </Typography>
-            </Grid>
+    const { t } = useTranslation("productBlock");
 
-            {!hideStoreInput && 
+    return (
+        <Paper sx={{...componentsStyles.paper, mt:1}}>
+            <Grid container justifyContent="space-between" direction={"column"}>
                 <Grid item xs={12}>
-                    <Select
-                        icon={storeIcon}
-                        label="Destino*"
-                        value={product.toStoreId || ""}
-                        error={product.toStoreId == ""}
-                        options={stores?.map(s => ({label: s.name, value: s.id}))}
-                        onChange={e => onPropChange("toStoreId", e.target.value)}/>
+                    <Typography lineHeight={"2em"} paddingBottom={"5px"}><b>{t("product") + ": "}</b>{trimString(product.name, prodNameTrim)}</Typography>
                 </Grid>
-            }
-            
-            { product.currentStoreId &&
+
                 <Grid item xs={12}>
-                    <Typography sx={{
-                            ...componentsStyles.hintText, 
-                            textAlign:"right", 
-                            color: storeSelectionError ? "#d32f2f" : "rgb(100,100,100)"
-                        }}>
-                        Ubicación actual: {getStoreData(stores,product.currentStoreId).name}
+                    <Input 
+                        icon={amountIcon}
+                        label={(t("quantity") + "*")}
+                        type="number"
+                        value={product.amount > 0 ? product.amount : ""}
+                        error={product.amount == ""}
+                        unit={getProdUnit(product)}
+                        onChange={e => onPropChange("amount", e.target.value)}/>
+                </Grid>
+                
+                <Grid item xs={12}>
+                    <Typography sx={{...componentsStyles.hintText, textAlign:"right", mb:1}}>
+                        {product.amount ? `${t('total_amount')} = ${product.pack_sizes*product.amount} ${product.pack_units}` : ""}
                     </Typography>
                 </Grid>
-            }
-        </Grid>
-    </Paper>
-);
+
+                {!hideStoreInput && 
+                    <Grid item xs={12}>
+                        <Select
+                            icon={storeIcon}
+                            label={t("destination") + "*"}
+                            value={product.toStoreId || ""}
+                            error={product.toStoreId == ""}
+                            options={stores?.map(s => ({label: s.name, value: s.id}))}
+                            onChange={e => onPropChange("toStoreId", e.target.value)}/>
+                    </Grid>
+                }
+                
+                { product.currentStoreId &&
+                    <Grid item xs={12}>
+                        <Typography sx={{
+                                ...componentsStyles.hintText, 
+                                textAlign:"right", 
+                                color: storeSelectionError ? "#d32f2f" : "rgb(100,100,100)"
+                            }}>
+                            {t("current_location")}: {getStoreData(stores,product.currentStoreId).name}
+                        </Typography>
+                    </Grid>
+                }
+            </Grid>
+        </Paper>
+    );
+};
 
 export default ProductBlock;

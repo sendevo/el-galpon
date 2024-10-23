@@ -1,6 +1,11 @@
 const operations = {
     en: {
         title: "Operations",
+        new_operation: "New operation",
+        select_location: "Select location",
+        same_location: "Same location",
+        choose_each: "Choose for each",
+        destination: "Destination",
         errorLoading: "Error loading operations",
         date: "Date",
         type: "Type",
@@ -10,15 +15,22 @@ const operations = {
         store_to: "Destination store",
         stockAmount: "Amount",
         observations: "Observations",
+        operation_saved: "Operation saved",
         buy: "Buy",
         move_stock: "Stock move",
         spend: "Use/Application",
         move_packs: "Packs move",
         return_packs: "Packs return",
+        required_fields: "Required fields",
         undef: "Undef"
     },
     es: {
         title: "Movimientos",
+        new_operation: "Nuevo movimiento",
+        select_location: "Elegir ubicación",
+        same_location: "Mismo depósito",
+        choose_each: "Elegir cada uno",
+        destination: "Destino",
         errorLoading: "Error al cargar movimientos",
         date: "Fecha",
         type: "Tipo",
@@ -28,11 +40,13 @@ const operations = {
         store_to: "Depósito destino",
         amount: "Cantidad",
         observations: "Observaciones",
+        operation_saved: "Movimiento registrado",
         buy: "Compra",
         move_stock: "Translado",
         spend: "Uso/Aplicación",
         move_packs: "Translado",
         return_packs: "Devolución de envases",
+        required_fields: "Campos obligatorios",
         undef: "Indefinido"
     }
 };

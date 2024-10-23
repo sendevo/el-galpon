@@ -149,7 +149,7 @@ const View = () => {
                 <Button
                     color="info"
                     variant="contained"
-                    onClick={()=>navigate("/items-form")}>
+                    onClick={() => toast("Funcionalidad aún no disponible")}>
                     {t('export')}
                 </Button>
             </Box>

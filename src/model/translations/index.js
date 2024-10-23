@@ -4,6 +4,7 @@ import productForm from "./views/productForm";
 import storesList from "./views/storesList";
 import returns from "./views/returns";
 import operations from "./views/operations";
+import productBlock from "./components/productBlock";
 import about from "./views/about";
 import alerts from "./views/alerts";
 
@@ -32,7 +33,8 @@ const dictionaries = {
 
     // Components
     search,
-    operationsBlock
+    operationsBlock,
+    productBlock
 };
 
 const languages = ["es", "en"];

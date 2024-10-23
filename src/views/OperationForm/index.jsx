@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { 
     Grid,
     Typography,
-    Paper,
-    TextField
+    Paper
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -77,7 +76,7 @@ const View = () => {
     
     const db = useDatabase();
         
-    const [viewTitle, setViewTitle] = useState("Nuevo movimiento");
+    const [viewTitle, setViewTitle] = useState(t("new_operation"));
     const [stores, setStores] = useState([]);
     const [formData, setFormData] = useState({
         operation: "",
@@ -184,7 +183,7 @@ const View = () => {
             console.log(formData.products);
             db.handleOperation(formData.operation, formData.products)
                 .then(() => {
-                    toast("Movimiento registrado", "success", 2000);
+                    toast(t("operation_saved"), "success", 2000);
                     navigate(-1);
                 })
                 .catch(console.error);
@@ -202,12 +201,12 @@ const View = () => {
                         <Paper sx={componentsStyles.paper}>
                             <Grid container direction="column" spacing={2}> 
                                 <Grid item>
-                                    <Typography lineHeight={"1em"}>Destino</Typography>
+                                    <Typography lineHeight={"1em"}>{t("destination")}</Typography>
                                 </Grid>
                                 <Grid item>
                                     <Switch 
-                                        labelFalse="Elegir cada uno"
-                                        labelTrue="Mismo depósito"
+                                        labelFalse={t("choose_each")}
+                                        labelTrue={t("same_location")}
                                         name="sameStore"
                                         value={formData.sameStore}
                                         onChange={e => handleSwitchChange(e.target.value)}/>
@@ -216,7 +215,7 @@ const View = () => {
                                     <Grid item>
                                         <Select
                                             icon={storeIcon}
-                                            label="Elegir ubicación*"
+                                            label={t("select_location") + "*"}
                                             name="globalStore"
                                             value={formData.globalStoreId || ""}
                                             error={formData.globalStore === ""}
@@ -245,7 +244,7 @@ const View = () => {
                     <Paper sx={componentsStyles.paper}>
                         <Input
                             icon={observationsIcoon}
-                            label="Observaciones"
+                            label={t("observations")}
                             name="obs"
                             type="text"
                             value={formData.obs || ""}
@@ -257,7 +256,7 @@ const View = () => {
                     <Typography 
                         fontSize="15px"
                         color="rgb(50,50,50)">
-                            * Campos obligatorios
+                            * {t("required_fields")}
                     </Typography>
                 </Grid>
 
