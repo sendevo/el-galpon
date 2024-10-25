@@ -6,6 +6,9 @@ import {
     compare, 
     generateUUID
 } from "../utils";
+import moment from "moment";
+import i18n from "i18next";
+import { MOMENT_LOCALE } from "../constants";
 import schemas from "./schemas.json";
 import migrateDB from "./migrations";
 import testData from "./testData";
@@ -52,6 +55,8 @@ export default class LocalDatabase {
                     .catch(console.error);
             }else{ // Load data 
                 debug("Loading data...");
+                const locale = localStorage.getItem("locale") || "es";
+                this.updateLocale(locale);
                 tables.forEach(table => {
                     const data = localStorage.getItem(table);
                     this._db[table] = data ? JSON.parse(data) : [];
@@ -78,6 +83,12 @@ export default class LocalDatabase {
             }
             onReady(this);
         }
+    }
+
+    updateLocale(locale){
+        moment.updateLocale(locale, MOMENT_LOCALE[locale]);
+        i18n.changeLanguage(locale);
+        localStorage.setItem("locale", locale);
     }
 
     insert(table, data) {

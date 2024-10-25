@@ -1,3 +1,9 @@
+# Miscelánea
+```js
+version: 0, // Código de version de la base de datos
+locale: "es", // Idioma de la aplicación
+```
+
 # Depósitos (stores)
 Definen lugares en donde pueden ubicarse los insumos. Para consultar la cantidad de insumos en un depósito, se debe recorrer la lista de insumos.  
 Los depositos no se pueden eliminar si tienen existencias (items).
@@ -34,7 +40,7 @@ Los productos no se pueden eliminar si hay stock asociado.
     comments: "",
     categories: ["Herbicidas","Fumigacion"],
     pack_sizes: [20], // Varias presentaciones
-    pack_units: ["l"], // Cada presentacion tiene unidad
+    pack_units: ["liter"], // Unidad de cada una (ver keywords en UNITS)
     expirable: false,
     returnable: false,
     created: 0,

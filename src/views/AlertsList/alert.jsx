@@ -101,12 +101,12 @@ const Alert = ({alert, onOpen, onRead, onDelete}) => {
                 options={
                     [
                         {
-                            text: (alert.seen ? "Marcar como no leido" : "Marcar como leido"),
+                            text: (alert.seen ? t("mark_as_unread") : t("mark_as_read")),
                             icon: (alert.seen ? <FaEyeSlash size={15} /> : <FaEye size={15} />),
                             onClick: onRead
                         },
                         {
-                            text: "Eliminar",
+                            text: t("delete"),
                             icon: <FaTrash size={15} />,
                             onClick: onDelete
                         }

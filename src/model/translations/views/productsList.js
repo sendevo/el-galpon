@@ -1,10 +1,12 @@
+import { UNITS_NAMES } from "../../constants";
+
 const productsList = {
     en: {
         title: "Products",
         name: "Name",
         presentation: "Presentation",
         unit: "Unit",
-        bulk: "Bulk",
+        bulk: "bulk",
         expirable: "Expirable",
         returnable: "Returnable",
         brand: "Brand/Manufacturer",
@@ -12,7 +14,22 @@ const productsList = {
         comments: "Comments",
         categories: "Categories",
         created: "Created",
-        modified: "Modified"
+        modified: "Modified",
+        error_loading: "Error loading products",
+        confirm_operation: "Confirm operation",
+        confirm_text: "Are you sure you want to delete the selected products?",
+        prod_deleted_plural: "{{len}} products were deleted",
+        prod_deleted_singular: "A product was deleted",
+        cannot_delete_with_stock: "Cannot delete products with stock",
+        error_delete: "Error when trying to delete product",
+        delete: "Delete",
+        actions: "Actions",
+        no_name: "No name",
+        select_one_or_more: "Select one or more items",
+        buy: "Buy",
+        edit: "Edit",
+        create_new: "Create new",
+        ...UNITS_NAMES.en
     },
     es: {
         title: "Productos",
@@ -27,7 +44,22 @@ const productsList = {
         comments: "Comentarios",
         categories: "Categorías",
         created: "Creado",
-        modified: "Modificado"
+        modified: "Modificado",
+        error_loading: "Error al cargar productos",
+        confirm_operation: "Confirmar operación",
+        confirm_text: "¿Está seguro que desea borrar los productos seleccionados?",
+        prod_deleted_plural: "Se eliminaron {{len}} productos",
+        prod_deleted_singular: "Se eliminó un producto",
+        cannot_delete_with_stock: "No se pueden eliminar productos con stock asociado",
+        error_delete: "Errror al eliminar producto",
+        delete: "Eliminar",
+        actions: "Acciones",
+        no_name: "Sin nombre",
+        select_one_or_more: "Selecciones uno o más insumos",
+        buy: "Comprar",
+        edit: "Editar",
+        create_new: "Crear nuevo",
+        ...UNITS_NAMES.es
     }
 };
 

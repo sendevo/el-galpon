@@ -1,7 +1,9 @@
+import common from "./common";
 import home from "./views/home";
 import itemList from "./views/itemsList";
 import productForm from "./views/productForm";
 import storesList from "./views/storesList";
+import storeForm from "./views/storeForm";
 import returns from "./views/returns";
 import operations from "./views/operations";
 import productBlock from "./components/productBlock";
@@ -18,10 +20,14 @@ import operationsBlock from "./components/operationsBlock";
 // {t('')}
 
 const dictionaries = {
+    // Common
+    common,
+
     // Primary views
     home, 
     itemList,
     storesList, 
+    storeForm,
     returns,
     operations,
     about, 

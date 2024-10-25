@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import i18next from "i18next";
 import { 
     Grid, 
     Button, 
@@ -18,7 +19,6 @@ import {
 import moment from "moment";
 import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
-import { BULK_UNITS } from "../../model/constants";
 import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
@@ -54,11 +54,10 @@ const View = () => {
     const getPresentation = product => {
         let presentation = "";
         for(let p = 0; p < product.pack_sizes.length; p++){
-            if(!BULK_UNITS.includes(product.pack_units[p])) {
-                presentation = `${product.pack_sizes[p]} ${product.pack_units[p]}`;
-                break;
+            if(product.pack_sizes[p] === -1){ // Bulk
+                presentation = `${t(product.pack_units[p])} (${t("bulk")})`;
             }else{
-                presentation = t('bulk');
+                presentation = `${product.pack_sizes[p]} ${t(product.pack_units[p])}`;
             }
         }
         return presentation;
@@ -68,7 +67,7 @@ const View = () => {
         db.query("products")
             .then(setData)
             .catch(error => {
-                toast("Error al cargar depósitos", "error");
+                toast(t("error_loading"), "error");
                 debug(error, "error");
             });
     }, []);
@@ -109,8 +108,8 @@ const View = () => {
 
     const handleDelete = () => {
         confirm(
-            "Confirmar operación",
-            "¿Desea eliminar los ítems seleccionados?",
+            t("confirm_operation"),
+            t("confirm_text"),
             () => { // On success
                 const len = selected.length;
                 db.delete("products", selected)
@@ -119,19 +118,23 @@ const View = () => {
                             .then(updatedData => {
                                 setData(updatedData);
                                 setSelected([]);
-                                toast(`Se ${len > 1 ? "eliminaron":"eliminó"} ${len} producto${len>1 ? "s":""}`, "success");
+                                toast(len > 1 ? 
+                                    t("prod_deleted_plural", {len})
+                                    :
+                                    t("prod_deleted_singular", {len}), 
+                                "success");
                             })
                             .catch(error => {
-                                toast("Error al eliminar productos", "error");
+                                toast(t("error_delete"), "error");
                                 debug(error, "error");
                             });
                     })
                     .catch(error => {
                         toast(
                         error.type === ERROR_CODES.DB.WITH_ITEMS ? 
-                                "No se puede eliminar un producto con stock asociado"
+                                t("cannot_delete_with_sotck")
                                 :
-                                "Error al eliminar productos"
+                                t("error_delete")
                                 , "error");
                         console.error(error);
             }       );
@@ -196,10 +199,10 @@ const View = () => {
                     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
                         <Grid container sx={{mb:1}} direction={"column"}>
                             <Grid item>
-                                <Typography sx={{fontWeight:"bold"}}>Acciones</Typography>
+                                <Typography sx={{fontWeight:"bold"}}>{t("actions")}</Typography>
                             </Grid>
                             <Grid item mb={1}>
-                                {selected.length===0 && <Typography sx={componentsStyles.hintText}>Seleccione uno o más insumos</Typography>}
+                                {selected.length===0 && <Typography sx={componentsStyles.hintText}>{t("select_one_or_more")}</Typography>}
                             </Grid>
                             <Grid item>
                                 <Grid 
@@ -213,7 +216,7 @@ const View = () => {
                                             disabled={selected.length === 0}
                                             variant="contained"
                                             onClick={handleBuy}>
-                                            Comprar
+                                            {t("buy")}
                                         </Button>
                                     </Grid>
                                     <Grid item>
@@ -221,7 +224,7 @@ const View = () => {
                                             variant="contained"
                                             disabled={selected.length !== 1}
                                             onClick={handleEdit}>
-                                            Editar        
+                                            {t("edit")}       
                                         </Button>
                                     </Grid>
                                     <Grid item>
@@ -230,7 +233,7 @@ const View = () => {
                                             variant="contained"
                                             disabled={selected.length === 0}
                                             onClick={handleDelete}>
-                                            Borrar
+                                            {t("delete")}
                                         </Button>
                                     </Grid>
                                 </Grid>
@@ -242,7 +245,7 @@ const View = () => {
                                         disabled={selected.length !== 0}
                                         variant="contained"
                                         onClick={handleNew}>
-                                        Crear nuevo
+                                        {t("create_new")}
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -259,7 +262,7 @@ const View = () => {
                         sx={{mt: 2}}
                         variant="contained"
                         onClick={handleNew}>
-                        Crear nuevo
+                        {t("create_new")}
                     </Button>
                 </Box>
             }

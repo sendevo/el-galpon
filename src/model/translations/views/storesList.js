@@ -12,7 +12,17 @@ const storesList = {
         edit: "Edit",
         stock: "Stock",
         delete: "Delete",
-        noname: "No name"
+        noname: "No name",
+        error_loading: "Error loading stores",
+        confirm_operation: "Confirm operation",
+        confirm_text: "Are you sure you want to delete the selected stores?",
+        loc_deleted_plural: "{{len}} stores were deleted",
+        loc_deleted_singular: "A store was deleted",
+        cannot_delete_with_stock: "Cannot delete stores with stock",
+        error_delete: "Error when trying to delete store",
+        delete: "Delete",
+        create_new: "Create new",
+        no_stores_yet: "No stores yet"
     },
     es: {
         title: "Depósitos",
@@ -27,7 +37,17 @@ const storesList = {
         edit: "Editar",
         stock: "Insumos",
         delete: "Borrar",
-        noname: "Sin nombre"
+        noname: "Sin nombre",
+        error_loading: "Error al cargar depósitos",
+        confirm_operation: "Confirmar operación",
+        confirm_text: "¿Está seguro que desea borrar los depósitos seleccionados?",
+        loc_deleted_plural: "Se eliminaron {{len}} depósitos",
+        loc_deleted_singular: "Se eliminó un depósito",
+        cannot_delete_with_stock: "No se pueden eliminar depósitos con stock",
+        error_delete: "Errror al eliminar depósito",
+        delete: "Eliminar",
+        create_new: "Crear nuevo",
+        no_stores_yet: "Aún no hay depósitos"
     }
 };
 

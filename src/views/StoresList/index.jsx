@@ -43,7 +43,7 @@ const View = () => {
         db.query("stores")
             .then(setData)
             .catch(error => {
-                toast("Error al cargar depósitos", "error");
+                toast(t("error_loading", "error"));
                 debug(error, "error");
             });
     }, []);
@@ -89,8 +89,8 @@ const View = () => {
 
     const handleDelete = () => {
         confirm(
-            "Confirmar operación", 
-            "¿Desea eliminar los ítems seleccionados?",
+            t("confirm_operation"), 
+            t("confirm_text"),
             () => { // On success
                 const len = selected.length;
                 db.delete("stores", selected)
@@ -99,15 +99,21 @@ const View = () => {
                             .then(updatedData => {
                                 setData(updatedData);
                                 setSelected([]);
-                                toast(`Se ${len > 1 ? "eliminaron":"eliminó"} ${len} depósito${len>1 ? "s":""}`, "success");
+                                toast
+                                    (len > 1 ? 
+                                        t("loc_deleted_plural", {len})
+                                        :
+                                        t("loc_deleted_singular", {len}), 
+                                    "success"
+                                );
                             });
                     })
                     .catch(error => {
                         toast(
                             error.type === ERROR_CODES.DB.WITH_ITEMS ? 
-                                    "No se puede eliminar depósitos con stock"
+                                    t("cannot_delete_with_stock")
                                     :
-                                    "Error al eliminar productos"
+                                    t("error_delete")
                                     , "error");
                         debug(error, "error");
                     });
@@ -226,12 +232,12 @@ const View = () => {
                     alignItems={"center"}
                     sx={{mt: "50%"}}>
                     <img src={iconEmpty} height="100px" alt="Sin datos" />
-                    <Typography variant="h5" fontWeight={"bold"}>Aún no hay depósitos</Typography>
+                    <Typography variant="h5" fontWeight={"bold"}>{t("no_stores_yet")}</Typography>
                     <Button 
                         sx={{mt: 2}}
                         variant="contained"
                         onClick={handleNew}>
-                        Crear nuevo
+                        {t("create_new")}
                     </Button>
                 </Box>
             }

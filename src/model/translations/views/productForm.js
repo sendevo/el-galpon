@@ -33,6 +33,7 @@ const productForm = {
         pack_units: "Package",
         updated_data: "Data updated",
         new_product_created: "New product created",
+        at_least_one_presentation: "There must be at least one presentation"
     },
     es: {
         // View title
@@ -68,6 +69,7 @@ const productForm = {
         pack_units: "Envase",
         updated_data: "Datos actualizados",
         new_product_created: "Producto creado",
+        at_least_one_presentation: "Debe haber al menos una presentación"
     }
 };
 

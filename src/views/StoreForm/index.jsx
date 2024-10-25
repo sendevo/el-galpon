@@ -6,6 +6,7 @@ import {
     Paper,
     Typography 
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
@@ -50,10 +51,12 @@ const View = () => {
 
     const [searchParams] = useSearchParams();    
     const navigate = useNavigate();
+
+    const { t } = useTranslation("storeForm");
     
     const db = useDatabase();   
     
-    const [viewTitle, setViewTitle] = useState("Depósitos");
+    const [viewTitle, setViewTitle] = useState(t("stores"));
     const [formData, setFormData] = useState({});
 
     const toast = useToast();
@@ -65,7 +68,7 @@ const View = () => {
             db.query("stores",[id])
                 .then(data => {
                     if(data.length === 1){
-                        setViewTitle("Edición de depósito");
+                        setViewTitle(t("store_edit"));
                         setFormData({
                             ...data[0],
                             gmLink: latLng2GoogleMap(data[0]?.lat, data[0]?.lng)
@@ -76,7 +79,7 @@ const View = () => {
                 })
                 .catch(console.error);
         }else{
-            setViewTitle("Creación de depósito");
+            setViewTitle(t("store_create"));
         }
     }, []);
 
@@ -86,17 +89,17 @@ const View = () => {
             db.insert("stores",formData)
                 .then(id => {
                     if(formData.id){ // Editing
-                        toast("Datos actualizados", "success", 2000);
+                        toast(t("updated_data"), "success", 2000);
                     }else{ // Create new
                         debug("Item id = " + id);
-                        toast("Depósito creado", "success", 2000);
+                        toast(t("store_create"), "success", 2000);
                     }
                     navigate(-1);
                 })
                 .catch(console.error);
         }else{
             debug("Complete all fields", "error");
-            toast("Complete los campos obligatorios", "error");
+            toast(t("complete_mandatory_fields"), "error");
         }
     };
 
@@ -148,8 +151,8 @@ const View = () => {
 
     const handleLocationHelp = () => {
         prmpt({
-            title: "Importar ubicación", 
-            message: "En este campo de texto puede escribir o pegar un enlace de Google Maps; los valores de Latitud y Longitud separados por coma; o bien utilizar el formato GMS (grados, minutos, segundos).", 
+            title: t("import_location_title"),
+            message: t("import_location_text"), 
             showCancelButton: false
         });
     };
@@ -159,11 +162,11 @@ const View = () => {
             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Generales</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>{t("common")}</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Input 
-                                    label="Nombre*"
+                                    label={t("name")+"*"}
                                     name="name"
                                     type="text"
                                     value={formData.name || ""}
@@ -173,7 +176,7 @@ const View = () => {
                             <Grid item xs={12}>
                                 <Input 
                                     multiline
-                                    label="Comentarios"
+                                    label={t("comments")}
                                     name="comments"
                                     type="text"
                                     value={formData.comments || ""}
@@ -184,11 +187,11 @@ const View = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"20px"}> Coordenadas </Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"20px"}> {t("coordinates")} </Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
                                 <Input 
-                                    label="Latitud*"
+                                    label={t("latitude")+"*"}
                                     name="lat"
                                     type="number"
                                     value={formData.lat || ""}
@@ -197,7 +200,7 @@ const View = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Input 
-                                    label="Longitud*"
+                                    label={t("longitude")+"*"}
                                     name="lng"
                                     type="number"
                                     value={formData.lng || ""}
@@ -206,7 +209,7 @@ const View = () => {
                             </Grid>
                         </Grid>
                         <Typography lineHeight={"1em"} marginTop={"5px"} paddingBottom={"5px"}>
-                            Importar
+                            {t("import")}
                             <Button 
                                 onClick={handleLocationHelp} 
                                 sx={{minWidth: "0px", padding: "6px 3px"}}>
@@ -215,7 +218,7 @@ const View = () => {
                         </Typography>
                         <Box sx={{mt:1}}>
                             <Input 
-                                label="Ubicación"
+                                label={t("location")}
                                 name="gmLink"
                                 type="text"
                                 value={formData.gmLink || ""}
@@ -225,11 +228,11 @@ const View = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Paper sx={componentsStyles.paper}>
-                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>Datos de contacto</Typography>
+                        <Typography lineHeight={"1em"} paddingBottom={"15px"}>{t("contact_data")}</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Input 
-                                    label="Responsable"
+                                    label={t("name")}
                                     name="contact_name"
                                     type="text"
                                     value={formData.contact?.name || ""}                                    
@@ -237,7 +240,7 @@ const View = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Input 
-                                    label="Teléfono"
+                                    label={t("phone")}
                                     name="contact_phone"
                                     type="text"
                                     value={formData?.contact?.phone || ""}
@@ -245,7 +248,7 @@ const View = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Input 
-                                    label="Dirección"
+                                    label={t("address")}
                                     name="contact_address"
                                     type="text"
                                     value={formData?.contact?.address || ""}
@@ -253,7 +256,7 @@ const View = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Input 
-                                    label="email"
+                                    label={t("email")}
                                     name="contact_email"
                                     type="text"
                                     value={formData?.contact?.email || ""}
@@ -265,7 +268,7 @@ const View = () => {
                 <Grid item xs={12}>
                     <Typography 
                         fontSize="15px"
-                        color="rgb(50,50,50)">* Campos obligatorios</Typography>
+                        color="rgb(50,50,50)">* {t("mandatory_fields")}</Typography>
                 </Grid>
                 <Grid 
                     item 
@@ -276,7 +279,7 @@ const View = () => {
                     <Button 
                         variant="contained"
                         onClick={handleSubmit}>
-                        Guardar
+                        {t("save")}
                     </Button>
                 </Grid>
             </Grid>     

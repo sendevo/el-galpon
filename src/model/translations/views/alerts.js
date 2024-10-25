@@ -8,7 +8,11 @@ const alerts = {
         delete: "Delete",
         reason: "Reason",
         date: "Date",
-        actions: "Actions"
+        actions: "Actions",
+        mark_as_read: "Mark as read",
+        mark_as_unread: "Mark as unread",
+        delete: "Delete"
+
     },
     es: {
         title: "Notificaciones y alertas",
@@ -19,7 +23,10 @@ const alerts = {
         delete: "Eliminar",
         reason: "Motivo",
         date: "Fecha",
-        actions: "Acciones"
+        actions: "Acciones",
+        mark_as_read: "Marcar como leido",
+        mark_as_unread: "Marcar como no leido",
+        delete: "Borrar"
     }
 };
 
