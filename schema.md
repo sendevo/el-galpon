@@ -40,7 +40,7 @@ Los productos no se pueden eliminar si hay stock asociado.
     comments: "",
     categories: ["Herbicidas","Fumigacion"],
     pack_sizes: [20], // Varias presentaciones
-    pack_units: ["liter"], // Unidad de cada una (ver keywords en UNITS)
+    pack_units: ["liter"], // Unidad de cada una (ver keywords en model/constants.js - UNITS)
     expirable: false,
     returnable: false,
     created: 0,

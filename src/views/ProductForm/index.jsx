@@ -5,7 +5,9 @@ import {
     Typography,
     Button,
     Fab,
-    Box
+    Box,
+    FormControlLabel,
+    Switch as MuiSwitch,
 } from "@mui/material";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
@@ -21,7 +23,7 @@ import {
     Switch
 } from "../../components/Inputs";
 import { debug, options2Select } from "../../model/utils";
-import { UNITS, CATEGORIES } from "../../model/constants";
+import { UNITS, UNITS_NAMES, CATEGORIES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 import { FaPlus, FaMinus } from "react-icons/fa";
 
@@ -60,7 +62,9 @@ const View = () => {
         name: undefined,
         // If size === -1, presentation is bulk and size is hidden in other tables
         pack_sizes: [undefined], 
-        pack_units: [undefined]
+        pack_units: [undefined],
+        expirable: false,
+        returnable: false
     });
 
     useEffect(() => {
@@ -85,9 +89,22 @@ const View = () => {
     const handleInputChange = event => {
         let {name, value} = event.target;
 
+        console.log(name, value);
+
         // For category input, value is an array of objects
         if(name === "categories"){ 
             value = value.map(v => v.label);
+        }
+
+        if(name.includes("pack_sizes")){
+            if(value < 1){
+                value = 1;
+            }
+        }
+
+        if(name.includes("bulk")){
+            value = value ? -1 : 1;
+            name = "pack_sizes_" + name.split("_")[1];
         }
         
         // For presentation fields, values are set in pairs of sizes and units
@@ -183,8 +200,17 @@ const View = () => {
                             {formData.pack_units.map((_, index) => (
                                 <Grid item key={index} sx={{mt:1}}>
                                     <Grid container spacing={1}>
-                                        <Grid item xs={6}>
-                                            <Input 
+                                        <Grid item xs={3}>
+                                            <FormControlLabel 
+                                                control={<MuiSwitch 
+                                                            size="small"
+                                                            checked={formData.pack_sizes[index] === -1}
+                                                            name={"bulk_"+index} 
+                                                            onChange={e => handleInputChange({target:{name: e.target.name, value: e.target.checked}})}/>}
+                                                label={t("bulk")} />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            {formData.pack_sizes[index] !== -1 && <Input 
                                                 disabled={!canEditPresentations}
                                                 label={t("presentation")+"*"}
                                                 name={"pack_sizes_"+index}
@@ -192,15 +218,16 @@ const View = () => {
                                                 value={formData.pack_sizes[index] || ""}
                                                 error={formData.pack_sizes[index] === ""}
                                                 onChange={handleInputChange}/>
+                                            }
                                         </Grid>
-                                        <Grid item xs={canEditPresentations ? 5:6}>
+                                        <Grid item xs={canEditPresentations ? 4:5}>
                                             <Select
                                                 disabled={!canEditPresentations}
-                                                label={t("unit")+"*"}
+                                                label={t("unit_label")+"*"}
                                                 name={"pack_units_"+index}
                                                 value={formData.pack_units[index] || ""}
                                                 error={formData.pack_units[index] === ""}
-                                                options={UNITS[i18next.language].map(u => ({label: t(u), value: u}))}
+                                                options={Object.keys(UNITS[i18next.language]).map(u => ({label: "a", value: u}))}
                                                 onChange={handleInputChange}
                                             />
                                         </Grid>

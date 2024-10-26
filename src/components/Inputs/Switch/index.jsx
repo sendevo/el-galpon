@@ -63,7 +63,10 @@ const Switch = props => {
                                 labelPlacement="bottom"
                                 sx={{"&.MuiFormControlLabel-root":{margin:"0px"}}}
                                 control={
-                                    <MuiSwitch checked={value} onChange={event => onChange({target:{name, value:event.target.checked}})} />
+                                    <MuiSwitch 
+                                        checked={value} 
+                                        onChange={event => onChange({target:{name, value:event.target.checked}})} 
+                                        inputProps={{ 'aria-label': 'controlled' }}/>
                                 }/>        
                         </Grid>
                         <Grid item sm={4}>

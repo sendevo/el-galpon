@@ -1,4 +1,4 @@
-import { UNITS_NAMES } from "../../constants";
+import { UNITS_ABBRS } from "../../constants";
 
 const itemList = {
     en: {
@@ -9,12 +9,12 @@ const itemList = {
         stock: "Stock",
         emptyPacks: "Empty packs",
         expiration: "Expiration",
-        buy: "Buy items",
+        buy: "Buy other products",
         export: "Export data",
         operationError: "Operation not allowed",
         not_available: "Not available function",
         bulk: "bulk",
-        ...UNITS_NAMES.en
+        ...UNITS_ABBRS.en
     },
     es: {
         title: "Insumos",
@@ -24,12 +24,12 @@ const itemList = {
         stock: "Stock",
         emptyPacks: "Envases vacíos",
         expiration: "Vencimiento",
-        buy: "Comprar insumos",
+        buy: "Comprar otro insumo",
         export: "Exportar datos",
         operationError: "Operación no permitida",
         not_available: "Función no disponible",
         bulk: "granel",
-        ...UNITS_NAMES.es
+        ...UNITS_ABBRS.es
     }
 };
 

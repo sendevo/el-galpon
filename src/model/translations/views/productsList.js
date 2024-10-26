@@ -1,4 +1,4 @@
-import { UNITS_NAMES } from "../../constants";
+import { UNITS_ABBRS } from "../../constants";
 
 const productsList = {
     en: {
@@ -29,7 +29,7 @@ const productsList = {
         buy: "Buy",
         edit: "Edit",
         create_new: "Create new",
-        ...UNITS_NAMES.en
+        ...UNITS_ABBRS.en
     },
     es: {
         title: "Productos",
@@ -59,7 +59,7 @@ const productsList = {
         buy: "Comprar",
         edit: "Editar",
         create_new: "Crear nuevo",
-        ...UNITS_NAMES.es
+        ...UNITS_ABBRS.es
     }
 };
 

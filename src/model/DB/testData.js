@@ -56,7 +56,7 @@ const products = [
         name: "Urea granulada",
         sku: "03-1234-1",
         pack_sizes: [-1],
-        pack_units: ["kilogram"],
+        pack_units: ["ton"],
         expirable: true,
         returnable: false,
         brand: "Profertil",
@@ -98,7 +98,7 @@ const products = [
         name: "Girasol",
         sku: "",
         pack_sizes: [180000, -1],
-        pack_units: ["seeds", "kilogram"],
+        pack_units: ["seeds", "ton"],
         expirable: true,
         returnable: false,
         brand: "ACA 220",
@@ -160,6 +160,20 @@ const products = [
         brand: "ER Agrícola",
         comments: "",
         categories: ["Alambrados"],
+        created: getDate(),
+        modified: getDate()
+    },
+    {
+        id: generateId(),
+        name: "Gasoil",
+        sku: "",
+        pack_sizes: [1],
+        pack_units: ["drum"],
+        expirable: false,
+        returnable: true,
+        brand: "YPF",
+        comments: "",
+        categories: ["Combustibles"],
         created: getDate(),
         modified: getDate()
     }

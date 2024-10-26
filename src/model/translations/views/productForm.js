@@ -1,3 +1,5 @@
+import { UNITS_ABBRS } from "../../constants";
+
 const productForm = {
     en: {
         // View title
@@ -10,7 +12,7 @@ const productForm = {
         name: "Name",
         presentations: "Product presentations",
         presentation: "Presentation",
-        unit: "Package",
+        unit_label: "Package",
         bulk_presentation: "Bulk sale",
         expiration: "Packaging recycling and expiration",
         expirable: "With expiration",
@@ -26,6 +28,9 @@ const productForm = {
         mandatory_fields: "Mandatory fields",
         confirm: "Confirm",
         cancel: "Cancel",
+
+        // Units
+        ...UNITS_ABBRS.en,
 
         // Messages
         missing_field: "Missing field: ",
@@ -46,7 +51,7 @@ const productForm = {
         name: "Nombre",
         presentations: "Presentaciones del producto",
         presentation: "Presentación",
-        unit: "Envase",
+        unit_label: "Envase",
         bulk_presentation: "Venta a granel",
         expiration: "Reciclaje y caducidad de envases",
         expirable: "Con vencimiento",
@@ -62,6 +67,9 @@ const productForm = {
         mandatory_fields: "Campos obligatorios",
         confirm: "Confirmar",
         cancel: "Cancelar",
+
+        // Units
+        ...UNITS_ABBRS.es,
 
         // Messages
         missing_field: "Campo faltante: ",

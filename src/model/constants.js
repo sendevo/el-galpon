@@ -109,6 +109,10 @@ export const CATEGORIES = {
 // DB product units
 export const UNITS = {
     es: {
+        bulk: {
+            name: "A granel",
+            abbr: "granel"
+        },
         unit: {
             name: "Unidad",
             abbr: "u"
@@ -246,16 +250,21 @@ export const UNITS = {
     }
 };
 
-const getUnits = lang => { // Spread the units for the selected language
+const getUnits = (lang, key) => { // Spread the units for the selected language
     const units = UNITS[lang];
-    const unitNames = Object.keys(units).reduce((acc, key) => {
-        acc[key] = units[key].abbr;
+    const unitNames = Object.keys(units).reduce((acc, index) => {
+        acc[index] = units[index][key];
         return acc;
     }, {});
     return unitNames;
 };
 
-export const UNITS_NAMES = {
-    es: getUnits("es"),
-    en: getUnits("en")
+export const UNITS_ABBRS = {
+    es: getUnits("es", "abbr"),
+    en: getUnits("en", "abbr")
 };
+
+export const UNITS_NAMES = {
+    es: getUnits("es", "name"),
+    en: getUnits("en", "name")
+}
