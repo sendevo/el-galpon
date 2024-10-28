@@ -20,15 +20,25 @@ const Switch = props => {
         error, 
         labelFalse, 
         labelTrue, 
-        onChange
+        onChange,
+        disabled
     } = props;
 
     const [iconLoaded, setIconLoaded] = useState(false);
 
     const iconDisplay = icon && iconLoaded || rIcon;
 
+    const handleCheck = event => {
+        onChange({
+            target:{
+                name, 
+                value:event.target.checked
+            }
+        });
+    };
+
     return (
-        <Grid container spacing={1} alignItems="center">
+        <Grid container spacing={1} alignItems="center" direction={"row"}>
             {icon &&
                 <Grid item xs={rIcon ? 1 : 2} display={iconDisplay ? 'block':'none'}>
                     {icon && !rIcon && 
@@ -44,11 +54,14 @@ const Switch = props => {
             }
             <Grid item xs={rIcon ? 11 : (iconDisplay ? 10 : 12)} className={classes.Container}>
                 {title && <span className={classes.Title}>{title}</span>}
-                <Box className={classes.InputContainer} sx={{border: error ? "1px solid red":null, marginLeft:"0px"}}>
+                <Box 
+                    className={classes.InputContainer} 
+                    sx={{border: error ? "1px solid red":null, marginLeft:"0px"}}>
                     <Grid 
                         container 
                         direction="row"
                         alignItems="center" 
+                        justifyContent="center"
                         spacing={1}>
                         {labelFalse && 
                             <Grid item sm={4}>
@@ -64,8 +77,9 @@ const Switch = props => {
                                 sx={{"&.MuiFormControlLabel-root":{margin:"0px"}}}
                                 control={
                                     <MuiSwitch 
+                                        disabled={disabled}
                                         checked={value} 
-                                        onChange={event => onChange({target:{name, value:event.target.checked}})} 
+                                        onChange={handleCheck} 
                                         inputProps={{ 'aria-label': 'controlled' }}/>
                                 }/>        
                         </Grid>

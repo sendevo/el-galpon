@@ -37,6 +37,7 @@ const Router = () => {
 
     const confirm = useConfirm();
 
+    /*
     useEffect(() => {
         confirm(
             "Versión de prueba",
@@ -49,6 +50,7 @@ const Router = () => {
             "" 
         );
     }, []);
+    */
 
     return (
         <BrowserRouter>

@@ -137,8 +137,8 @@ const View = () => {
                             <Grid item xs={8}>
                                 <Select
                                     value={i18next.language}
-                                    onChange={e => onLocaleChange(e.target.value)}
-                                    options = {languages} />
+                                    options = {languages}
+                                    onChange={e => onLocaleChange(e.target.value)}/>
                             </Grid>
                         </Grid>
                     </Paper>

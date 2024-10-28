@@ -12,7 +12,8 @@ const productForm = {
         name: "Name",
         presentations: "Product presentations",
         presentation: "Presentation",
-        unit_label: "Package",
+        size: "Size",
+        unit_label: "Unit",
         bulk_presentation: "Bulk sale",
         expiration: "Packaging recycling and expiration",
         expirable: "With expiration",
@@ -38,7 +39,8 @@ const productForm = {
         pack_units: "Package",
         updated_data: "Data updated",
         new_product_created: "New product created",
-        at_least_one_presentation: "There must be at least one presentation"
+        at_least_one_presentation: "There must be at least one presentation",
+        cannot_remove_this_presentation: "This presentation cannot be removed"
     },
     es: {
         // View title
@@ -51,7 +53,8 @@ const productForm = {
         name: "Nombre",
         presentations: "Presentaciones del producto",
         presentation: "Presentación",
-        unit_label: "Envase",
+        size: "Medida",
+        unit_label: "Unidad",
         bulk_presentation: "Venta a granel",
         expiration: "Reciclaje y caducidad de envases",
         expirable: "Con vencimiento",
@@ -77,7 +80,8 @@ const productForm = {
         pack_units: "Envase",
         updated_data: "Datos actualizados",
         new_product_created: "Producto creado",
-        at_least_one_presentation: "Debe haber al menos una presentación"
+        at_least_one_presentation: "Debe haber al menos una presentación",
+        cannot_remove_this_presentation: "No se puede eliminar esta presentación"
     }
 };
 
