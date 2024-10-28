@@ -21,7 +21,8 @@ const Switch = props => {
         labelFalse, 
         labelTrue, 
         onChange,
-        disabled
+        disabled,
+        center
     } = props;
 
     const [iconLoaded, setIconLoaded] = useState(false);
@@ -61,7 +62,7 @@ const Switch = props => {
                         container 
                         direction="row"
                         alignItems="center" 
-                        justifyContent="center"
+                        justifyContent={center && "center"}
                         spacing={1}>
                         {labelFalse && 
                             <Grid item sm={4}>

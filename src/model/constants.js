@@ -109,10 +109,6 @@ export const CATEGORIES = {
 // DB product units
 export const UNITS = {
     es: {
-        bulk: {
-            name: "A granel",
-            abbr: "granel"
-        },
         unit: {
             name: "Unidad",
             abbr: "u"

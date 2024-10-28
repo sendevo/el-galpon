@@ -13,12 +13,12 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   [x] Listado de notificaciones.  
   [x] Modificar CATEGORIES para no usar options2Select(). 
   [x] Productos con distintas presentaciones.  
-  [ ] Agregar presentacion a productos creados.  
-  [ ] A granel debe tener unidad.  
+  [x] Agregar presentacion a productos creados.  
+  [x] A granel debe tener unidad.  
   [ ] En formulario de movimientos, elegir presentacion de compra.
   [ ] Logica de operaciones.  
   [ ] Configuración de notificaciones en productos o items.  
-  [ ] Vista de devolucion de envases. 
+  [x] Vista de devolucion de envases. 
   [ ] Lógica de alertas.  
   [ ] Filtros de listados.  
   [ ] Exportar informacion excel y pdf.  

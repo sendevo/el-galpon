@@ -47,6 +47,7 @@ const View = () => {
 
     const [items, setItems] = useState([]);
     const [ignoredCols, setIgnoredCols] = useState([]);
+    const [viewTitle, setViewTitle] = useState("title");
 
     const { t } = useTranslation('itemList');
 
@@ -63,10 +64,12 @@ const View = () => {
             const params = key.split(":");
             if(params.length === 3){
                 const paramKey = params[0];
-                if(itemAttrs.includes(paramKey))
-                    ignored.push(paramKey);
-                else
-                    console.log("Invalid param: ", paramKey, value);
+                if(paramKey !== "packs"){
+                    if(itemAttrs.includes(paramKey))
+                        ignored.push(paramKey);
+                }else{
+                    setViewTitle("returns");
+                }
             }else{
                 console.log("Invalid param: ", key, value);
             }
@@ -107,7 +110,7 @@ const View = () => {
     };
 
     return (
-        <MainView title={t('title')}>
+        <MainView title={t(viewTitle)}>
             {ignoredCols.includes("product_id") && items.length > 0 && <ProductDetails productData={items[0]?.productData}/>}
             {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
             {items.length > 0 ? 

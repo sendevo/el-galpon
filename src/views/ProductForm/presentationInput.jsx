@@ -68,9 +68,10 @@ const PresentationInput = ({
 
             <Grid item>
                 <Switch 
+                    center
                     disabled={!editable}
-                    labelFalse={capitalize(t("bulk"))}
-                    labelTrue={capitalize(t("unit_label"))}
+                    labelTrue={capitalize(t("bulk"))}
+                    labelFalse={capitalize(t("pack_label"))}
                     name="bulk"
                     value={packSize === -1}
                     onChange={handleInputChange}/>

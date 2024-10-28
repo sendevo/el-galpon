@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import i18next from "i18next";
 import { 
     Grid, 
     Button, 
@@ -28,7 +27,7 @@ import { componentsStyles } from "../../themes";
 import { debug, cropString } from "../../model/utils";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
-const attributes = ["name", "presentation", "expirable", "returnable", "brand", "sku", "comments", "categories", "created", "modified"];
+const attributes = ["name", "presentations", "expirable", "returnable", "brand", "sku", "comments", "categories", "created", "modified"];
 const HeaderCell = ({ attribute }) => {
     return (
         <TableCell sx={componentsStyles.headerCell}>
@@ -53,12 +52,17 @@ const View = () => {
 
     const getPresentation = product => {
         let presentation = "";
+
+        console.log(product.name);
+        console.log(product.pack_sizes.length);
+
         for(let p = 0; p < product.pack_sizes.length; p++){
             if(product.pack_sizes[p] === -1){ // Bulk
-                presentation = `${t(product.pack_units[p])} (${t("bulk")})`;
+                presentation += `${t(product.pack_units[p])} (${t("bulk")})`;
             }else{
-                presentation = `${product.pack_sizes[p]} ${t(product.pack_units[p])}`;
+                presentation += `${product.pack_sizes[p]} ${t(product.pack_units[p])}`;
             }
+            presentation += p < product.pack_sizes.length - 1 ? " / " : "";
         }
         return presentation;
     };

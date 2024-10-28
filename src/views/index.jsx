@@ -1,7 +1,6 @@
 // Menu views
 import Stock from "./Stock";
 import StoresList from "./StoresList";
-import Returns from "./Returns";
 import OperationsList from "./OperationsList";
 import About from "./About";
 import AlertsList from "./AlertsList";
@@ -34,10 +33,10 @@ const views = [
         component: <StoresList />
     },
     {
-        path: "/returns",
+        path: "stock?packs:gt:0",
         homeTitle: "returns",
         icon: returnsIcon,
-        component: <Returns />
+        component: null
     },
     {
         path: "/operations-list",

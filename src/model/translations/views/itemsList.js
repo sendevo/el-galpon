@@ -3,6 +3,7 @@ import { UNITS_ABBRS } from "../../constants";
 const itemList = {
     en: {
         title: "Items",
+        returns: "Returns",
         product: "Product",
         presentation: "Presentation",
         location: "Location",
@@ -18,6 +19,7 @@ const itemList = {
     },
     es: {
         title: "Insumos",
+        returns: "Devoluciones",
         product: "Producto",
         presentation: "Presentación",
         location: "Ubicación",
