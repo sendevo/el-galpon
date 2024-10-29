@@ -76,7 +76,7 @@ Los movimientos tienen fechas editables pero el resto son datos inmutables, perm
     price: 0, // Costo de operacion (compra, movimiento o devolucion)
     stock_amount: 0, // Siempre positivo o 0
     pack_amount: 0, // Siempre positivo o 0
-    presentation_index: 0,
+    presentation_index: 0, // Se puede comprar una presentacion por vez
     observations: "" // Mensaje con detalles adicionales
 }
 ```

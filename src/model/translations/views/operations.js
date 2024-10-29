@@ -1,3 +1,5 @@
+import { UNITS_ABBRS } from "../../constants";
+
 const operations = {
     en: {
         title: "Operations",
@@ -13,6 +15,7 @@ const operations = {
         presentation: "Presentation",
         store_from: "Origin store",
         store_to: "Destination store",
+        stock: "Amount",
         stockAmount: "Amount",
         observations: "Observations",
         operation_saved: "Operation saved",
@@ -22,7 +25,8 @@ const operations = {
         move_packs: "Packs move",
         return_packs: "Packs return",
         required_fields: "Required fields",
-        undef: "Undef"
+        undef: "Undef",
+        ...UNITS_ABBRS.en
     },
     es: {
         title: "Movimientos",
@@ -36,8 +40,9 @@ const operations = {
         type: "Tipo",
         product: "Producto",
         presentation: "Presentación",
-        store_from: "Depósito origen",
+        store_from: "Origen",
         store_to: "Depósito destino",
+        stock: "Cantidad",
         amount: "Cantidad",
         observations: "Observaciones",
         operation_saved: "Movimiento registrado",
@@ -47,7 +52,8 @@ const operations = {
         move_packs: "Translado",
         return_packs: "Devolución de envases",
         required_fields: "Campos obligatorios",
-        undef: "Indefinido"
+        undef: "Indefinido",
+        ...UNITS_ABBRS.es
     }
 };
 

@@ -41,7 +41,7 @@ const validForm = formData => {
         default:
             return false;
     }
-}
+};
 
 const validateParams = searchParams => {
     const operation = searchParams.get("type");
@@ -75,7 +75,7 @@ const View = () => {
     const toast = useToast();
     
     const db = useDatabase();
-        
+
     const [viewTitle, setViewTitle] = useState(t("new_operation"));
     const [stores, setStores] = useState([]);
     const [formData, setFormData] = useState({
@@ -93,7 +93,7 @@ const View = () => {
 
     useEffect(() => {
         const queryData = validateParams(searchParams);
-        if(queryData.valid){
+        if(queryData.valid) {
             db.query("stores", []).then(storesData => {
                 const stores = storesData.map(s => ({id: s.id, name: s.name}));
                 const operation = queryData.operation;
@@ -108,6 +108,7 @@ const View = () => {
                                 maxAmount = getMaxAmount(row, operation);
                                 amount = maxAmount;
                                 toStoreId = row.store_id;
+                                presentationIndex = row.presentation_index;
                                 currentStoreId = row.store_id; // Inmutable
                             } else { // Selected from product list
                                 product = row;
@@ -181,12 +182,14 @@ const View = () => {
         if(validForm(formData)){
             console.log(formData.operation);
             console.log(formData.products);
+            /*
             db.handleOperation(formData.operation, formData.products)
                 .then(() => {
                     toast(t("operation_saved"), "success", 2000);
                     navigate(-1);
                 })
                 .catch(console.error);
+            */
         }else{
             debug("Complete all fields", "error");
             toast("Complete los campos obligatorios", "error");

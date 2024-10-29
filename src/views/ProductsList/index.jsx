@@ -53,9 +53,6 @@ const View = () => {
     const getPresentation = product => {
         let presentation = "";
 
-        console.log(product.name);
-        console.log(product.pack_sizes.length);
-
         for(let p = 0; p < product.pack_sizes.length; p++){
             if(product.pack_sizes[p] === -1){ // Bulk
                 presentation += `${t(product.pack_units[p])} (${t("bulk")})`;

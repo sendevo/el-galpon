@@ -12,6 +12,7 @@ import {
     TableRow
 } from "@mui/material";
 import moment from "moment";
+import useToast from '../../hooks/useToast';
 import { isValidRowData } from "../../model/DB";
 import { OPERATION_TYPES_NAMES } from '../../model/constants';
 import { componentsStyles } from "../../themes";
@@ -29,23 +30,18 @@ const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
 const OperationsTable = ({ operations }) => {
 
     const db = useDatabase();
+    const toast = useToast();
     const { t } = useTranslation('operations');
 
-    const [names, setNames] = useState({
-        productsNames: {},
-        storesNames: {}
-    });
+    const [ready, setReady] = useState(false);
+    const [products, setProducts] = useState({});
+    const [storesNames, setStoresNames] = useState({});
 
-    // Combine stock_amount and pack_amount into amount
-    operations = operations.map(op => {
-        op.amount = op.stock_amount || op.pack_amount;
-        return op;
-    });
 
     // The following keys must match the keys defined in the translations file. This is to sepparate data attributes from it converstions,
     // for example: date (unix) -> date (formatted) or product (ID) -> product (name).
-    const fields = ["date", "type", "product", "presentation", "amount", "store_from", "store_to", "observations"];    
-    const sortableFields = ["date", "type", "product", "amount", "store_from", "store_to"];
+    const fields = ["date", "type", "product", "stock", "store_from", "store_to", "observations"];    
+    const sortableFields = ["date", "type", "product", "stock", "store_from", "store_to"];
     
     // Sorting columns, key and direction
     const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
@@ -55,11 +51,13 @@ const OperationsTable = ({ operations }) => {
         const productsIds = operations.map(op => op.product_id);
         db.query("products", productsIds)
             .then(result => {
-                const productsNames = result.reduce((acc, item) => {
-                    acc[item.id] = item.name;
+                // Array to object
+                const prods = result.reduce((acc, item) => {
+                    acc[item.id] = item;
                     return acc;
                 }, {});
-                setNames(names => ({ ...names, productsNames }));
+                setReady(true);
+                setProducts(prods);
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
@@ -75,7 +73,7 @@ const OperationsTable = ({ operations }) => {
                     acc[item.id] = item.name;
                     return acc;
                 }, {});
-                setNames(names => ({...names, storesNames}));
+                setStoresNames(storesNames);
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
@@ -83,6 +81,19 @@ const OperationsTable = ({ operations }) => {
             });
     }, []);
 
+    // Get item stock
+    const getStock = item => {
+        let presentation = "";
+        const product = products[item.product_id];
+        const pIndex = item.presentation_index;
+        const amount = item.stock_amount || item.pack_amount;
+        if(product?.pack_sizes[pIndex] === -1){
+            presentation = `${amount} ${t(product.pack_units[pIndex])}`;
+        }else{
+            presentation = `${amount} x ${product.pack_sizes[pIndex]} ${t(product.pack_units[pIndex])}`;
+        }
+        return presentation;
+    };
 
     const requestSort = (key) => {
         if(!sortableFields.includes(key)) return;
@@ -103,18 +114,20 @@ const OperationsTable = ({ operations }) => {
                 cond = t(OPERATION_TYPES_NAMES[op1.type]) > t(OPERATION_TYPES_NAMES[op2.type]);
                 break;
             case "product":
-                cond = names.productsNames[op1.product_id] > names.productsNames[op2.product_id];
+                cond = products[op1.product_id].name > products[op2.product_id].name;
                 break;
-            case "amount":
-                cond = op1.amount > op2.amount;
+            case "stock":
+                const amount1 = op1.stock_amount || op1.pack_amount;
+                const amount2 = op2.stock_amount || op2.pack_amount;
+                cond = amount1 > amount2;
                 break;
             case "store_from":
                 if(!op1.store_from_id) return 1;
-                cond = names.storesNames[op1.store_from_id] > names.storesNames[op2.store_from_id];
+                cond = storesNames[op1.store_from_id] > storesNames[op2.store_from_id];
                 break;
             case "store_to":
                 if(!op1.store_to_id) return 1;
-                cond = names.storesNames[op1.store_to_id] > names.storesNames[op2.store_to_id];
+                cond = storesNames[op1.store_to_id] > storesNames[op2.store_to_id];
                 break;
             default:
                 return 0;
@@ -127,7 +140,7 @@ const OperationsTable = ({ operations }) => {
 
     return (
         <Box>
-            <TableContainer component={Paper} sx={componentsStyles.paper}>
+            {ready && <TableContainer component={Paper} sx={componentsStyles.paper}>
                 <Table size="small">
                     <TableHead>
                         <TableRow>
@@ -145,17 +158,16 @@ const OperationsTable = ({ operations }) => {
                             isValidRowData(item, "operations") && <TableRow key={item.id}>
                                 <TableCell sx={componentsStyles.tableCell}>{moment(item.timestamp).format("DD/MM/YYYY")}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{t(OPERATION_TYPES_NAMES[item.type])}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{names.productsNames[item.product_id] || "S/D"}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{item.presentation_id}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{item.amount}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{names.storesNames[item.store_from_id] || "-"}</TableCell>
-                                <TableCell sx={componentsStyles.tableCell}>{names.storesNames[item.store_to_id] || "-"}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{products[item.product_id].name || "S/D"}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{getStock(item)}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{storesNames[item.store_from_id] || "-"}</TableCell>
+                                <TableCell sx={componentsStyles.tableCell}>{storesNames[item.store_to_id] || "-"}</TableCell>
                                 <TableCell sx={componentsStyles.tableCell}>{item.observations}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </TableContainer>}
         </Box>
     );
 };
