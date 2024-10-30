@@ -16,7 +16,8 @@ El Galpón es una aplicación utilitaria para tablets, pc y smartphones que perm
   [x] Agregar presentacion a productos creados.  
   [x] A granel debe tener unidad.  
   [x] Vista de devolucion de envases. 
-  [ ] En formulario de movimientos, elegir presentacion de compra.
+  [x] En formulario de movimientos, elegir presentacion de compra.
+  [ ] Detalles de ubicacion en fila expandible.  
   [ ] Logica de operaciones.  
   [ ] Configuración de notificaciones en compra de items.  
   [ ] Lógica de alertas.

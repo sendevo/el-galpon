@@ -81,7 +81,7 @@ const View = () => {
             });
     }, []);
 
-    const handleOperation = operationType => {
+    const handleOperation = operationType => {// Redirect to operation form 
         if(operationType === "BUY" && !enabledOperations.BUY){ // No product selected
             navigate("/products-list"); // Go to product list
         }else{ // Go to operation form
@@ -124,6 +124,7 @@ const View = () => {
                         items={items} 
                         setItems={setItems}
                         ignoredCols={ignoredCols}/>
+                    {/*handleOperation(TYPE) redirect to operation-form with operation parameters*/}
                     {showActionBlock &&
                         <OperationsBlock
                             enabledOperations={enabledOperations}

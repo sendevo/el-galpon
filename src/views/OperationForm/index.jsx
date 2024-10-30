@@ -108,7 +108,6 @@ const View = () => {
                                 maxAmount = getMaxAmount(row, operation);
                                 amount = maxAmount;
                                 toStoreId = row.store_id;
-                                presentationIndex = row.presentation_index;
                                 currentStoreId = row.store_id; // Inmutable
                             } else { // Selected from product list
                                 product = row;
@@ -119,6 +118,7 @@ const View = () => {
                             }
                             const {id, pack_sizes, name, pack_units, brand} = product;
                             return {
+                                presentationIndex: 0, // By default, select first presentation
                                 id, 
                                 pack_sizes, 
                                 name, 
@@ -178,10 +178,11 @@ const View = () => {
         }));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = () => { /* Set operation data and add to DB*/
         if(validForm(formData)){
             console.log(formData.operation);
-            console.log(formData.products);
+            console.log(formData.products); // Product list
+            
             /*
             db.handleOperation(formData.operation, formData.products)
                 .then(() => {
@@ -190,6 +191,9 @@ const View = () => {
                 })
                 .catch(console.error);
             */
+
+            toast(t("operation_completed"), "success", 2000);
+            setTimeout(() => navigate(-1), 1000);
         }else{
             debug("Complete all fields", "error");
             toast("Complete los campos obligatorios", "error");
@@ -199,6 +203,7 @@ const View = () => {
     return(
         <MainView title={t(viewTitle)}>
             <Grid container spacing={1} direction="column">
+                {/*This block shows global configuration when more than one product is selected*/}
                 {showGlobalStoreBlock &&
                     <Grid item xs={12}>
                         <Paper sx={componentsStyles.paper}>
@@ -259,9 +264,21 @@ const View = () => {
                     <Typography 
                         fontSize="15px"
                         color="rgb(50,50,50)">
-                            * {t("required_fields")}
+                            * {t("mandatory_fields")}
                     </Typography>
                 </Grid>
+
+                {/*}
+                <Grid item>
+                    <Typography 
+                        fontSize="12px"
+                        color="#666"
+                        lineHeight={"1em"}
+                        mb={1}>
+                            <i>{t("buttons_tip")}</i>
+                    </Typography>
+                </Grid>
+                */}
 
                 <Grid item>
                     <ActionsBlock 

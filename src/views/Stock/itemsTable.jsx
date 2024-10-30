@@ -38,7 +38,7 @@ const ItemList = ({items, setItems, ignoredCols}) => {
         if(product?.pack_sizes[pIndex] === -1){
             presentation = `${item.stock} ${t(product.pack_units[pIndex])}`;
         }else{
-            presentation = `${item.stock} x ${product.pack_sizes[pIndex]} ${t(product.pack_units[pIndex])}`;
+            presentation = `${item.stock}×${product.pack_sizes[pIndex]} ${t(product.pack_units[pIndex])}`;
         }
         return presentation;
     };
@@ -73,7 +73,7 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                                 {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}
                                 {!ignoredCols.includes("presentation") && <TableCell sx={componentsStyles.tableCell}>{getStock(item)}</TableCell>}
                                 {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : ""}</TableCell>}
-                                {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.expiration_date ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
+                                {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>

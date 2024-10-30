@@ -197,36 +197,47 @@ export default class LocalDatabase {
 
     }
 
-    buyStock(itemsData) {
+    buyStock(productsData) {
         // http://localhost:5173/operation-form?type=BUY&products=0394-jfuqgtdh4-23hj2h4
         return new Promise((resolve, reject) => {
-            const job = [];
-            itemsData.forEach(item => {
-                const amt = parseInt(item.amount);
-                const operation = {
-                    timestamp: Date.now(),
-                    type: OPERATION_TYPES.BUY,
-                    item_id: item.id,
-                    store_from_id: item.currentStoreId || null,
-                    store_to_id: item.toStoreId || null,
-                    price: 0,
+            const items_data = productsData.map(prod => {
+                const amt = parseInt(prod.amount);
+                return {
+                    product_id: prod.id,
+                    store_from_id: prod.currentStoreId || null,
+                    store_to_id: prod.toStoreId || null,
+                    price: prod.price,
                     stock_amount: amt,
-                    pack_amount: item.returnable ? amt : 0
+                    pack_amount: prod.returnable ? amt : 0,
+                    presentation_index: prod.presentationIndex
                 };
-                job.push(this.insert("operations", operation));
             });
-            Promise.all(job)
+            const operation = {
+                timestamp: Date.now(),
+                type: OPERATION_TYPES.BUY,
+                items_data
+            };
+
+            console.log("TODO: add stock to items table");
+            resolve();
+            return;
+
+            /* 
+            this.insert("operations", operation)
                 .then(ids => {
                     resolve(ids);
                 })
                 .catch(reject);
+            */
         });
     }
 
     spendStock(itemsData) {
         return new Promise((resolve, reject) => {
-            console.log("Spending stock...");
             console.log(itemsData);
+            console.log("TODO: check if store has enough stock");
+            console.log("TODO: remove stock from items table");
+            console.log("TODO: if returnable, add packs to items table");
         });
     }
 
@@ -248,6 +259,7 @@ export default class LocalDatabase {
         });
     }
 
+    /*This function redirect to the corresponding actions, as each one has different behaviour */
     handleOperation(operation_key, items){
         const operation = OPERATION_TYPES[operation_key];
         switch(operation){

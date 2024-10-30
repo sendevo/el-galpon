@@ -37,18 +37,12 @@
             ]
         },
         "operations": {
-            "attributes": ["timestamp", "type", "product_id", "store_from_id", "store_to_id", "stock_amount", "pack_amount", "observations"],
+            "attributes": ["timestamp", "type", "items_data", "observations"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true
             },
-            "indexes": [{
-                    "name": "product_id",
-                    "keyPath": "product_id",
-                    "options": {
-                        "unique": false
-                    }
-                },
+            "indexes": [
                 {
                     "name": "timestamp",
                     "keyPath": "timestamp",

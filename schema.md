@@ -70,13 +70,15 @@ Los movimientos tienen fechas editables pero el resto son datos inmutables, perm
     id: 0, // (indexedDB -> auto increment, localStorage -> UUID)
     timestamp: 0,
     type: "", // keywords: BUY, MOVE_STOCK, SPEND, MOVE_PACKS, RETURN_PACKS
-    product_id: 0,
-    store_from_id: 0 || null,
-    store_to_id: 0 || null,
-    price: 0, // Costo de operacion (compra, movimiento o devolucion)
-    stock_amount: 0, // Siempre positivo o 0
-    pack_amount: 0, // Siempre positivo o 0
-    presentation_index: 0, // Se puede comprar una presentacion por vez
+    items_data: [{ // Arreglo de items por operacion
+        product_id: 0,
+        store_from_id: 0 || null,
+        store_to_id: 0 || null,
+        price: 0, // Costo de operacion (compra, movimiento o devolucion)
+        stock_amount: 0, // Siempre positivo o 0
+        pack_amount: 0, // Siempre positivo o 0
+        presentation_index: 0, // Se puede comprar una presentacion por vez
+    }]
     observations: "" // Mensaje con detalles adicionales
 }
 ```

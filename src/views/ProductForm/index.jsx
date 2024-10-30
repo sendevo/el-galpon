@@ -254,8 +254,9 @@ const View = () => {
                 <Grid item xs={12}>
                     <DetailsForm props={productData} onChange={handleInputChange}/>
                 </Grid>
-                <Grid item xs={12} sx={{mb:1}}>
+                <Grid item xs={12} sx={{mb:2}}>
                     <Typography 
+                        lineHeight={"1em"}
                         fontSize="15px"
                         color="rgb(50,50,50)">* {t("mandatory_fields")}</Typography>
                 </Grid>

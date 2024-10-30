@@ -47,7 +47,11 @@ const ProductBlock = ({
 
     return (
         <Paper sx={{...componentsStyles.paper, mt:1}}>
-            <Grid container justifyContent="space-between" direction={"column"} spacing={1}>
+            <Grid 
+                container 
+                justifyContent="space-between" 
+                direction={"column"} 
+                spacing={1}>
                 <Grid item xs={12}>
                     <Typography lineHeight={"2em"} paddingBottom={"5px"}><b>{t("product") + ": "}</b>{trimString(product.name, prodNameTrim)}</Typography>
                 </Grid>
@@ -55,7 +59,10 @@ const ProductBlock = ({
                 <Grid item xs={12}>
                     <Input 
                         icon={amountIcon}
-                        label={(t("quantity") + "*")}
+                        label={
+                            ( t("quantity") +
+                            ` (${product.pack_sizes[product.presentationIndex] === -1 ? "" : ("×"+t(product.pack_sizes[product.presentationIndex]))}${t(product.pack_units[product.presentationIndex])}) *`)
+                        }
                         type="number"
                         value={product.amount > 0 ? product.amount : ""}
                         error={product.amount == ""}

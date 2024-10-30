@@ -9,8 +9,10 @@ const operations = {
         choose_each: "Choose for each",
         destination: "Destination",
         errorLoading: "Error loading operations",
+        expand_details: "Details",
+        details: "Operation details",
         date: "Date",
-        type: "Type",
+        type: "Operation",
         product: "Product",
         presentation: "Presentation",
         store_from: "Origin store",
@@ -24,8 +26,10 @@ const operations = {
         spend: "Use/Application",
         move_packs: "Packs move",
         return_packs: "Packs return",
-        required_fields: "Required fields",
+        mandatory_fields: "Required fields",
         undef: "Undef",
+        buttons_tip: "Tip: Tap the buttons of the inputs to get more information",
+        operation_completed: "Operation saved successfully",
         ...UNITS_ABBRS.en
     },
     es: {
@@ -36,8 +40,10 @@ const operations = {
         choose_each: "Elegir cada uno",
         destination: "Destino",
         errorLoading: "Error al cargar movimientos",
+        expand_details: "Detalles",
+        details: "Detalles de movimiento",
         date: "Fecha",
-        type: "Tipo",
+        type: "Movimiento",
         product: "Producto",
         presentation: "Presentación",
         store_from: "Origen",
@@ -51,8 +57,10 @@ const operations = {
         spend: "Uso/Aplicación",
         move_packs: "Translado",
         return_packs: "Devolución de envases",
-        required_fields: "Campos obligatorios",
+        mandatory_fields: "Campos obligatorios",
         undef: "Indefinido",
+        buttons_tip: "Tip: Toque los botones los campos para obtener más información",
+        operation_completed: "Movimiento guardado con éxito",
         ...UNITS_ABBRS.es
     }
 };
