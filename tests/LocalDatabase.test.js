@@ -14,8 +14,13 @@ describe("Database Operations", () => {
     it("should add an item to 'products'", async () => {
         const data = {
             name: "Glifosato",
-            pack_sizes: 20,
-            pack_units: "l",
+            presentations: [
+                {
+                    pack_size: 20,
+                    unit: "liters",
+                    bulk: false
+                }
+            ],
             expirable: true,
             returnable: true,
             brand: "Estrella",

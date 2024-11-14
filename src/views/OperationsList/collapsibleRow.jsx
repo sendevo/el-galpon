@@ -28,10 +28,10 @@ const CollapsibleRow = props => {
         const product = products[item.product_id];
         const pIndex = item.presentation_index;
         const amount = item.stock_amount || item.pack_amount;
-        if(product?.pack_sizes[pIndex] === -1){
-            presentation = `${amount} ${t(product.pack_units[pIndex])}`;
+        if(product?.presentations[pIndex].bulk){
+            presentation = `${amount} ${t(product.presentations[pIndex].unit)}`;
         }else{
-            presentation = `${amount} x ${product.pack_sizes[pIndex]} ${t(product.pack_units[pIndex])}`;
+            presentation = `${amount} x ${product.presentations[pIndex].pack_size} ${t(product.presentations[pIndex].unit)}`;
         }
         return presentation;
     };

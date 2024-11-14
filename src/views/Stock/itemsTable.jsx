@@ -35,10 +35,10 @@ const ItemList = ({items, setItems, ignoredCols}) => {
         let presentation = "";
         const product = item?.productData;
         const pIndex = item.presentation_index;
-        if(product?.pack_sizes[pIndex] === -1){
-            presentation = `${item.stock} ${t(product.pack_units[pIndex])}`;
+        if(product?.presentations[pIndex].bulk){
+            presentation = `${item.stock} ${t(product.presentations[pIndex].unit)}`;
         }else{
-            presentation = `${item.stock}×${product.pack_sizes[pIndex]} ${t(product.pack_units[pIndex])}`;
+            presentation = `${item.stock}×${product.presentations[pIndex].pack_size} ${t(product.presentations[pIndex].unit)}`;
         }
         return presentation;
     };

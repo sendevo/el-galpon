@@ -41,8 +41,13 @@ const products = [
         id: generateId(),
         name: "Glifosato",
         sku: "10-01111-0",
-        pack_sizes: [40],
-        pack_units: ["liter"],
+        presentations: [
+            {
+                unit: "liter",
+                pack_size: 40,
+                bulk: false
+            }
+        ],
         expirable: true,
         returnable: true,
         brand: "Estrella",
@@ -55,8 +60,13 @@ const products = [
         id: generateId(),
         name: "Dicamba",
         sku: "10-05121-0",
-        pack_sizes: [40],
-        pack_units: ["liter"],
+        presentations: [
+            {
+                unit: "liter",
+                pack_size: 40,
+                bulk: false
+            }
+        ],
         expirable: true,
         returnable: true,
         brand: "Dicamax aca 58",
@@ -69,8 +79,13 @@ const products = [
         id: generateId(),
         name: "Atrazina",
         sku: "10-24123-0",
-        pack_sizes: [80],
-        pack_units: ["liter"],
+        presentations: [
+            {
+                unit: "liter",
+                pack_size: 80,
+                bulk: false
+            }
+        ],
         expirable: true,
         returnable: true,
         brand: "Atrazina lq 90 (R)",
@@ -83,8 +98,13 @@ const products = [
         id: generateId(),
         name: "Urea granulada",
         sku: "03-1234-1",
-        pack_sizes: [-1],
-        pack_units: ["ton"],
+        presentations: [
+            {
+                unit: "ton",
+                pack_size: null,
+                bulk: true
+            }
+        ],
         expirable: true,
         returnable: false,
         brand: "Profertil",
@@ -97,8 +117,18 @@ const products = [
         id: generateId(),
         name: "Trigo",
         sku: "",
-        pack_sizes: [25, -1],
-        pack_units: ["kilogram", "ton"],
+        presentations: [
+            {
+                unit: "kilogram",
+                pack_size: 25,
+                bulk: false
+            },
+            {
+                unit: "ton",
+                pack_size: null,
+                bulk: true
+            }
+        ],
         expirable: false,
         returnable: false,
         brand: "ACA 304",
@@ -111,8 +141,13 @@ const products = [
         id: generateId(),
         name: "Maíz",
         sku: "",
-        pack_sizes: [80000],
-        pack_units: ["seeds"],
+        presentations: [
+            {
+                unit: "seeds",
+                pack_size: 80000,
+                bulk: false
+            }
+        ],
         expirable: false,
         returnable: false,
         brand: "ACA 477",
@@ -125,8 +160,18 @@ const products = [
         id: generateId(),
         name: "Girasol",
         sku: "",
-        pack_sizes: [180000, -1],
-        pack_units: ["seeds", "ton"],
+        presentations: [
+            {
+                unit: "seeds",
+                pack_size: 180000,
+                bulk: false
+            },
+            {
+                unit: "ton",
+                pack_size: null,
+                bulk: true
+            }
+        ],
         expirable: false,
         returnable: false,
         brand: "ACA 220",
@@ -139,8 +184,13 @@ const products = [
         id: generateId(),
         name: "Silobolsa",
         sku: "MA-0000",
-        pack_sizes: [50],
-        pack_units: ["meter"],
+        presentations: [
+            {
+                unit: "unit",
+                pack_size: 50,
+                bulk: false
+            }
+        ],
         expirable: false,
         returnable: false,
         brand: "Pentasilo Manta",
@@ -153,8 +203,13 @@ const products = [
         id: generateId(),
         name: "2,4D",
         sku: "RD-0021",
-        pack_sizes: [20],
-        pack_units: ["liter"],
+        presentations: [
+            {
+                unit: "liter",
+                pack_size: 20,
+                bulk: false
+            }
+        ],
         expirable: true,
         returnable: true,
         brand: "Monsanto",
@@ -167,8 +222,13 @@ const products = [
         id: generateId(),
         name: "Suplemento vitamínico",
         sku: "16-023008",
-        pack_sizes: [25],
-        pack_units: ["kilogram"],
+        presentations: [
+            {
+                unit: "kilogram",
+                pack_size: 25,
+                bulk: false
+            }
+        ],
         expirable: true,
         returnable: false,
         brand: "AF Mix ADQ Preparto Aniónica",
@@ -181,8 +241,13 @@ const products = [
         id: generateId(),
         name: "Piedra de magnesio",
         sku: "",
-        pack_sizes: [18],
-        pack_units: ["kilogram"],
+        presentations: [
+            {
+                unit: "kilgram",
+                pack_size: 18,
+                bulk: false
+            }
+        ],
         expirable: true,
         returnable: false,
         brand: "Biofarma",
@@ -195,8 +260,13 @@ const products = [
         id: generateId(),
         name: "Varilla 1.5x2x120",
         sku: "",
-        pack_sizes: [9],
-        pack_units: ["unit"],
+        presentations: [
+            {
+                unit: "unit",
+                pack_size: 9,
+                bulk: false
+            }
+        ],
         expirable: false,
         returnable: false,
         brand: "ER Agrícola",
@@ -209,8 +279,13 @@ const products = [
         id: generateId(),
         name: "Gasoil",
         sku: "",
-        pack_sizes: [1],
-        pack_units: ["drum"],
+        presentations: [
+            {
+                unit: "liter",
+                pack_size: 200,
+                bulk: false
+            }
+        ],
         expirable: false,
         returnable: true,
         brand: "YPF",

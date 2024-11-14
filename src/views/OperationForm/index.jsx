@@ -116,13 +116,12 @@ const View = () => {
                                 toStoreId = "";
                                 currentStoreId = ""; // Inmutable
                             }
-                            const {id, pack_sizes, name, pack_units, brand} = product;
+                            const {id, name, presentations, brand} = product;
                             return {
                                 presentationIndex: 0, // By default, select first presentation
                                 id, 
-                                pack_sizes, 
                                 name, 
-                                pack_units, 
+                                presentations, 
                                 brand, 
                                 amount, 
                                 maxAmount,

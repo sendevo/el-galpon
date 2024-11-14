@@ -8,7 +8,7 @@
             }
         },
         "products": {
-            "attributes": ["name", "brand", "comments", "categories", "pack_sizes", "pack_units", "expirable", "returnable", "created", "modified", "sku"],
+            "attributes": ["name", "brand", "comments", "categories", "presentations", "expirable", "returnable", "created", "modified", "sku"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true

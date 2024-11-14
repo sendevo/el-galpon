@@ -24,12 +24,11 @@ import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
 
-// Required fields: name, pack_sizes, pack_units
+// Required fields: name, presentations
 const validateForm = productData => {
     const missingFields = [];
     if(!productData.name) missingFields.push("name");
-    if(productData.pack_sizes.some(s => !s) || productData.pack_sizes.length === 0) missingFields.push("pack_sizes");
-    if(productData.pack_units.some(u => !u) || productData.pack_units.length === 0) missingFields.push("pack_units");
+    if(productData.presentations.some(s => !s) || productData.presentations.length === 0) missingFields.push("presentations");
     return missingFields;
 };
 
@@ -57,8 +56,11 @@ const View = () => {
 
     const [productData, setProductData] = useState({
         name: undefined,
-        pack_sizes: [undefined], 
-        pack_units: [undefined],
+        presentations: [{
+            pack_size: undefined,
+            unit: undefined,
+            bulk: undefined
+        }], // Array of objects {pack_size, unit, bulk}
         expirable: false,
         returnable: false
     });
@@ -73,7 +75,7 @@ const View = () => {
                 .then(data => {
                     if(data.length === 1) {
                         const product = data[0];
-                        setInmutablePresentation(product.pack_sizes.length);
+                        setInmutablePresentation(product.presentations.length);
                         setProductData(product);
                     }else{
                         debug("Error when queryin data: more than one product", "error");
@@ -86,8 +88,7 @@ const View = () => {
     const handleAddPresentation = () => {
         setProductData({
             ...productData,
-            pack_sizes: [...productData.pack_sizes, undefined],
-            pack_units: [...productData.pack_units, undefined]
+            presentations: [...presentations, undefined]
         });
     };
 
@@ -97,14 +98,13 @@ const View = () => {
             return;
         }
 
-        if(productData.pack_sizes.length === 1){
+        if(productData.presentations.length === 1){
             toast(t("at_least_one_presentation"), "error");
             return;
         }
         setProductData({
             ...productData,
-            pack_sizes: productData.pack_sizes.filter((_, i) => i !== index),
-            pack_units: productData.pack_units.filter((_, i) => i !== index)
+            presentations: productData.presentations.filter((_, i) => i !== index)
         });
     };
 
@@ -113,11 +113,11 @@ const View = () => {
         const {name, value} = event.target;
 
         if(name === "packSize") {
-            newProductData.pack_sizes[index] = value;
+            newProductData.presentations[index].pack_size = value;
         }
 
         if(name === "packUnit") {
-            newProductData.pack_units[index] = value;
+            newProductData.presentations[index].unit = value;
         }
 
         setProductData(currentState => ({
@@ -186,14 +186,14 @@ const View = () => {
                             <Grid item>
                                 <Typography lineHeight={"1em"} paddingBottom={"20px"}>{t("presentations")}</Typography>
                             </Grid>
-                            {productData.pack_units.map((_, index) => (
+                            {productData.presentations.map((_, index) => (
                                 <Grid item sx={{mt:2}} key={index}>
                                     <Grid container alignItems={"flex-start"}>
                                         <Grid item xs>
                                             <PresentationInput 
                                                 editable={index >= inmutablePresentation || viewTitle === "creation_title"}
-                                                packSize={productData.pack_sizes[index]}
-                                                packUnit={productData.pack_units[index]}
+                                                packSize={productData.presentations[index].pack_size}
+                                                packUnit={productData.presentations[index].unit}
                                                 onChange={e => handlePresentationChange(e, index)}/>
                                         </Grid>
                                         <Grid item>
@@ -205,7 +205,7 @@ const View = () => {
                                             </IconButton>
                                         </Grid>
                                     </Grid>
-                                    {(index !== productData.pack_units.length-1) && 
+                                    {(index !== productData.presentations.length-1) && 
                                         <Divider 
                                             sx={{ 
                                                 borderBottomWidth: 1, 

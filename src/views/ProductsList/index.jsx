@@ -53,13 +53,13 @@ const View = () => {
     const getPresentation = product => {
         let presentation = "";
 
-        for(let p = 0; p < product.pack_sizes.length; p++){
-            if(product.pack_sizes[p] === -1){ // Bulk
-                presentation += `${t(product.pack_units[p])} (${t("bulk")})`;
+        for(let p = 0; p < product.presentations.length; p++){
+            if(product.presentations[p].bulk){
+                presentation += `${t(product.presentations[p].unit)} (${t("bulk")})`;
             }else{
-                presentation += `${product.pack_sizes[p]} ${t(product.pack_units[p])}`;
+                presentation += `${product.presentations[p].pack_size} ${t(product.presentations[p].unit)}`;
             }
-            presentation += p < product.pack_sizes.length - 1 ? " / " : "";
+            presentation += p < product.presentations.length - 1 ? " / " : "";
         }
         return presentation;
     };

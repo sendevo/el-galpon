@@ -11,12 +11,12 @@ const getStoreData = (stores, storeId) => stores.find(s => s.id === storeId);
 
 // The following function computes size, unit and amount to generate strings for the presentation
 const getPresentationData = (product, presentationIndex, translatingFc) => {
-    const blk = product.pack_sizes[presentationIndex] === -1;
-    const packSize = blk ? "" : product.pack_sizes[presentationIndex];
+    const blk = product.presentations[presentationIndex].bulk;
+    const packSize = blk ? "" : product.presentations[presentationIndex].pack_size;
     const unitSuffix = blk ? `(${translatingFc("bulk")})` : "";
-    const unit = translatingFc(product.pack_units[presentationIndex]) + " " + unitSuffix;
-    const amount = (blk ? product.amount : product.amount * product.pack_sizes[presentationIndex]);
-    const totalAmount = amount + " " + translatingFc(product.pack_units[presentationIndex]) + " " + unitSuffix;
+    const unit = translatingFc(product.presentations[presentationIndex].unit) + " " + unitSuffix;
+    const amount = (blk ? product.amount : product.amount * product.presentations[presentationIndex].pack_size);
+    const totalAmount = amount + " " + translatingFc(product.presentations[presentationIndex].unit) + " " + unitSuffix;
     return {
         packSize,
         unit,
@@ -35,7 +35,7 @@ const ProductBlock = ({
     const { t } = useTranslation("productBlock");
 
     // Get list of presentations for the select input
-    const presentations = product.pack_sizes.map((_, index) => {
+    const presentations = product.presentations.map((_, index) => {
         const {packSize, unit} = getPresentationData(product, index, t);
         return {
             label: packSize + " " + unit, 
@@ -61,7 +61,7 @@ const ProductBlock = ({
                         icon={amountIcon}
                         label={
                             ( t("quantity") +
-                            ` (${product.pack_sizes[product.presentationIndex] === -1 ? "" : ("×"+t(product.pack_sizes[product.presentationIndex]))}${t(product.pack_units[product.presentationIndex])}) *`)
+                            ` (${product.presentations[product.presentationIndex].pack_size === -1 ? "" : ("×"+t(product.presentations[product.presentationIndex].pack_size))}${t(product.presentations[product.presentationIndex].unit)}) *`)
                         }
                         type="number"
                         value={product.amount > 0 ? product.amount : ""}
