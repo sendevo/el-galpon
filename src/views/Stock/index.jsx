@@ -25,8 +25,8 @@ const isOperationAllowed = (operation, selectedItems) => { // Button status base
     return operation === "BUY" && moreThanOne || // When BUY = true: buy selected products else go to product list (enable other buy button)
         operation === "SPEND" && moreThanOne && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
         operation === "MOVE_STOCK" && moreThanOne && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-        operation === "MOVE_PACKS" && moreThanOne && selectedItems.every(it => it.packs > 0) || // Enabled if all selected items have packs
-        operation === "RETURN_PACKS" && moreThanOne && selectedItems.every(it => it.packs > 0); // Enabled if all selected items have packs
+        operation === "MOVE_PACKS" && moreThanOne && selectedItems.every(it => it.empty_packs > 0) || // Enabled if all selected items have packs
+        operation === "RETURN_PACKS" && moreThanOne && selectedItems.every(it => it.empty_packs > 0); // Enabled if all selected items have packs
 };
 
 const getEnabledOperations = (selectedItems) => { // Get enabled operations based on selected items
@@ -56,7 +56,7 @@ const View = () => {
     const enabledOperations = getEnabledOperations(selectedItems);
     const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
 
-    const itemAttrs = ["id", "store_id", "product_id", "stock", "packs", "expiration_date"];
+    const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
 
     useEffect(() => {
         const ignored = [];
@@ -64,7 +64,7 @@ const View = () => {
             const params = key.split(":");
             if(params.length === 3){
                 const paramKey = params[0];
-                if(paramKey !== "packs"){
+                if(paramKey !== "empty_packs"){
                     if(itemAttrs.includes(paramKey))
                         ignored.push(paramKey);
                 }else{

@@ -63,7 +63,7 @@ Los insumos son instancias de productos que se encuentran almacenadas en un dep√
     product_id: 0,
     store_id: 0,
     stock: 0,
-    packs: 0 || null, // Si returnable = true
+    empty_packs: 0 || null, // Si returnable = true
     presentation_index: 0,
     expiration_date: 0 || null // Si expirable = true
 }

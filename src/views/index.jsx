@@ -33,7 +33,7 @@ const views = [
         component: <StoresList />
     },
     {
-        path: "stock?packs:gt:0",
+        path: "stock?empty_packs:gt:0",
         homeTitle: "returns",
         icon: returnsIcon,
         component: null

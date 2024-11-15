@@ -17,7 +17,7 @@ import { componentsStyles } from "../../themes";
 
 
 const ItemList = ({items, setItems, ignoredCols}) => {
-
+    
     const selected = items.filter(it => it.selected);
     const { t } = useTranslation('itemList');
 
@@ -32,15 +32,10 @@ const ItemList = ({items, setItems, ignoredCols}) => {
     const setAllSelected = select => setItems(prevItems => prevItems.map(it => ({...it, selected: select})));
 
     const getStock = item => {
-        let presentation = "";
-        const product = item?.productData;
         const pIndex = item.presentation_index;
-        if(product?.presentations[pIndex].bulk){
-            presentation = `${item.stock} ${t(product.presentations[pIndex].unit)}`;
-        }else{
-            presentation = `${item.stock}×${product.presentations[pIndex].pack_size} ${t(product.presentations[pIndex].unit)}`;
-        }
-        return presentation;
+        const presentation = item.productData.presentations[pIndex];
+        const stockText = `${item.stock} ${t(presentation.unit)}`;
+        return stockText;
     };
 
     return (
@@ -57,7 +52,7 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                             {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>{t('product')}</TableCell>}
                             {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>}
                             {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.headerCell}>{t('stock')}</TableCell>}
-                            {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
+                            {!ignoredCols.includes("empty_packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
                             {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>{t('expiration')}</TableCell>}
                         </TableRow>
                     </TableHead>
@@ -69,10 +64,10 @@ const ItemList = ({items, setItems, ignoredCols}) => {
                                         checked={item.selected} 
                                         onChange={() => toggleSelect(index)} />
                                 </TableCell>
-                                {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.name || "S/D"}</TableCell>}
-                                {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData?.name || "S/D"}</TableCell>}
+                                {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
+                                {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
                                 {!ignoredCols.includes("presentation") && <TableCell sx={componentsStyles.tableCell}>{getStock(item)}</TableCell>}
-                                {!ignoredCols.includes("packs") && <TableCell sx={componentsStyles.tableCell}>{item.packs ? item.packs : ""}</TableCell>}
+                                {!ignoredCols.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
                                 {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                             </TableRow>
                         ))}

@@ -120,7 +120,7 @@ const products = [
         presentations: [
             {
                 unit: "kilogram",
-                pack_size: 25,
+                pack_size: 50,
                 bulk: false
             },
             {
@@ -371,8 +371,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Glifosato"),
         store_id: getId(stores, "Galpón"),
-        stock: 3,
-        packs: 10,
+        stock: 120,
+        empty_packs: 10,
         presentation_index: 0,
         expiration_date: timeAgo(-5*DAY)
     },
@@ -380,8 +380,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Glifosato"),
         store_id: getId(stores, "Agronomia"),
-        stock: 12,
-        packs: 0,
+        stock: 480,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -389,8 +389,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Dicamba"),
         store_id: getId(stores, "Galpón"),
-        stock: 10,
-        packs: 5,
+        stock: 400,
+        empty_packs: 5,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -399,7 +399,7 @@ const items = [
         product_id: getId(products, "Urea granulada"),
         store_id: getId(stores, "Silo IV"),
         stock: 5.5,
-        packs: 0,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -408,7 +408,7 @@ const items = [
         product_id: getId(products, "Urea granulada"),
         store_id: getId(stores, "Silo III"),
         stock: 2,
-        packs: 0,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -416,8 +416,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Urea granulada"),
         store_id: getId(stores, "Acopiador"),
-        stock: 2,
-        packs: 0,
+        stock: 2.5,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -425,8 +425,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Maíz"),
         store_id: getId(stores, "Agronomia"),
-        stock: 2,
-        packs: 0,
+        stock: 360000,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -435,7 +435,7 @@ const items = [
         product_id: getId(products, "Trigo"),
         store_id: getId(stores, "Acopiador"),
         stock: 2,
-        packs: 0,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -443,8 +443,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "2,4D"),
         store_id: getId(stores, "Galpón"),
-        stock: 2,
-        packs: 5,
+        stock: 40,
+        empty_packs: 5,
         presentation_index: 0,
         expiration_date: timeAgo(-10*DAY)
     },
@@ -452,8 +452,8 @@ const items = [
         id: generateId(),
         product_id: getId(products, "2,4D"),
         store_id: getId(stores, "Agronomia"),
-        stock: 5,
-        packs: 0,
+        stock: 65,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },
@@ -462,7 +462,7 @@ const items = [
         product_id: getId(products, "Trigo"),
         store_id: getId(stores, "Silo I"),
         stock: 5,
-        packs: 0,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     }
@@ -493,7 +493,7 @@ const operations = [
             store_from_id: null,
             store_to_id: getId(stores, "Galpón"),
             price: 0,
-            stock_amount: 2,
+            stock_amount: 80,
             pack_amount: 2,
             presentation_index: 0
         },
@@ -502,7 +502,7 @@ const operations = [
             store_from_id: null,
             store_to_id: getId(stores, "Galpón"),
             price: 0,
-            stock_amount: 2,
+            stock_amount: 40,
             pack_amount: 2,
             presentation_index: 0
         }],
@@ -532,7 +532,7 @@ const operations = [
             store_from_id: getId(stores, "Agronomia"),
             store_to_id: null,
             price: 0,
-            stock_amount: 10,
+            stock_amount: 350,
             pack_amount: 0,
             presentation_index: 0
         }],

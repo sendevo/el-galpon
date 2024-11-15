@@ -117,7 +117,7 @@ class Stock {
             presentationIndex: params.presentationIndex || 0,
             store: params.store || Store.create(),
             stock: params.stock || 0,
-            packs: params.packs || 0,
+            emptyPacks: params.emptyPacks || 0,
             expirationDate: params.expirationDate || null,
             created: params.created || Date.now(),
             modified: params.modified || Date.now()
@@ -211,7 +211,7 @@ const stock = new Stock(
         presentationIndex: 0, 
         store, 
         stock: 0, 
-        packs: 0, 
+        emptyPacks: 0, 
         expirationDate: null 
     }
 );

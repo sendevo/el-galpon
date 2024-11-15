@@ -61,7 +61,7 @@ const getMaxAmount = (item, operation) => {
     if(requireStock.includes(operation))
         return item?.stock;
     if(requirePacks.includes(operation))
-        return item?.packs;
+        return item?.empty_packs;
     return -1;
 };
 
