@@ -13,6 +13,7 @@ import DatabaseProvider from "./context/Database";
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import translations from './model/translations';
+import ErrorBoundary from './components/ErrorBoundary';
 import Home from "./views/Home";
 import views from "./views";
 import theme, { globalStyles } from "./themes";
@@ -37,6 +38,7 @@ const Router = () => {
 
     const confirm = useConfirm();
 
+    /*
     useEffect(() => {
         confirm(
             "Versión de prueba",
@@ -49,18 +51,21 @@ const Router = () => {
             "" 
         );
     }, []);
+    */
 
     return (
         <BrowserRouter>
-            <Routes>
-                <Route index element={<Home/>} />
-                {
-                    views.map((v,k) => (
-                        <Route key={k} path={v.path} element={v.component} />
-                    ))        
-                }
-                <Route path="*" element={<Navigate replace to="/" />} />
-            </Routes>
+            <ErrorBoundary>
+                <Routes>
+                    <Route index element={<Home/>} />
+                    {
+                        views.map((v,k) => (
+                            <Route key={k} path={v.path} element={v.component} />
+                        ))        
+                    }
+                    <Route path="*" element={<Navigate replace to="/" />} />
+                </Routes>
+            </ErrorBoundary>
         </BrowserRouter>
     );
 };

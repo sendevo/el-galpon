@@ -4,7 +4,7 @@ import image from "../../assets/working_monkey.jpg";
 
 const View = () => {
     return(
-        <MainView title={"Devoluciones de envase"}>
+        <MainView title={"Ventana no disponible"}>
             <Typography 
                 sx={{mb:2}}
                 textAlign={"center"}

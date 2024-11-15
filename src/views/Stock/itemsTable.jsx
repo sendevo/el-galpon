@@ -16,7 +16,7 @@ import { componentsStyles } from "../../themes";
 
 
 
-const ItemList = ({items, setItems, ignoredCols}) => {
+const ItemsTable = ({items, setItems, ignoredCols}) => {
     
     const selected = items.filter(it => it.selected);
     const { t } = useTranslation('itemList');
@@ -28,6 +28,8 @@ const ItemList = ({items, setItems, ignoredCols}) => {
             return newItems;
         });
     };
+
+    console.log(item.property.hi);
 
     const setAllSelected = select => setItems(prevItems => prevItems.map(it => ({...it, selected: select})));
 
@@ -78,4 +80,4 @@ const ItemList = ({items, setItems, ignoredCols}) => {
     );
 };
 
-export default ItemList;
+export default ItemsTable;

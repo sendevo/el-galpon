@@ -44,7 +44,6 @@ Los productos no se pueden eliminar si hay stock asociado.
             unit: "liter", // Keyword
             bulk: false, // Si se vende a granel
             pack_size: 20 || null // Tamanio de envase (si aplica)
-            // print()
         }
     ]
     expirable: false,

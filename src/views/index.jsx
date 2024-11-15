@@ -4,6 +4,7 @@ import StoresList from "./StoresList";
 import OperationsList from "./OperationsList";
 import About from "./About";
 import AlertsList from "./AlertsList";
+import Error from "./Error";
 // Menu icons
 import stockIcon from "../assets/icons/stock.png";
 import storesIcon from "../assets/icons/barn.png";
@@ -49,6 +50,10 @@ const views = [
         homeTitle: "menu_info",
         icon: aboutIcon,
         component: <About />
+    },
+    {
+        path: "/error",
+        component: <Error />
     },
     // Secondary views
     {

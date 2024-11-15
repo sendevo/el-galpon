@@ -9,6 +9,7 @@ import operations from "./views/operations";
 import productBlock from "./components/productBlock";
 import about from "./views/about";
 import alerts from "./views/alerts";
+import error from "./views/error";
 
 import productsList from "./views/productsList";
 
@@ -32,6 +33,7 @@ const dictionaries = {
     operations,
     about, 
     alerts,
+    error,
 
     // Secondary views
     productsList,

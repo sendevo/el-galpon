@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { useTranslation } from 'react-i18next';
-import { OPERATION_TYPES_NAMES } from '../../model/constants';
+import { OPERATION_TYPES_NAMES, OPERATION_TYPES } from '../../model/constants';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 
@@ -23,17 +23,15 @@ const CollapsibleRow = props => {
     const [open, setOpen] = useState(false);
     const { t } = useTranslation('operations');
 
-    const getStock = item => {
-        let presentation = "";
-        const product = products[item.product_id];
+    const getStock = (item, operationType) => { // Duplicate from src/views/Stock/itemsTable.jsx
         const pIndex = item.presentation_index;
-        const amount = item.stock_amount || item.pack_amount;
-        if(product?.presentations[pIndex].bulk){
-            presentation = `${amount} ${t(product.presentations[pIndex].unit)}`;
-        }else{
-            presentation = `${amount} x ${product.presentations[pIndex].pack_size} ${t(product.presentations[pIndex].unit)}`;
-        }
-        return presentation;
+        const product = products[item.product_id];
+        const presentation = product.presentations[pIndex];
+        const packOperation = (operationType === OPERATION_TYPES.RETURN_PACKS || OPERATION_TYPES.MOVE_PACKS);
+        const amount = packOperation ? item.pack_amount : item.stock_amount;
+        const suffix = packOperation ? ` × ${presentation.pack_size} ${t(presentation.unit)}` : t(presentation.unit);
+        const amountText = `${amount} ${suffix}`;
+        return amountText;
     };
 
     return (
@@ -88,7 +86,7 @@ const CollapsibleRow = props => {
                                         products && storesNames && 
                                         <TableRow key={i}>
                                             <TableCell>{products[item.product_id]?.name}</TableCell>
-                                            <TableCell>{getStock(item)}</TableCell>
+                                            <TableCell>{getStock(item, operation.type)}</TableCell>
                                             <TableCell>{storesNames[item.store_from_id]}</TableCell>
                                             <TableCell>{storesNames[item.store_to_id]}</TableCell>
                                         </TableRow>
