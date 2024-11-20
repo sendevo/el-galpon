@@ -1,0 +1,91 @@
+.
+├── capacitor.config.json
+├── images
+│   ├── background
+│   │   └── galpon1.png
+│   ├── captura.png
+│   ├── capturas
+│   │   ├── 10_info.png
+│   │   ├── 11_notificaciones.png
+│   │   ├── 1_menu_ppal.png
+│   │   ├── 2_depositos.png
+│   │   ├── 3_form_deposito.png
+│   │   ├── 4_insumos.png
+│   │   ├── 5_filtros_lista.png
+│   │   ├── 5_form_producto.png
+│   │   ├── 6_lista_productos_1.png
+│   │   ├── 7_lista_productos_2.png
+│   │   ├── 8_historial.png
+│   │   └── 9_form_compra.png
+│   ├── criiollo.jpg
+│   ├── favicon.png
+│   ├── icon_1024.png
+│   └── templates
+│       ├── barn.png
+│       └── campero.png
+├── index.html
+├── package.json
+├── package-lock.json
+├── project_tree.txt
+├── readme.md
+├── schema.md
+├── src
+│   ├── App.jsx
+│   ├── assets
+│   │   ├── backgrounds
+│   │   ├── icons
+│   │   ├── logo_el_galpon.png
+│   │   ├── logo_inta.png
+│   │   ├── logo_inta_white.png
+│   │   ├── logo_ministerio_white.png
+│   │   └── working_monkey.jpg
+│   ├── components
+│   │   ├── ActionsBlock
+│   │   ├── Confirm
+│   │   ├── ContextMenu
+│   │   ├── EmptyList
+│   │   ├── ErrorBoundary
+│   │   ├── GenericCard
+│   │   ├── Inputs
+│   │   ├── MainView
+│   │   ├── NotificationIcon
+│   │   ├── Preloader
+│   │   ├── Prompt
+│   │   ├── SearchForm
+│   │   └── Toast
+│   ├── context
+│   │   ├── Database
+│   │   └── UIFeedback
+│   ├── hooks
+│   │   ├── useConfirm
+│   │   ├── usePreloader
+│   │   ├── usePrompt
+│   │   └── useToast
+│   ├── main.jsx
+│   ├── model
+│   │   ├── classes.js
+│   │   ├── constants.js
+│   │   ├── DB
+│   │   ├── pdf
+│   │   ├── translations
+│   │   └── utils.js
+│   ├── themes
+│   │   └── index.jsx
+│   └── views
+│       ├── About
+│       ├── AlertsList
+│       ├── Empty404
+│       ├── Error
+│       ├── Home
+│       ├── index.jsx
+│       ├── OperationForm
+│       ├── OperationsList
+│       ├── ProductForm
+│       ├── ProductsList
+│       ├── Stock
+│       ├── StoreForm
+│       └── StoresList
+├── vite.config.js
+└── vite.config.web.js
+
+49 directories, 40 files

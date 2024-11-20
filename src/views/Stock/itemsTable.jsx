@@ -29,8 +29,6 @@ const ItemsTable = ({items, setItems, ignoredCols}) => {
         });
     };
 
-    console.log(item.property.hi);
-
     const setAllSelected = select => setItems(prevItems => prevItems.map(it => ({...it, selected: select})));
 
     const getStock = item => {
