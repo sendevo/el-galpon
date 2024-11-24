@@ -13,12 +13,15 @@ import ItemsTable from "./itemsTable";
 import OperationsBlock from "./operationsBlock";
 import EmptyList from "../../components/EmptyList";
 
+
 const buyButtonStyle = {
     marginTop: "20px",
     display:"flex", 
     alignItems:"center", 
     justifyContent:"center"
 };
+
+const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
 
 const isOperationAllowed = (operation, selectedItems) => { // Button status based on selected items
     const moreThanOne = selectedItems.length > 0;
@@ -37,47 +40,59 @@ const getEnabledOperations = (selectedItems) => { // Get enabled operations base
     return enabledOperations;
 };
 
+const getIgnoredColumns = searchParams => { // Get ignored columns based on search params
+    const ignored = ["empty_packs"]; // List of ignored columns. By default, empty packs are not shown
+    let title = "title"; // Default title
+    // Search params are used to filter item
+    searchParams.forEach((value, key) => { // searchParams has forEach method, but it is not an array
+        const params = key.split(":"); // Conditions are separated by ":", e.g. empty_packs:gt:0 (more than 0 empty packs)
+        if(params.length === 3){ // Number of params should be 3: attribute, operator, value
+            const paramKey = params[0];
+            // For the case of pack returns, hide the stock column and show the empty packs column
+            if(paramKey === "empty_packs"){
+                title = "returns";
+                ignored.push("stock");
+                const index = ignored.indexOf(paramKey);
+                if (index > -1) {
+                    ignored.splice(index, 1);
+                }
+            }
+            ignored.push(paramKey);
+        }else{
+            console.log("Invalid param: ", key, value);
+            toast(t('invalidParam'), "info");
+        }
+    });
+    return {ignored, title};
+}
 const View = () => {
     const db = useDatabase();   
     const navigate = useNavigate();
-
     const [searchParams] = useSearchParams();
-
     const toast = useToast();
-
-    const [items, setItems] = useState([]);
-    const [ignoredCols, setIgnoredCols] = useState([]);
-    const [viewTitle, setViewTitle] = useState("title");
-
     const { t } = useTranslation('itemList');
+
+    // Complete list of items
+    const [items, setItems] = useState([]);
+
+    // When listing filtered items, some columns are ignored
+    const [ignoredCols, setIgnoredCols] = useState([]); 
+
+    // If the view shows list of empty packs only, the title is "returns"    
+    const [viewTitle, setViewTitle] = useState("title"); // Default title
 
     const selectedItems = items.filter(it => it.selected);
 
     const enabledOperations = getEnabledOperations(selectedItems);
     const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
 
-    const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
-
     useEffect(() => {
-        const ignored = [];
-        searchParams.forEach((value, key) => {
-            const params = key.split(":");
-            if(params.length === 3){
-                const paramKey = params[0];
-                if(paramKey !== "empty_packs"){
-                    if(itemAttrs.includes(paramKey))
-                        ignored.push(paramKey);
-                }else{
-                    setViewTitle("returns");
-                }
-            }else{
-                console.log("Invalid param: ", key, value);
-            }
-        });
+        const {ignored, title} = getIgnoredColumns(searchParams);
         db.query("items", [], searchParams.toString())
             .then(iData => {
                 setItems(iData.map(it => ({...it, selected: false})));
                 setIgnoredCols(ignored);
+                setViewTitle(title);
             });
     }, []);
 
@@ -106,7 +121,7 @@ const View = () => {
     };
 
     const handleExport = () => {
-        toast(t('not_available'), "info");
+        toast(t('notAvailable'), "info");
     };
 
     return (
@@ -120,10 +135,12 @@ const View = () => {
                         fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
                         onFiltersChange={handleFilter}
                         onQueryChange={handleSearch}/>
+
                     <ItemsTable 
                         items={items} 
                         setItems={setItems}
-                        ignoredCols={ignoredCols}/>
+                        ignoredCols={[...ignoredCols]}/>
+
                     {/*handleOperation(TYPE) redirect to operation-form with operation parameters*/}
                     {showActionBlock &&
                         <OperationsBlock
@@ -136,7 +153,7 @@ const View = () => {
                     }
                 </Box>
                 :
-                <EmptyList message={"La lista de insumos está vacía"}/>
+                <EmptyList message={t("emptyList")}/>
             }
             
             { !enabledOperations.BUY &&
@@ -153,7 +170,7 @@ const View = () => {
                 <Button
                     color="info"
                     variant="contained"
-                    onClick={() => toast("Funcionalidad aún no disponible")}>
+                    onClick={() => toast(t("notAvailable"))}>
                     {t('export')}
                 </Button>
             </Box>

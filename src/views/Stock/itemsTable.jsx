@@ -16,8 +16,8 @@ import { componentsStyles } from "../../themes";
 
 
 
-const ItemsTable = ({items, setItems, ignoredCols}) => {
-    
+const ItemsTable = ({items, setItems, ignoredCols, divsx}) => {
+
     const selected = items.filter(it => it.selected);
     const { t } = useTranslation('itemList');
 
@@ -39,7 +39,7 @@ const ItemsTable = ({items, setItems, ignoredCols}) => {
     };
 
     return (
-        <Box>
+        <Box sx={divsx}>
             <TableContainer component={Paper} sx={componentsStyles.paper}>
                 <Table size="small">
                     <TableHead>
@@ -66,7 +66,7 @@ const ItemsTable = ({items, setItems, ignoredCols}) => {
                                 </TableCell>
                                 {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
                                 {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
-                                {!ignoredCols.includes("presentation") && <TableCell sx={componentsStyles.tableCell}>{getStock(item)}</TableCell>}
+                                {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock ? getStock(item) : ""}</TableCell>}
                                 {!ignoredCols.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
                                 {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                             </TableRow>
