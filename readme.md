@@ -313,9 +313,9 @@ La rama ```main``` contiene la versión de producción. Los cambios se realizan 
   [x] Listado de movimientos.  
   [x] Listado de notificaciones.  
   [x] Vista de devolucion de envases.  
-  [ ] Productos con distintas presentaciones.  
-  [ ] Listas de items con stock y con envases vacios por separado.  
+  [x] Listas de items con stock y con envases vacios por separado.  
   [ ] Controles de compra-uso-movimiento-devolucion separado.  
+  [ ] Productos con distintas presentaciones.  
   [ ] Agregar presentacion a productos creados.  
   [ ] En formulario de movimientos, elegir presentacion de operacion.  
   [ ] Detalles de ubicacion en fila expandible.  

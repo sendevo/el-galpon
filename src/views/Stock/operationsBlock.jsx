@@ -2,13 +2,23 @@ import { useTranslation } from 'react-i18next';
 import { 
     Paper,
     Grid,
+    Box,
     Button,
     Typography
 } from "@mui/material";
 import { componentsStyles } from "../../themes";
 
-const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePack, onReturn}) => {
+const exportButtonStyle = {
+    marginTop: "20px",
+    display:"flex", 
+    alignItems:"center", 
+    justifyContent:"center"
+};
+
+const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePack, onReturn, onExport}) => {
+    
     const { t } = useTranslation('operationsBlock');
+    
     return (
         <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
             { (enabledOperations.MOVE_STOCK || enabledOperations.SPEND || enabledOperations.BUY) &&
@@ -80,6 +90,14 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                     </Grid>
                 </Grid>
             }
+            <Box sx={exportButtonStyle}>
+                <Button
+                    color="info"
+                    variant="contained"
+                    onClick={() => toast(t("notAvailable"))}>
+                    {t('export')}
+                </Button>
+            </Box>
         </Paper>
     );
 };

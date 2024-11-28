@@ -21,22 +21,29 @@ const buyButtonStyle = {
     justifyContent:"center"
 };
 
-const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
+//const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
 
-const isOperationAllowed = (operation, selectedItems) => { // Button status based on selected items
-    const moreThanOne = selectedItems.length > 0;
-    return operation === "BUY" && moreThanOne || // When BUY = true: buy selected products else go to product list (enable other buy button)
-        operation === "SPEND" && moreThanOne && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-        operation === "MOVE_STOCK" && moreThanOne && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-        operation === "MOVE_PACKS" && moreThanOne && selectedItems.every(it => it.empty_packs > 0) || // Enabled if all selected items have packs
-        operation === "RETURN_PACKS" && moreThanOne && selectedItems.every(it => it.empty_packs > 0); // Enabled if all selected items have packs
-};
+const getEnabledOperations = selectedItems => { // Get enabled operations based on selected items
+    // Returned object's format is, for example:
+    // {BUY: true, MOVE_STOCK: false, SPEND: false, MOVE_PACKS: false, RETURN_PACKS: false}
 
-const getEnabledOperations = (selectedItems) => { // Get enabled operations based on selected items
-    const enabledOperations = Object.keys(OPERATION_TYPES).reduce((enabledOp, op) => {
-        enabledOp[op] = isOperationAllowed(op, selectedItems);
-        return enabledOp;
-    }, {});
+    const isOperationAllowed = operation => { //Check allowed operations based on selected items
+        const moreThanOne = selectedItems.length > 0; // At least one item selected
+        if(moreThanOne){
+            return operation === "BUY" || // When BUY = true: buy selected products else go to product list (enable other buy button)
+                operation === "SPEND" && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
+                operation === "MOVE_STOCK" && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
+                operation === "MOVE_PACKS" && selectedItems.every(it => it.empty_packs > 0) || // Enabled if all selected items have packs
+                operation === "RETURN_PACKS" && selectedItems.every(it => it.empty_packs > 0); // Enabled if all selected items have packs
+        }
+        return false;
+    };
+
+    const enabledOperations = Object.keys(OPERATION_TYPES)
+        .reduce((operationTypes, operation) => {
+            operationTypes[operation] = isOperationAllowed(operation);
+            return operationTypes;
+        }, {});
     return enabledOperations;
 };
 
@@ -65,6 +72,7 @@ const getIgnoredColumns = searchParams => { // Get ignored columns based on sear
     });
     return {ignored, title};
 }
+
 const View = () => {
     const db = useDatabase();   
     const navigate = useNavigate();
@@ -149,7 +157,8 @@ const View = () => {
                             onMoveStock={() => handleOperation('MOVE_STOCK')}
                             onSpend={() => handleOperation('SPEND')}
                             onMovePack={() => handleOperation('MOVE_PACKS')}
-                            onReturn={() => handleOperation('RETURN_PACKS')}/>
+                            onReturn={() => handleOperation('RETURN_PACKS')}
+                            onExport={handleExport}/>
                     }
                 </Box>
                 :
@@ -166,14 +175,7 @@ const View = () => {
                     </Button>
                 </Box>
             }
-            <Box sx={buyButtonStyle}>
-                <Button
-                    color="info"
-                    variant="contained"
-                    onClick={() => toast(t("notAvailable"))}>
-                    {t('export')}
-                </Button>
-            </Box>
+            
         </MainView>
     );
 };

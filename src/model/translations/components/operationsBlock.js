@@ -1,19 +1,21 @@
 const operationsBlock = {
     en: {
         emptyPacks: "Empty packs",
-        selected: "Selected stock",
+        selected: "Selected items",
         buy: "Buy",
         spend: "Spend",
         move: "Move",
-        return: "Return"
+        return: "Return",
+        export: "Export selected items"
     },
     es: {
         emptyPacks: "Envases vacíos",
-        selected: "Stock seleccionado",
+        selected: "Items seleccionados",
         buy: "Comprar",
         spend: "Usar",
         move: "Mover",
-        return: "Devolver"
+        return: "Devolver",
+        export: "Exportar items seleccionados"
     }
 };
 
