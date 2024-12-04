@@ -15,7 +15,7 @@ const exportButtonStyle = {
     justifyContent:"center"
 };
 
-const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMovePack, onReturn, onExport}) => {
+const OperationsBlock = ({enabledOperations, onOperation, onExport}) => {
     
     const { t } = useTranslation('operationsBlock');
     
@@ -35,7 +35,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                                     disabled={!enabledOperations.BUY}
                                     color="success"
                                     variant="contained"
-                                    onClick={onBuy}>
+                                    onClick={()=>onOperation("BUY")}>
                                     {t('buy')}
                                 </Button>
                             </Grid>    
@@ -44,7 +44,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                                     disabled={!enabledOperations.MOVE_STOCK}
                                     color="secondary"
                                     variant="contained"
-                                    onClick={onMoveStock}>
+                                    onClick={()=>onOperation("MOVE_STOCK")}>
                                     {t('move')}
                                 </Button>
                             </Grid>
@@ -53,7 +53,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                                     disabled={!enabledOperations.SPEND}
                                     color="darkRed"
                                     variant="contained"
-                                    onClick={onSpend}>
+                                    onClick={()=>onOperation("SPEND")}>
                                     {t('spend')}
                                 </Button>
                             </Grid>
@@ -74,7 +74,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                                 disabled={!enabledOperations.MOVE_PACKS}
                                 color="secondary"
                                 variant="contained"
-                                onClick={onMovePack}>
+                                onClick={()=>onOperation("MOVE_PACKS")}>
                                 {t('move')}
                             </Button>
                         </Grid>
@@ -83,7 +83,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                                 disabled={!enabledOperations.RETURN_PACKS}
                                 color="darkRed"
                                 variant="contained"
-                                onClick={onReturn}>
+                                onClick={()=>onOperation("RETURN_PACKS")}>
                                 {t('return')}
                             </Button>
                         </Grid>
@@ -94,7 +94,7 @@ const OperationsBlock = ({enabledOperations, onBuy, onMoveStock, onSpend, onMove
                 <Button
                     color="info"
                     variant="contained"
-                    onClick={() => toast(t("notAvailable"))}>
+                    onClick={onExport}>
                     {t('export')}
                 </Button>
             </Box>

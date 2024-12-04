@@ -36,9 +36,8 @@ const onSwitchLanguage = (lang) => { // 'es' or 'en'
 
 const Router = () => {
 
-    const confirm = useConfirm();
-
     /*
+    const confirm = useConfirm();
     useEffect(() => {
         confirm(
             "Versión de prueba",

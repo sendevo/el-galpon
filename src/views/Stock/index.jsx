@@ -23,18 +23,19 @@ const buyButtonStyle = {
 
 //const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
 
-const getEnabledOperations = selectedItems => { // Get enabled operations based on selected items
+const getEnabledOperations = (selectedItems, ignoredCols) => { // Get enabled operations based on selected items
     // Returned object's format is, for example:
     // {BUY: true, MOVE_STOCK: false, SPEND: false, MOVE_PACKS: false, RETURN_PACKS: false}
 
     const isOperationAllowed = operation => { //Check allowed operations based on selected items
-        const moreThanOne = selectedItems.length > 0; // At least one item selected
-        if(moreThanOne){
-            return operation === "BUY" || // When BUY = true: buy selected products else go to product list (enable other buy button)
-                operation === "SPEND" && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-                operation === "MOVE_STOCK" && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-                operation === "MOVE_PACKS" && selectedItems.every(it => it.empty_packs > 0) || // Enabled if all selected items have packs
-                operation === "RETURN_PACKS" && selectedItems.every(it => it.empty_packs > 0); // Enabled if all selected items have packs
+        const atLeastOneSelected = selectedItems.length > 0; // At least one item of the list is selected
+        
+        if(atLeastOneSelected){
+            return operation === "BUY" && !ignoredCols.includes("stock") || // When BUY = true: buy selected products else go to product list (enable other buy button)
+                operation === "SPEND" && !ignoredCols.includes("stock") && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
+                operation === "MOVE_STOCK" && !ignoredCols.includes("stock") && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
+                operation === "MOVE_PACKS" && ignoredCols.includes("empty_packs") && selectedItems.every(it => it.empty_packs > 0) || // Enabled if all selected items have packs
+                operation === "RETURN_PACKS" && !ignoredCols.includes("empty_packs") && selectedItems.every(it => it.empty_packs > 0); // Enabled if all selected items have packs
         }
         return false;
     };
@@ -44,6 +45,7 @@ const getEnabledOperations = selectedItems => { // Get enabled operations based 
             operationTypes[operation] = isOperationAllowed(operation);
             return operationTypes;
         }, {});
+        
     return enabledOperations;
 };
 
@@ -91,7 +93,7 @@ const View = () => {
 
     const selectedItems = items.filter(it => it.selected);
 
-    const enabledOperations = getEnabledOperations(selectedItems);
+    const enabledOperations = getEnabledOperations(selectedItems, ignoredCols);
     const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
 
     useEffect(() => {
@@ -153,11 +155,7 @@ const View = () => {
                     {showActionBlock &&
                         <OperationsBlock
                             enabledOperations={enabledOperations}
-                            onBuy={() => handleOperation('BUY')}
-                            onMoveStock={() => handleOperation('MOVE_STOCK')}
-                            onSpend={() => handleOperation('SPEND')}
-                            onMovePack={() => handleOperation('MOVE_PACKS')}
-                            onReturn={() => handleOperation('RETURN_PACKS')}
+                            onOperation={handleOperation}
                             onExport={handleExport}/>
                     }
                 </Box>
