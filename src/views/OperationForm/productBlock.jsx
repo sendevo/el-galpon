@@ -57,12 +57,17 @@ const ProductBlock = ({
                 </Grid>
 
                 <Grid item xs={12}>
+                    <Typography>{t("presentation") + ": " + product.category}</Typography>
+                </Grid>
+
+                <Grid item xs={12}>
                     <Input 
                         icon={amountIcon}
-                        label={
-                            ( t("quantity") +
-                            ` (${product.presentations[product.presentationIndex].pack_size === -1 ? "" : ("×"+t(product.presentations[product.presentationIndex].pack_size))}${t(product.presentations[product.presentationIndex].unit)}) *`)
-                        }
+                        label={t("quantity") + " (" + t(product.presentations[product.presentationIndex].unit) + ")"}
+                        /*label={
+-                            ( t("quantity") +
+-                            ` (${product.presentations[product.presentationIndex].pack_size === -1 ? "" : ("×"+t(product.presentations[product.presentationIndex].pack_size))}${t(product.presentations[product.presentationIndex].unit)}) *`)
+-                        }*/
                         type="number"
                         value={product.amount > 0 ? product.amount : ""}
                         error={product.amount == ""}
@@ -90,8 +95,6 @@ const ProductBlock = ({
                         <Divider sx={{m:1}}/>
                     </>
                 }
-
-                
 
                 {!hideStoreInput && 
                     <Grid item xs={12}>

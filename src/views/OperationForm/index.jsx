@@ -148,6 +148,7 @@ const View = () => {
 
     const handleProductPropChange = (prop, index, value) => {
         const prevProducts = [...formData.products];
+        // These props are attributes of the form, not the object to store in DB
         prevProducts[index][prop] = value;
         setFormData({
             ...formData,

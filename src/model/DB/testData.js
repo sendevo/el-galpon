@@ -243,7 +243,7 @@ const products = [
         sku: "",
         presentations: [
             {
-                unit: "kilgram",
+                unit: "kilogram",
                 pack_size: 18,
                 bulk: false
             }
