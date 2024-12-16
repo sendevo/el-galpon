@@ -16,7 +16,7 @@ import { componentsStyles } from "../../themes";
 
 
 
-const ItemsTable = ({items, setItems, ignoredCols, divsx}) => {
+const ItemsTable = ({items, setItems, columns, divsx}) => {
 
     const selected = items.filter(it => it.selected);
     const { t } = useTranslation('itemList');
@@ -49,11 +49,11 @@ const ItemsTable = ({items, setItems, ignoredCols, divsx}) => {
                                     checked={selected.length === items.length} 
                                     onChange={e => setAllSelected(e.target.checked)} />
                             </TableCell>
-                            {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>{t('product')}</TableCell>}
-                            {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>}
-                            {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.headerCell}>{t('stock')}</TableCell>}
-                            {!ignoredCols.includes("empty_packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
-                            {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>{t('expiration')}</TableCell>}
+                            {columns.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>{t('product')}</TableCell>}
+                            {columns.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>}
+                            {columns.includes("stock") && <TableCell sx={componentsStyles.headerCell}>{t('stock')}</TableCell>}
+                            {columns.includes("empty_packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
+                            {columns.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>{t('expiration')}</TableCell>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -64,11 +64,11 @@ const ItemsTable = ({items, setItems, ignoredCols, divsx}) => {
                                         checked={item.selected} 
                                         onChange={() => toggleSelect(index)} />
                                 </TableCell>
-                                {!ignoredCols.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
-                                {!ignoredCols.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
-                                {!ignoredCols.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock ? getStock(item) : ""}</TableCell>}
-                                {!ignoredCols.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
-                                {!ignoredCols.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
+                                {columns.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
+                                {columns.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
+                                {columns.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock ? getStock(item) : ""}</TableCell>}
+                                {columns.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
+                                {columns.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>

@@ -23,58 +23,6 @@ const buyButtonStyle = {
 
 //const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
 
-const getEnabledOperations = (selectedItems, ignoredCols) => { // Get enabled operations based on selected items
-    // Returned object's format is, for example:
-    // {BUY: true, MOVE_STOCK: false, SPEND: false, MOVE_PACKS: false, RETURN_PACKS: false}
-
-    const isOperationAllowed = operation => { //Check allowed operations based on selected items
-        const atLeastOneSelected = selectedItems.length > 0; // At least one item of the list is selected
-        
-        if(atLeastOneSelected){
-            return operation === "BUY" && !ignoredCols.includes("stock") || // When BUY = true: buy selected products else go to product list (enable other buy button)
-                operation === "SPEND" && !ignoredCols.includes("stock") && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-                operation === "MOVE_STOCK" && !ignoredCols.includes("stock") && selectedItems.every(it => it.stock > 0) || // Enabled if all selected items have stock
-                operation === "MOVE_PACKS" && ignoredCols.includes("empty_packs") && selectedItems.every(it => it.empty_packs > 0) || // Enabled if all selected items have packs
-                operation === "RETURN_PACKS" && !ignoredCols.includes("empty_packs") && selectedItems.every(it => it.empty_packs > 0); // Enabled if all selected items have packs
-        }
-        return false;
-    };
-
-    const enabledOperations = Object.keys(OPERATION_TYPES)
-        .reduce((operationTypes, operation) => {
-            operationTypes[operation] = isOperationAllowed(operation);
-            return operationTypes;
-        }, {});
-        
-    return enabledOperations;
-};
-
-const getIgnoredColumns = searchParams => { // Get ignored columns based on search params
-    const ignored = ["empty_packs"]; // List of ignored columns. By default, empty packs are not shown
-    let title = "title"; // Default title
-    // Search params are used to filter item
-    searchParams.forEach((value, key) => { // searchParams has forEach method, but it is not an array
-        const params = key.split(":"); // Conditions are separated by ":", e.g. empty_packs:gt:0 (more than 0 empty packs)
-        if(params.length === 3){ // Number of params should be 3: attribute, operator, value
-            const paramKey = params[0];
-            // For the case of pack returns, hide the stock column and show the empty packs column
-            if(paramKey === "empty_packs"){
-                title = "returns";
-                ignored.push("stock");
-                const index = ignored.indexOf(paramKey);
-                if (index > -1) {
-                    ignored.splice(index, 1);
-                }
-            }
-            ignored.push(paramKey);
-        }else{
-            console.log("Invalid param: ", key, value);
-            toast(t('invalidParam'), "info");
-        }
-    });
-    return {ignored, title};
-}
-
 const View = () => {
     const db = useDatabase();   
     const navigate = useNavigate();
@@ -84,25 +32,18 @@ const View = () => {
 
     // Complete list of items
     const [items, setItems] = useState([]);
-
-    // When listing filtered items, some columns are ignored
-    const [ignoredCols, setIgnoredCols] = useState([]); 
-
-    // If the view shows list of empty packs only, the title is "returns"    
-    const [viewTitle, setViewTitle] = useState("title"); // Default title
-
     const selectedItems = items.filter(it => it.selected);
 
-    const enabledOperations = getEnabledOperations(selectedItems, ignoredCols);
-    const showActionBlock = Object.values(enabledOperations).splice(1).some(value => value) || enabledOperations.BUY;
+    // TEMP
+    const enabledOperations = ["BUY", "MOVE_STOCK", "RETURN_PACKS", "MOVE_PACKS", "SPEND"].reduce((acc, op) => {
+        acc[op] = true;
+        return acc;
+    }, {});
 
     useEffect(() => {
-        const {ignored, title} = getIgnoredColumns(searchParams);
         db.query("items", [], searchParams.toString())
             .then(iData => {
                 setItems(iData.map(it => ({...it, selected: false})));
-                setIgnoredCols(ignored);
-                setViewTitle(title);
             });
     }, []);
 
@@ -135,9 +76,9 @@ const View = () => {
     };
 
     return (
-        <MainView title={t(viewTitle)}>
-            {ignoredCols.includes("product_id") && items.length > 0 && <ProductDetails productData={items[0]?.productData}/>}
-            {ignoredCols.includes("store_id") && items.length > 0 && <StoreDetails storeData={items[0]?.storeData}/>}
+        <MainView title={t("returns")}>
+            {false && <ProductDetails productData={items[0]?.productData}/>}
+            {false && <StoreDetails storeData={items[0]?.storeData}/>}
             {items.length > 0 ? 
                 <Box>
                     <SearchForm 
@@ -149,15 +90,12 @@ const View = () => {
                     <ItemsTable 
                         items={items} 
                         setItems={setItems}
-                        ignoredCols={[...ignoredCols]}/>
+                        columns={["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"]}/>
 
-                    {/*handleOperation(TYPE) redirect to operation-form with operation parameters*/}
-                    {showActionBlock &&
-                        <OperationsBlock
-                            enabledOperations={enabledOperations}
-                            onOperation={handleOperation}
-                            onExport={handleExport}/>
-                    }
+                    <OperationsBlock
+                        enabledOperations={enabledOperations}
+                        onOperation={handleOperation}
+                        onExport={handleExport}/>
                 </Box>
                 :
                 <EmptyList message={t("emptyList")}/>

@@ -310,18 +310,45 @@ La rama ```main``` contiene la versión de producción. Los cambios se realizan 
 
 ## versión 1.0.0 (alpha)  
 
-  [x] Listado de movimientos.  
-  [x] Listado de notificaciones.  
-  [x] Vista de devolucion de envases.  
-  [x] Listas de items con stock y con envases vacios por separado.  
-  [ ] Controles de compra-uso-movimiento-devolucion separado.  
-  [ ] Productos con distintas presentaciones.  
-  [ ] Agregar presentacion a productos creados.  
-  [ ] En formulario de movimientos, elegir presentacion de operacion.  
-  [ ] Detalles de ubicacion en fila expandible.  
-  [ ] Logica de operaciones.  
-  [ ] Configuración de notificaciones en compra de items.  
-  [ ] Lógica de alertas.  
-  [ ] Filtros de listados (con URL).  
-  [ ] Exportar informacion excel y pdf.  
-  [ ] Migracion de localStorage a IndexedDB.  
+En menu ppal
+[ ] Letra de los botones en minuscula
+[ ] Botones más anchos para ocupar una sola linea
+[ ] Reemplazar Devoluciones por Devolver envases vacíos
+[ ] Sacar sombra a las letras de EL GALPON
+
+Vista de depositos
+[ ] Quitar campos de creado y modificado
+[ ] Cambiar "insumos" por "stock"
+[ ] Ajustar codigo de colores. Para boton stock usar negro
+[ ] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo
+[ ] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado
+
+Vista de productos
+[ ] Ordenar alfabeticamente por defecto
+[ ] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"
+
+Vista de stock
+[ ] Reemplazar "stock seleccionado" por "productos seleccionados"
+[ ] Eliminar columna de envases vacios
+[ ] Corregir botones de accion
+
+Vista de devoluciones
+[ ] Quitar "Comprar insumos"
+[ ] Eliminar columna de datos de vencimiento
+[ ] Eliminar columna de stock
+[ ] Corregir botones de accion
+
+Componente de filtrado
+[ ] Revisar selector de categoria
+[ ] Quitar campos fecha de - hasta
+[ ] Aplicar filtrados para la tabla
+
+Vista de formulario de deposito
+[ ] Cambiar creacion por "nuevo deposito"
+[ ] La geolocalizacion no debe ser obligatoria
+
+Formulario de compra/movimiento/devolucion
+[ ] Indicar fecha de vencimiento
+[ ] Campos para configurar alarma de stock bajo
+[ ] Adaptar campos segun la operacion
+[ ] Registrar operacion en la DB

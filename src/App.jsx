@@ -36,6 +36,7 @@ const onSwitchLanguage = (lang) => { // 'es' or 'en'
 
 const Router = () => {
 
+    /*
     const confirm = useConfirm();
     useEffect(() => {
         confirm(
@@ -49,6 +50,7 @@ const Router = () => {
             "" 
         );
     }, []);
+    */
 
     return (
         <BrowserRouter>

@@ -124,8 +124,8 @@ export default class LocalDatabase {
             // Filter by properties
             let rows = this._db[table].filter(it => {
                 const condition = filters.every(filter => {
-                    const value = it[filter.key];
-                    return compare(value, filter.value, filter.operator);
+                    const itemAttrValue = it[filter.key];
+                    return compare(itemAttrValue, filter.value, filter.operator);
                 }) && (rowIds.length === 0 || rowIds.includes(it.id));
                 return condition;
             });

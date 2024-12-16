@@ -22,13 +22,13 @@ import OperationForm from "./OperationForm";
 const views = [
     // Menu views
     {
-        path: "/stock",
+        path: "stock",
         homeTitle: "items",
         icon: stockIcon,
         component: <Stock />
     },
     {
-        path: "/stores-list",
+        path: "stores-list",
         homeTitle: "stores",
         icon: storesIcon,
         component: <StoresList />
@@ -40,40 +40,40 @@ const views = [
         component: null
     },
     {
-        path: "/operations-list",
+        path: "operations-list",
         homeTitle: "operations",
         icon: operationsIcon,
         component: <OperationsList />
     },
     {
-        path: "/about",
+        path: "about",
         homeTitle: "menu_info",
         icon: aboutIcon,
         component: <About />
     },
     {
-        path: "/error",
+        path: "error",
         component: <Error />
     },
     // Secondary views
     {
-        path: "/store-form",
+        path: "store-form",
         component: <StoreForm />
     },
     {
-        path: "/products-list",
+        path: "products-list",
         component: <ProductsList />
     },
     {
-        path: "/product-form",
+        path: "product-form",
         component: <ProductForm />
     },
     {
-        path: "/operation-form",
+        path: "operation-form",
         component: <OperationForm />
     },
     {
-        path: "/alerts",
+        path: "alerts",
         component: <AlertsList />
     }
 ];
