@@ -325,11 +325,13 @@ Vista de depositos
 
 Vista de productos
 [ ] Ordenar alfabeticamente por defecto
-[ ] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"
+[ ] Formato de presentaciones  
 
 Vista de stock
 [x] Ordenar alfabeticamente por defecto
+[x] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"
 [ ] Corregir seleccion de items (se selecciona uno diferente al clickeado).  
+[ ] Formato de presentaciones
 [ ] Reemplazar "stock seleccionado" por "productos seleccionados"
 [ ] Eliminar columna de envases vacios
 [ ] Corregir botones de accion
@@ -345,6 +347,9 @@ Componente de filtrado
 [ ] Selector de categoria tapa el teclado
 [x] Quitar campos fecha de - hasta
 [ ] Aplicar filtrados para las tablas
+
+Vista de formulario de productos
+[ ] Formato y cálculo de presentaciones.  
 
 Vista de formulario de deposito
 [x] Cambiar creacion por "nuevo deposito"

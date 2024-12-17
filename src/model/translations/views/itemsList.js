@@ -2,7 +2,6 @@ import { UNITS_ABBRS } from "../../constants";
 
 const itemList = {
     en: {
-        title: "Items",
         returns: "Returns",
         product: "Product",
         presentation: "Presentation",
@@ -22,18 +21,17 @@ const itemList = {
         ...UNITS_ABBRS.en
     },
     es: {
-        title: "Insumos",
         returns: "Devoluciones",
         product: "Producto",
         presentation: "Presentación",
         location: "Ubicación",
-        stock: "Stock",
+        stock: "Insumos",
         emptyList: "La lista de insumos está vacía",
         empty_packs: "Envases vacíos",
         store_id: "Ubicación",
         product_id: "Producto",
         expiration_date: "Vencimiento",
-        buy: "Comprar otro insumo",
+        buy: "Ingresar otro insumo",
         export: "Exportar datos",
         operationError: "Operación no permitida",
         notAvailable: "Función no disponible",

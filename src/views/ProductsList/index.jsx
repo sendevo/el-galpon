@@ -4,18 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { 
     Grid, 
     Button, 
-    Table, 
-    TableBody, 
-    TableCell, 
-    TableContainer, 
-    TableHead, 
-    TableRow, 
     Paper, 
-    Checkbox, 
     Typography, 
     Box 
 } from '@mui/material';
-import moment from "moment";
+import ProductsTable from "./productsTable";
 import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
@@ -24,86 +17,52 @@ import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import EmptyList from "../../components/EmptyList";
 import { componentsStyles } from "../../themes";
-import { debug, cropString } from "../../model/utils";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { debug } from "../../model/utils";
 
-const attributes = ["name", "presentations", "expirable", "returnable", "brand", "sku", "comments", "categories", "created", "modified"];
-const HeaderCell = ({ attribute }) => {
-    return (
-        <TableCell sx={componentsStyles.headerCell}>
-            {attribute}
-        </TableCell>
-    );
-};
 
 const View = () => {
 
-    const navigate = useNavigate();
-    
     const db = useDatabase();   
-
+    const navigate = useNavigate();
+    const toast = useToast();
     const { t } = useTranslation('productsList');
     
-    const [data, setData] = useState([]);
-    const [selected, setSelected] = useState([]);
+    const [data, setData] = useState([]);    
+    const selectedProducts = data.filter(p => p.selected);
     
-    const toast = useToast();
     const confirm = useConfirm();
-
-    const getPresentation = product => {
-        let presentation = "";
-
-        for(let p = 0; p < product.presentations.length; p++){
-            if(product.presentations[p].bulk){
-                presentation += `${t(product.presentations[p].unit)} (${t("bulk")})`;
-            }else{
-                presentation += `${product.presentations[p].pack_size} ${t(product.presentations[p].unit)}`;
-            }
-            presentation += p < product.presentations.length - 1 ? " / " : "";
-        }
-        return presentation;
-    };
 
     useEffect(() => {
         db.query("products")
-            .then(setData)
+            .then(pData => {
+                setData(pData.map(p => ({
+                    ...p, 
+                    selected: false
+                })));
+            })
             .catch(error => {
                 toast(t("error_loading"), "error");
                 debug(error, "error");
             });
     }, []);
 
-    const handleSelect = productId => {
-        const selectedIndex = selected.indexOf(productId);
-        const newSelected = [...selected];
-        if (selectedIndex === -1)
-            newSelected.push(productId);
-        else
-            newSelected.splice(selectedIndex, 1);
-        setSelected(newSelected);
-    };
-
-    const handleSelectAll = selected => {
-        if(selected)
-            setSelected(data.map(d => d.id));
-        else 
-            setSelected([]);
-    };
-
     const handleNew = () => navigate("/product-form");
 
+    const unSelectAll = () => setData(prevProducts => prevProducts.map(p => ({...p, selected: false})));
+
     const handleBuy = () => {
-        const products = selected.join("_");
+        const products = selectedProducts.map(p => p.id).join("_");
         navigate(`/operation-form?type=BUY&products=${products}`);
     };
         
     const handleEdit = () => {
-        if(selected.length === 1){
-            const productId = selected[0];
+        if(selectedProducts.length === 1){
+            const index = data.findIndex(p => p.selected);
+            const productId = data[index].id;
             navigate(`/product-form?id=${productId}`);
         }else{
             debug("Multpiple selection for edit", "error");
-            setSelected([]);
+            unSelectAll();
         }
     };
 
@@ -112,13 +71,14 @@ const View = () => {
             t("confirm_operation"),
             t("confirm_text"),
             () => { // On success
-                const len = selected.length;
-                db.delete("products", selected)
+                const len = selectedProducts.length;
+                const ids = selectedProducts.map(p => p.id);
+                db.delete("products", ids)
                     .then(() => {
                         db.query("products")
                             .then(updatedData => {
                                 setData(updatedData);
-                                setSelected([]);
+                                unSelectAll();
                                 toast(len > 1 ? 
                                     t("prod_deleted_plural", {len})
                                     :
@@ -133,7 +93,7 @@ const View = () => {
                     .catch(error => {
                         toast(
                         error.type === ERROR_CODES.DB.WITH_ITEMS ? 
-                                t("cannot_delete_with_sotck")
+                                t("cannot_delete_with_stock")
                                 :
                                 t("error_delete")
                                 , "error");
@@ -157,53 +117,19 @@ const View = () => {
                 <Box>
                     <SearchForm 
                         sx={{mb:2}}
-                        fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
+                        fields={["categories", "expirable", "returnable", "brand"]} 
                         onFiltersChange={handleFilter}
                         onQueryChange={handleSearch}/>
-                    <TableContainer component={Paper} sx={componentsStyles.paper}>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={componentsStyles.headerCell}>
-                                        <Checkbox 
-                                            checked={selected.length === data.length} 
-                                            onChange={e => handleSelectAll(e.target.checked)} />
-                                    </TableCell>
-                                    {attributes.map((attr, index) => (
-                                        <HeaderCell key={index} attribute={t(attr)} />
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {data.map(product => (
-                                <TableRow key={product.id}>
-                                    <TableCell sx={componentsStyles.tableCell}>
-                                        <Checkbox 
-                                            checked={selected.indexOf(product.id) !== -1} 
-                                            onChange={() => handleSelect(product.id)} />
-                                    </TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.name || "Sin nombre"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{getPresentation(product)}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.expirable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.returnable ? <FaCheck color="green"/> : <FaTimes color="red"/>}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.sku || ""}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{cropString(product.comments || "-", 10)}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{product.categories?.join(', ') || "-"}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{moment(product.created).format("DD/MM/YYYY HH:mm")}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{moment(product.modified).format("DD/MM/YYYY HH:mm")}</TableCell>
-                                </TableRow>
-                            ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+
+                    <ProductsTable products={data} setProducts={setData}/>
+                    
                     <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
                         <Grid container sx={{mb:1}} direction={"column"}>
                             <Grid item>
                                 <Typography sx={{fontWeight:"bold"}}>{t("actions")}</Typography>
                             </Grid>
                             <Grid item mb={1}>
-                                {selected.length===0 && <Typography sx={componentsStyles.hintText}>{t("select_one_or_more")}</Typography>}
+                                {selectedProducts.length===0 && <Typography sx={componentsStyles.hintText}>{t("select_one_or_more")}</Typography>}
                             </Grid>
                             <Grid item>
                                 <Grid 
@@ -214,7 +140,7 @@ const View = () => {
                                     <Grid item>
                                         <Button 
                                             color="success"
-                                            disabled={selected.length === 0}
+                                            disabled={selectedProducts.length === 0}
                                             variant="contained"
                                             onClick={handleBuy}>
                                             {t("buy")}
@@ -223,7 +149,7 @@ const View = () => {
                                     <Grid item>
                                         <Button
                                             variant="contained"
-                                            disabled={selected.length !== 1}
+                                            disabled={selectedProducts.length !== 1}
                                             onClick={handleEdit}>
                                             {t("edit")}       
                                         </Button>
@@ -232,7 +158,7 @@ const View = () => {
                                         <Button     
                                             color="red"
                                             variant="contained"
-                                            disabled={selected.length === 0}
+                                            disabled={selectedProducts.length === 0}
                                             onClick={handleDelete}>
                                             {t("delete")}
                                         </Button>
@@ -243,7 +169,7 @@ const View = () => {
                                 <Grid item>
                                     <Button 
                                         sx={{mt: 2}}
-                                        disabled={selected.length !== 0}
+                                        disabled={selectedProducts.length !== 0}
                                         variant="contained"
                                         onClick={handleNew}>
                                         {t("create_new")}

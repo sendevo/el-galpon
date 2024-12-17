@@ -34,7 +34,7 @@ const View = () => {
     const selectedItems = items.filter(it => it.selected);
 
     // TEMP
-    const enabledOperations = ["BUY", "MOVE_STOCK", "RETURN_PACKS", "MOVE_PACKS", "SPEND"].reduce((acc, op) => {
+    const enabledOperations = ["BUY", "BUY_OTHER", "MOVE_STOCK", "RETURN_PACKS", "MOVE_PACKS", "SPEND"].reduce((acc, op) => {
         acc[op] = true;
         return acc;
     }, {});
@@ -50,7 +50,7 @@ const View = () => {
     }, []);
 
     const handleOperation = operationType => {// Redirect to operation form 
-        if(operationType === "BUY" && !enabledOperations.BUY){ // No product selected
+        if(operationType === "BUY_OTHER"){ // No product selected
             navigate("/products-list"); // Go to product list
         }else{ // Go to operation form
             if(enabledOperations[operationType]){
@@ -78,7 +78,7 @@ const View = () => {
     };
 
     return (
-        <MainView title={t("returns")}>
+        <MainView title={t("stock")}>
             {false && <ProductDetails productData={items[0]?.productData}/>}
             {false && <StoreDetails storeData={items[0]?.storeData}/>}
             {items.length > 0 ? 
@@ -94,21 +94,23 @@ const View = () => {
                         setItems={setItems}
                         columns={["product_id", "store_id", "stock", "empty_packs", "expiration_date"]}/>
 
+                    {/*
                     <OperationsBlock
                         enabledOperations={enabledOperations}
                         onOperation={handleOperation}
                         onExport={handleExport}/>
+                    */}
                 </Box>
                 :
                 <EmptyList message={t("emptyList")}/>
             }
             
-            { !enabledOperations.BUY &&
+            { enabledOperations.BUY_OTHER &&
                 <Box style={buyButtonStyle}>
                     <Button 
                         color="success"
                         variant="contained"
-                        onClick={()=>handleOperation("BUY")}>
+                        onClick={()=>handleOperation("BUY_OTHER")}>
                         {t('buy')}
                     </Button>
                 </Box>

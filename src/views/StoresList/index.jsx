@@ -47,23 +47,27 @@ const View = () => {
 
     const handleNew = () => navigate("/store-form");
 
+    const unSelectAll = () => setStores(prevStores => prevStores.map(st => ({...st, selected: false})));
+
     const handleEdit = () => {
         if(selectedStores.length === 1){
-            const storeId = selectedStores[0];
+            const index = stores.findIndex(st => st.selected);
+            const storeId = stores[index].id;
             navigate(`/store-form?id=${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
-            setSelected([]);
+            unSelectAll();
         }
     };
 
     const handleStock = () => {
         if(selectedStores.length === 1){
-            const storeId = selectedStores[0];
+            const index = stores.findIndex(st => st.selected);
+            const storeId = stores[index].id;;
             navigate(`/stock?store_id:eq:${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
-            setSelected([]);
+            unSelectAll();
         }
     };
 
@@ -73,12 +77,13 @@ const View = () => {
             t("confirm_text"),
             () => { // On success
                 const len = selectedStores.length;
-                db.delete("stores", selectedStores)
+                const ids = selectedStores.map(st => st.id);
+                db.delete("stores", ids)
                     .then(() => {
                         db.query("stores")
                             .then(updatedData => {
                                 setStores(updatedData);
-                                setSelected([]);
+                                unSelectAll();
                                 toast
                                     (len > 1 ? 
                                         t("loc_deleted_plural", {len})

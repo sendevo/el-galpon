@@ -10,6 +10,7 @@ const productForm = {
         // Labels
         product: "Product",
         name: "Name",
+        no_name: "No name",
         presentations: "Product presentations",
         presentation: "Presentation",
         size: "Size",
@@ -52,6 +53,7 @@ const productForm = {
         // Labels
         product: "Producto",
         name: "Nombre",
+        no_name: "Sin nombre",
         presentations: "Presentaciones del producto",
         presentation: "Presentación",
         size: "Medida",

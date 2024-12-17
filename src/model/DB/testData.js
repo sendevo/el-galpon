@@ -152,7 +152,7 @@ const products = [
         returnable: false,
         brand: "ACA 477",
         comments: "",
-        categories: ["seed"],
+        categories: ["Semillas"],
         created: getDate(),
         modified: getDate()
     },

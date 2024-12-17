@@ -14,19 +14,11 @@ import {
 } from "@mui/material";
 import CollapsibleRow from './collapsibleRow';
 import useToast from '../../hooks/useToast';
+import HeaderCell from "../../components/HeaderCell";
 import { isValidRowData } from "../../model/DB";
 import { OPERATION_TYPES_NAMES } from '../../model/constants';
 import { componentsStyles } from "../../themes";
 
-
-const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
-    const sortedArrow = sortedDirection ? (sortedDirection === "asc" ? "▲" : "▼") : "";
-    return (
-        <TableCell sx={componentsStyles.headerCell} onClick={onClick}>
-            {attribute + sortedArrow}
-        </TableCell>
-    );
-};
 
 const OperationsTable = ({ operations }) => {
 

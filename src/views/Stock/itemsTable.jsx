@@ -12,17 +12,10 @@ import {
     TableRow
 } from "@mui/material";
 import moment from "moment";
+import HeaderCell from "../../components/HeaderCell";
 import { isValidRowData } from "../../model/DB";
 import { componentsStyles } from "../../themes";
 
-const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
-    const sortedArrow = sortedDirection ? (sortedDirection === "asc" ? "▲" : "▼") : "";
-    return (
-        <TableCell sx={componentsStyles.headerCell} onClick={onClick}>
-            {attribute + sortedArrow}
-        </TableCell>
-    );
-};
 
 const ItemsTable = ({items, setItems, columns}) => {
 
@@ -32,10 +25,11 @@ const ItemsTable = ({items, setItems, columns}) => {
 
     const selected = items.filter(it => it.selected);
 
-    const toggleSelect = index => {
+    const toggleSelect = item => {
         setItems(prevItems => {
+            const index = prevItems.findIndex(it => it.id === item.id);
+            prevItems[index].selected = !prevItems[index].selected;
             const newItems = [...prevItems];
-            newItems[index].selected = !newItems[index].selected;
             return newItems;
         });
     };
@@ -50,7 +44,6 @@ const ItemsTable = ({items, setItems, columns}) => {
     };
 
     const requestSort = (key) => {
-        console.log("Requesting sort for", key);
         const direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
         setSortConfig({ key, direction });
     };
@@ -97,19 +90,20 @@ const ItemsTable = ({items, setItems, columns}) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedItems.map((item, index) => (
-                            isValidRowData(item, "items") && <TableRow key={item.id}>
-                                <TableCell sx={componentsStyles.tableCell}>
-                                    <Checkbox 
-                                        checked={item.selected} 
-                                        onChange={() => toggleSelect(index)} />
-                                </TableCell>
-                                {columns.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
-                                {columns.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
-                                {columns.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock ? getStock(item) : ""}</TableCell>}
-                                {columns.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
-                                {columns.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
-                            </TableRow>
+                        {sortedItems.map(item => (
+                            isValidRowData(item, "items") && // This is a DB related fn that uses schema
+                                <TableRow key={item.id}>
+                                    <TableCell sx={componentsStyles.tableCell}>
+                                        <Checkbox 
+                                            checked={item.selected} 
+                                            onChange={() => toggleSelect(item)} />
+                                    </TableCell>
+                                    {columns.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
+                                    {columns.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
+                                    {columns.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock ? getStock(item) : ""}</TableCell>}
+                                    {columns.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
+                                    {columns.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
+                                </TableRow>
                         ))}
                     </TableBody>
                 </Table>
