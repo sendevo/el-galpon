@@ -311,10 +311,10 @@ La rama ```main``` contiene la versión de producción. Los cambios se realizan 
 ## versión 1.0.0 (alpha)  
 
 En menu ppal
-[ ] Letra de los botones en minuscula
-[ ] Botones más anchos para ocupar una sola linea
-[ ] Reemplazar Devoluciones por Devolver envases vacíos
-[ ] Sacar sombra a las letras de EL GALPON
+[x] Letra de los botones en minuscula
+[x] Botones más anchos para ocupar una sola linea
+[x] Reemplazar Devoluciones por Devolver envases vacíos
+[x] Sacar sombra a las letras de EL GALPON
 
 Vista de depositos
 [ ] Quitar campos de creado y modificado

@@ -29,7 +29,7 @@ const styles = {
         marginBottom: "0px",
         lineHeight: "100%",
         color: "white",
-        textShadow: "4px 4px 3px black",
+        textShadow: "1px 1px 1px black",
         textTransform: "uppercase",
         fontWeight: "bold"
     },
@@ -56,10 +56,11 @@ const styles = {
     button: {
         p: 2,
         lineHeight: "1em",
-        width: "60vw",
+        width: "75vw",
         maxWidth: "400px",
         height: "60px",
-        backgroundColor: "rgba(250,250,250,.75)"
+        backgroundColor: "rgba(250,250,250,.75)",
+        textTransform: "none"
     },
     buttonIcon: {
         position: "absolute",
@@ -74,7 +75,7 @@ const styles = {
         color: "#000000",
         fontWeight: "bold",
         lineHeight: "1em",
-        textTransform: "uppercase"
+        //textTransform: "uppercase"
     },
     bottomBox: {
         backgroundColor: "#2D6F94",
