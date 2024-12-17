@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { 
     Grid, 
     Button, 
-    Table, 
-    TableBody, 
-    TableCell, 
-    TableContainer, 
-    TableHead, 
-    TableRow, 
     Paper, 
-    Checkbox, 
     Typography, 
     Box
 } from '@mui/material';
@@ -19,56 +12,44 @@ import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
+import StoresTable from "./storesTable";
 import MainView from "../../components/MainView";
 import { Search } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
-import { debug, latLng2GoogleMap, cropString } from "../../model/utils";
+import { debug } from "../../model/utils";
 import iconEmpty from "../../assets/icons/empty_folder.png";
-import { FaExternalLinkAlt } from "react-icons/fa";
 
 
 const View = () => {
-
-    const navigate = useNavigate();
     const db = useDatabase();   
-    const [data, setData] = useState([]);
-    const [selected, setSelected] = useState([]);
+    const navigate = useNavigate();
+    const toast = useToast();
     const {t} = useTranslation('storesList');
 
-    const toast = useToast();
+    const [stores, setStores] = useState([]);
+    const selectedStores = stores.filter(st => st.selected);
+    
     const confirm = useConfirm();
     
     useEffect(() => {
         db.query("stores")
-            .then(setData)
+            .then( sData => {
+                setStores(sData.map(st => ({
+                    ...st, 
+                    selected: false
+                })));
+            })
             .catch(error => {
                 toast(t("error_loading", "error"));
                 debug(error, "error");
             });
     }, []);
 
-    const handleSelect = storeId => {
-        const selectedIndex = selected.indexOf(storeId);
-        const newSelected = [...selected];
-        if (selectedIndex === -1)
-            newSelected.push(storeId);
-        else
-            newSelected.splice(selectedIndex, 1);
-        setSelected(newSelected);
-    };
-
-    const handleSelectAll = selected => {
-        if(selected)
-            setSelected(data.map(d => d.id));
-        else 
-            setSelected([]);
-    };
-
     const handleNew = () => navigate("/store-form");
 
     const handleEdit = () => {
-        if(selected.length === 1){
-            const storeId = selected[0];
+        if(selectedStores.length === 1){
+            const storeId = selectedStores[0];
             navigate(`/store-form?id=${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
@@ -77,8 +58,8 @@ const View = () => {
     };
 
     const handleStock = () => {
-        if(selected.length === 1){
-            const storeId = selected[0];
+        if(selectedStores.length === 1){
+            const storeId = selectedStores[0];
             navigate(`/stock?store_id:eq:${storeId}`);
         }else{
             debug("Multpiple selection for edit", "error");
@@ -91,12 +72,12 @@ const View = () => {
             t("confirm_operation"), 
             t("confirm_text"),
             () => { // On success
-                const len = selected.length;
-                db.delete("stores", selected)
+                const len = selectedStores.length;
+                db.delete("stores", selectedStores)
                     .then(() => {
                         db.query("stores")
                             .then(updatedData => {
-                                setData(updatedData);
+                                setStores(updatedData);
                                 setSelected([]);
                                 toast
                                     (len > 1 ? 
@@ -129,55 +110,16 @@ const View = () => {
             <Paper sx={componentsStyles.paper}>
                 <Search submit={handleSearch}/>
             </Paper>
-            {data.length > 0 ?
+            {stores.length > 0 ?
                 <Box sx={{mt:2}}>
                     
-                    <TableContainer component={Paper} sx={componentsStyles.paper}>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={componentsStyles.headerCell}>
-                                        <Checkbox 
-                                            checked={selected.length === data.length} 
-                                            onChange={e => handleSelectAll(e.target.checked)} />
-                                    </TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>{t('name')}</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>{t('comments')}</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {data.map(store => (
-                                <TableRow key={store.id}>
-                                    <TableCell sx={componentsStyles.tableCell}>
-                                        <Checkbox 
-                                            checked={selected.indexOf(store.id) !== -1} 
-                                            onChange={() => handleSelect(store.id)} />
-                                    </TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{store.name || t('noname')}</TableCell>
-                                    <TableCell sx={{...componentsStyles.tableCell, textAlign:"center"}}>
-                                        {store.lat && store.lng ? 
-                                            <Link 
-                                                target="_blank"
-                                                rel="nooreferrer"
-                                                to={latLng2GoogleMap(store.lat, store.lng)}>
-                                                    <FaExternalLinkAlt/>
-                                            </Link>
-                                            :
-                                            "-"
-                                        }
-                                    </TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{cropString(store.comments || "-", 10)}</TableCell>
-                                </TableRow>
-                            ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <StoresTable stores={stores} setStores={setStores}/>
+
                     <Paper sx={{...componentsStyles.paper, pl:2, pr:2, mt:2}}>
                         <Grid container sx={{mb:1}} direction={"column"}>
                             <Grid item>
                                 <Typography sx={{fontWeight:"bold"}}>{t('actions')}</Typography>
-                                {selected.length===0 && 
+                                {selectedStores.length===0 && 
                                     <Typography sx={{...componentsStyles.hintText, mb:1}}>{t('selection')}</Typography>
                                 }
                             </Grid>
@@ -186,7 +128,7 @@ const View = () => {
                                     fullWidth
                                     color="secondary"
                                     variant="contained"
-                                    disabled={selected.length !== 1}
+                                    disabled={selectedStores.length !== 1}
                                     onClick={handleStock}>
                                     {t('stock')}
                                 </Button>
@@ -199,7 +141,7 @@ const View = () => {
                             justifyContent="space-between">
                             <Grid item>
                                 <Button 
-                                    disabled={selected.length > 0}
+                                    disabled={selectedStores.length > 0}
                                     color="success"
                                     variant="contained"
                                     onClick={handleNew}>
@@ -209,7 +151,7 @@ const View = () => {
                             <Grid item>
                                 <Button 
                                     variant="contained"
-                                    disabled={selected.length !== 1}
+                                    disabled={selectedStores.length !== 1}
                                     onClick={handleEdit}>
                                     {t('edit')}    
                                 </Button>
@@ -218,7 +160,7 @@ const View = () => {
                                 <Button     
                                     color="error"
                                     variant="contained"
-                                    disabled={selected.length === 0}
+                                    disabled={selectedStores.length === 0}
                                     onClick={handleDelete}>
                                     {t('delete')}
                                 </Button>

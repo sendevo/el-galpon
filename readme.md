@@ -329,6 +329,7 @@ Vista de productos
 
 Vista de stock
 [x] Ordenar alfabeticamente por defecto
+[ ] Corregir seleccion de items (se selecciona uno diferente al clickeado).  
 [ ] Reemplazar "stock seleccionado" por "productos seleccionados"
 [ ] Eliminar columna de envases vacios
 [ ] Corregir botones de accion

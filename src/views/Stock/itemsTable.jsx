@@ -24,7 +24,7 @@ const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
     );
 };
 
-const ItemsTable = ({items, setItems, columns, divsx}) => {
+const ItemsTable = ({items, setItems, columns}) => {
 
     // Sorting columns, key and direction
     const [sortConfig, setSortConfig] = useState({ key: "product_id", direction: "asc" });
@@ -77,7 +77,7 @@ const ItemsTable = ({items, setItems, columns, divsx}) => {
             sortingFunction(a, b) : sortingFunction(b, a));
 
     return (
-        <Box sx={divsx}>
+        <Box>
             <TableContainer component={Paper} sx={componentsStyles.paper}>
                 <Table size="small">
                     <TableHead>

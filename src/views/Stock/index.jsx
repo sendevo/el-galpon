@@ -44,11 +44,7 @@ const View = () => {
             .then(iData => {
                 setItems(iData.map(it => ({
                     ...it, 
-                    selected: false,
-                    /*
-                    storeName: it.storeData.name,
-                    productName: it.productData.name,
-                    */
+                    selected: false
                 })));
             });
     }, []);
