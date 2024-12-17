@@ -328,20 +328,22 @@ Vista de productos
 [ ] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"
 
 Vista de stock
+[x] Ordenar alfabeticamente por defecto
 [ ] Reemplazar "stock seleccionado" por "productos seleccionados"
 [ ] Eliminar columna de envases vacios
 [ ] Corregir botones de accion
 
 Vista de devoluciones
+[ ] Ordenar alfabeticamente por defecto
 [ ] Quitar "Comprar insumos"
 [ ] Eliminar columna de datos de vencimiento
 [ ] Eliminar columna de stock
 [ ] Corregir botones de accion
 
 Componente de filtrado
-[ ] Revisar selector de categoria
+[ ] Selector de categoria tapa el teclado
 [x] Quitar campos fecha de - hasta
-[ ] Aplicar filtrados para la tabla
+[ ] Aplicar filtrados para las tablas
 
 Vista de formulario de deposito
 [x] Cambiar creacion por "nuevo deposito"

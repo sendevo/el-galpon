@@ -42,7 +42,14 @@ const View = () => {
     useEffect(() => {
         db.query("items", [], searchParams.toString())
             .then(iData => {
-                setItems(iData.map(it => ({...it, selected: false})));
+                setItems(iData.map(it => ({
+                    ...it, 
+                    selected: false,
+                    /*
+                    storeName: it.storeData.name,
+                    productName: it.productData.name,
+                    */
+                })));
             });
     }, []);
 
@@ -89,7 +96,7 @@ const View = () => {
                     <ItemsTable 
                         items={items} 
                         setItems={setItems}
-                        columns={["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"]}/>
+                        columns={["product_id", "store_id", "stock", "empty_packs", "expiration_date"]}/>
 
                     <OperationsBlock
                         enabledOperations={enabledOperations}

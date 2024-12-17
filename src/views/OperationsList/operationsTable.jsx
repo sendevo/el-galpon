@@ -20,10 +20,10 @@ import { componentsStyles } from "../../themes";
 
 
 const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
-    const sorted = sortedDirection ? (sortedDirection === "asc" ? "▲" : "▼") : "";
+    const sortedArrow = sortedDirection ? (sortedDirection === "asc" ? "▲" : "▼") : "";
     return (
         <TableCell sx={componentsStyles.headerCell} onClick={onClick}>
-            {attribute + sorted}
+            {attribute + sortedArrow}
         </TableCell>
     );
 };
@@ -34,19 +34,17 @@ const OperationsTable = ({ operations }) => {
     const toast = useToast();
     const { t } = useTranslation('operations');
 
-    const [ready, setReady] = useState(false);
+    // Data from database
     const [products, setProducts] = useState({});
     const [storesNames, setStoresNames] = useState({});
-
+    
+    // Sorting columns, key and direction
+    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
 
     // The following keys must match the keys defined in the translations file. This is to sepparate data attributes from it converstions,
     // for example: date (unix) -> date (formatted) or product (ID) -> product (name).
     const mainFields = ["date", "type", "observations"];    
     const mainSortableFields = ["date", "type"];
-    
-    // Sorting columns, key and direction
-    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
-
 
     useEffect(() => { // Fetch products and stores names
         const itemsData = operations.map(op => op.items_data);
@@ -61,7 +59,6 @@ const OperationsTable = ({ operations }) => {
                     acc[item.id] = item;
                     return acc;
                 }, {});
-                setReady(true);
                 setProducts(prods);
             })
             .catch(error => {
@@ -112,39 +109,40 @@ const OperationsTable = ({ operations }) => {
             sortConfig.direction === "asc" ? 
                 sortingFunction(a, b) : sortingFunction(b, a));
 
-
     return (
         <Box>
-            {ready && <TableContainer component={Paper} sx={componentsStyles.paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                        <TableCell>
-                            <Typography fontWeight={"bold"} fontSize={"14px"}>
-                                {t("expand_details")}
-                            </Typography>
-                        </TableCell>
-                            {mainFields.map((attr, index) => (
-                                <HeaderCell 
-                                    sortedDirection={sortConfig.key === attr ? sortConfig.direction : ""}
-                                    onClick={() => requestSort(attr)}
-                                    key={index} 
-                                    attribute={t(attr)}/>
+            {Object.keys(products).length > 0 && Object.keys(storesNames).length > 0 &&
+                <TableContainer component={Paper} sx={componentsStyles.paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>
+                                    <Typography fontWeight={"bold"} fontSize={"14px"}>
+                                        {t("expand_details")}
+                                    </Typography>
+                                </TableCell>
+                                {mainFields.map((attr, index) => (
+                                    <HeaderCell 
+                                        sortedDirection={sortConfig.key === attr ? sortConfig.direction : ""}
+                                        onClick={() => requestSort(attr)}
+                                        key={index} 
+                                        attribute={t(attr)}/>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {sortedData.map((operation, index) => (
+                                isValidRowData(operation, "operations") && 
+                                    <CollapsibleRow 
+                                        key={index} 
+                                        operation={operation}
+                                        products={products}
+                                        storesNames={storesNames}/>
                             ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {sortedData.map((operation, index) => (
-                            isValidRowData(operation, "operations") && 
-                                <CollapsibleRow 
-                                    key={index} 
-                                    operation={operation}
-                                    products={products}
-                                    storesNames={storesNames}/>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            }
         </Box>
     );
 };

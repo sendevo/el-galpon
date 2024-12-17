@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { 
     Box, 
@@ -14,12 +15,22 @@ import moment from "moment";
 import { isValidRowData } from "../../model/DB";
 import { componentsStyles } from "../../themes";
 
-
+const HeaderCell = ({ onClick, attribute, sortedDirection }) => {
+    const sortedArrow = sortedDirection ? (sortedDirection === "asc" ? "▲" : "▼") : "";
+    return (
+        <TableCell sx={componentsStyles.headerCell} onClick={onClick}>
+            {attribute + sortedArrow}
+        </TableCell>
+    );
+};
 
 const ItemsTable = ({items, setItems, columns, divsx}) => {
 
-    const selected = items.filter(it => it.selected);
+    // Sorting columns, key and direction
+    const [sortConfig, setSortConfig] = useState({ key: "product_id", direction: "asc" });
     const { t } = useTranslation('itemList');
+
+    const selected = items.filter(it => it.selected);
 
     const toggleSelect = index => {
         setItems(prevItems => {
@@ -38,6 +49,33 @@ const ItemsTable = ({items, setItems, columns, divsx}) => {
         return stockText;
     };
 
+    const requestSort = (key) => {
+        console.log("Requesting sort for", key);
+        const direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
+        setSortConfig({ key, direction });
+    };
+
+    const sortingFunction = (a, b) => {
+        switch(sortConfig.key){
+            case "product_id":
+                return a.productData.name.localeCompare(b.productData.name);
+            case "store_id":
+                return a.storeData.name.localeCompare(b.storeData.name);
+            case "stock":
+                return a.stock - b.stock;
+            case "empty_packs":
+                return a.empty_packs - b.empty_packs;
+            case "expiration_date":
+                return a.expiration_date - b.expiration_date;
+            default:
+                return 0;
+        }
+    }
+
+    const sortedItems = [...items].sort((a, b) => 
+        sortConfig.direction === "asc" ? 
+            sortingFunction(a, b) : sortingFunction(b, a));
+
     return (
         <Box sx={divsx}>
             <TableContainer component={Paper} sx={componentsStyles.paper}>
@@ -49,15 +87,17 @@ const ItemsTable = ({items, setItems, columns, divsx}) => {
                                     checked={selected.length === items.length} 
                                     onChange={e => setAllSelected(e.target.checked)} />
                             </TableCell>
-                            {columns.includes("product_id") && <TableCell sx={componentsStyles.headerCell}>{t('product')}</TableCell>}
-                            {columns.includes("store_id") && <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>}
-                            {columns.includes("stock") && <TableCell sx={componentsStyles.headerCell}>{t('stock')}</TableCell>}
-                            {columns.includes("empty_packs") && <TableCell sx={componentsStyles.headerCell}>{t('emptyPacks')}</TableCell>}
-                            {columns.includes("expiration_date") && <TableCell sx={componentsStyles.headerCell}>{t('expiration')}</TableCell>}
+                            {columns.map((attr, index) => (
+                                <HeaderCell 
+                                    sortedDirection={sortConfig.key === attr ? sortConfig.direction : ""}
+                                    onClick={() => requestSort(attr)}
+                                    key={index} 
+                                    attribute={t(attr)}/>
+                            ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {items.map((item, index) => (
+                        {sortedItems.map((item, index) => (
                             isValidRowData(item, "items") && <TableRow key={item.id}>
                                 <TableCell sx={componentsStyles.tableCell}>
                                     <Checkbox 
