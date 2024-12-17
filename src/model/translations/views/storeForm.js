@@ -2,7 +2,7 @@ const storeForm = {
     en: {
         stores: "Stores",
         store_edit: "Store edit",
-        store_create: "Store creation",
+        store_create: "New store",
         updated_data: "Updated data",
         complete_mandatory_fields: "Complete mandatory fields",
         import_location_title: "Import location",
@@ -26,7 +26,7 @@ const storeForm = {
     es: {
         stores: "Depósitos",
         store_edit: "Edición de depósito",
-        store_create: "Creación de depósito",
+        store_create: "Nuevo depósito",
         updated_data: "Datos actualizados",
         complete_mandatory_fields: "Complete los campos obligatorios",
         import_location_title: "Importar ubicación",

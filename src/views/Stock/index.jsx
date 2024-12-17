@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Box, Button } from "@mui/material";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
-import { OPERATION_TYPES } from "../../model/constants";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import ProductDetails from "./productDetails";

@@ -15,13 +15,12 @@ import {
     Typography, 
     Box
 } from '@mui/material';
-import moment from "moment";
 import { ERROR_CODES } from "../../model/constants";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import useConfirm from "../../hooks/useConfirm";
 import MainView from "../../components/MainView";
-import SearchForm from "../../components/SearchForm";
+import { Search } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
 import { debug, latLng2GoogleMap, cropString } from "../../model/utils";
 import iconEmpty from "../../assets/icons/empty_folder.png";
@@ -125,18 +124,14 @@ const View = () => {
         console.log(query);
     };
 
-    const handleFilter = filters => {
-        console.log(filters);
-    };
-
     return(
         <MainView title={t('title')}>
-            <SearchForm 
-                fields={["dateFrom", "dateTo"]} 
-                onFiltersChange={handleFilter}
-                onQueryChange={handleSearch}/>
+            <Paper sx={componentsStyles.paper}>
+                <Search submit={handleSearch}/>
+            </Paper>
             {data.length > 0 ?
                 <Box sx={{mt:2}}>
+                    
                     <TableContainer component={Paper} sx={componentsStyles.paper}>
                         <Table size="small">
                             <TableHead>
@@ -149,8 +144,6 @@ const View = () => {
                                     <TableCell sx={componentsStyles.headerCell}>{t('name')}</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>{t('location')}</TableCell>
                                     <TableCell sx={componentsStyles.headerCell}>{t('comments')}</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>{t('created')}</TableCell>
-                                    <TableCell sx={componentsStyles.headerCell}>{t('modified')}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -163,25 +156,41 @@ const View = () => {
                                     </TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{store.name || t('noname')}</TableCell>
                                     <TableCell sx={{...componentsStyles.tableCell, textAlign:"center"}}>
-                                        <Link 
-                                            target="_blank"
-                                            rel="nooreferrer"
-                                            to={latLng2GoogleMap(store.lat, store.lng)}>
-                                                <FaExternalLinkAlt/>
-                                        </Link>
+                                        {store.lat && store.lng ? 
+                                            <Link 
+                                                target="_blank"
+                                                rel="nooreferrer"
+                                                to={latLng2GoogleMap(store.lat, store.lng)}>
+                                                    <FaExternalLinkAlt/>
+                                            </Link>
+                                            :
+                                            "-"
+                                        }
                                     </TableCell>
                                     <TableCell sx={componentsStyles.tableCell}>{cropString(store.comments || "-", 10)}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{moment(store.created).format("DD/MM/YYYY HH:mm")}</TableCell>
-                                    <TableCell sx={componentsStyles.tableCell}>{moment(store.modified).format("DD/MM/YYYY HH:mm")}</TableCell>
                                 </TableRow>
                             ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Paper sx={{...componentsStyles.paper, p:1, mt:2}}>
+                    <Paper sx={{...componentsStyles.paper, pl:2, pr:2, mt:2}}>
                         <Grid container sx={{mb:1}} direction={"column"}>
-                            <Typography sx={{fontWeight:"bold"}}>{t('actions')}</Typography>
-                            {selected.length===0 && <Typography sx={componentsStyles.hintText}>{t('selection')}</Typography>}
+                            <Grid item>
+                                <Typography sx={{fontWeight:"bold"}}>{t('actions')}</Typography>
+                                {selected.length===0 && 
+                                    <Typography sx={{...componentsStyles.hintText, mb:1}}>{t('selection')}</Typography>
+                                }
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    fullWidth
+                                    color="secondary"
+                                    variant="contained"
+                                    disabled={selected.length !== 1}
+                                    onClick={handleStock}>
+                                    {t('stock')}
+                                </Button>
+                            </Grid>
                         </Grid>
                         <Grid 
                             container 
@@ -190,6 +199,7 @@ const View = () => {
                             justifyContent="space-between">
                             <Grid item>
                                 <Button 
+                                    disabled={selected.length > 0}
                                     color="success"
                                     variant="contained"
                                     onClick={handleNew}>
@@ -202,15 +212,6 @@ const View = () => {
                                     disabled={selected.length !== 1}
                                     onClick={handleEdit}>
                                     {t('edit')}    
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    color="secondary"
-                                    variant="contained"
-                                    disabled={selected.length !== 1}
-                                    onClick={handleStock}>
-                                    {t('stock')}
                                 </Button>
                             </Grid>
                             <Grid item>

@@ -9,7 +9,6 @@ import {
     Button,
     Typography
 } from "@mui/material";
-import moment from "moment";
 import {
     Search,
     SuggesterInput,
@@ -26,7 +25,7 @@ import { options2Select } from "../../model/utils";
 import { useDatabase } from "../../context/Database";
 import { 
     FaFilter,
-    FaCalendarAlt,
+    //FaCalendarAlt,
     FaRegHandPointRight,
     FaRecycle,
     FaCalendarDay,
@@ -36,8 +35,8 @@ import i18next from "i18next";
 
 const defaultFilters = { // Filter values
     // Common
-    dateFrom: Date.now() - 1296000000,
-    dateTo: Date.now(),
+    //dateFrom: Date.now() - 1296000000,
+    //dateTo: Date.now(),
     // For stock
     categories: [],
     expirable: false,
@@ -49,8 +48,8 @@ const defaultFilters = { // Filter values
     storesIds: [],
 
     // States
-    dateFrom_active: false,
-    dateTo_active: false,
+    //dateFrom_active: false,
+    //dateTo_active: false,
     categories_active: false,
     expirable_active: false,
     returnable_active: false,
@@ -99,8 +98,8 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
         const {name, value} = e.target;
         setFilters({
             ...filters,
-            [name]: name === "dateFrom" || name === "dateTo" ? moment(value, "YYYY-MM-DD").unix()*1000 : value,
             [name+"_active"]: true
+            //[name]: name === "dateFrom" || name === "dateTo" ? moment(value, "YYYY-MM-DD").unix()*1000 : value,
         });
     };
 
@@ -231,7 +230,7 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     rIcon={true}/>
                             </Grid>
                         }
-                        {fields.includes("storesIds") && 
+                        {fields.includes("types") && 
                             <Grid item xs={12}>
                                 <SuggesterInput 
                                     multiple
@@ -245,7 +244,8 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     rIcon={true}/>
                             </Grid>
                         }
-                        {fields.includes("dateFrom") &&
+
+                        {/*fields.includes("dateFrom") &&
                             <Grid item xs={12}>
                                 <Input 
                                     type="date"
@@ -256,8 +256,8 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     icon={<FaCalendarAlt color={filters.dateFrom_active ? "green":"gray"} size={20} />}
                                     rIcon={true}/>
                             </Grid>
-                        }
-                        {fields.includes("dateTo") && 
+                        /*}
+                        {/*fields.includes("dateTo") && 
                             <Grid item xs={12}>
                                 <Input 
                                     type="date"
@@ -268,7 +268,8 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                                     icon={<FaCalendarAlt color={filters.dateTo_active ? "green":"gray"} size={20} />}
                                     rIcon={true}/>
                             </Grid>
-                        }
+                        */}
+                        
                     </Grid>
                     <Grid 
                         sx={{mt:1}}
@@ -276,24 +277,28 @@ const SearchForm = ({fields, onFiltersChange, onQueryChange, sx}) => {
                         direction={"row"}
                         spacing={2} 
                         justifyContent="space-around">
-                        <Grid item>
-                            <Button 
-                                size="small"
-                                variant="contained" 
-                                color="error"
-                                onClick={handleFiltersReset}>
-                                    {t('clear')}
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                size="small"
-                                variant="contained"
-                                color="primary"
-                                onClick={handleFiltersApply}>
-                                {t('apply')}
-                            </Button>
-                        </Grid>
+                        {fields.includes("storesIds") && 
+                            <Grid item>
+                                <Button 
+                                    size="small"
+                                    variant="contained" 
+                                    color="error"
+                                    onClick={handleFiltersReset}>
+                                        {t('clear')}
+                                </Button>
+                            </Grid>
+                        }
+                        {fields.includes("storesIds") && 
+                            <Grid item>
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleFiltersApply}>
+                                        {t('apply')}
+                                    </Button>
+                            </Grid>
+                        }
                     </Grid>
                 </AccordionDetails>
             </Accordion>

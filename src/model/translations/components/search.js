@@ -1,7 +1,7 @@
 const search = {
     en: {
         text: "Search",
-        filter: "Filter",
+        filter: "Filters",
         dateFrom: "Date from",
         dateTo: "Date to",
         clear: "Clear",
@@ -21,7 +21,7 @@ const search = {
     },
     es: {
         text: "Buscar",
-        filter: "Filtrar",
+        filter: "Filtros",
         dateFrom: "Fecha desde",
         dateTo: "Fecha hasta",
         clear: "Limpiar",

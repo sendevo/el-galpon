@@ -25,8 +25,6 @@ import { componentsStyles } from "../../themes";
 import { FaInfoCircle } from "react-icons/fa";
 
 
-const validateForm = formData => Boolean(formData.name && formData.lat && formData.lng);
-
 const getLatLong = locationInput => { // Get latitude and longitude from location input
     const result = googleMap2LatLng(locationInput) || dms2LatLng(locationInput);
     if(result){ // Google map url link
@@ -84,7 +82,7 @@ const View = () => {
     }, []);
 
     const handleSubmit = () => {
-        if(validateForm(formData)){
+        if(Boolean(formData.name)){ // Mandatory field
             debug(formData);
             db.insert("stores",formData)
                 .then(id => {
@@ -191,7 +189,7 @@ const View = () => {
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
                                 <Input 
-                                    label={t("latitude")+"*"}
+                                    label={t("latitude")}
                                     name="lat"
                                     type="number"
                                     value={formData.lat || ""}
@@ -200,7 +198,7 @@ const View = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Input 
-                                    label={t("longitude")+"*"}
+                                    label={t("longitude")}
                                     name="lng"
                                     type="number"
                                     value={formData.lng || ""}

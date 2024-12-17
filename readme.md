@@ -317,11 +317,11 @@ En menu ppal
 [x] Sacar sombra a las letras de EL GALPON
 
 Vista de depositos
-[ ] Quitar campos de creado y modificado
-[ ] Cambiar "insumos" por "stock"
-[ ] Ajustar codigo de colores. Para boton stock usar negro
-[ ] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo
-[ ] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado
+[x] Quitar campos de creado y modificado
+[x] Cambiar "insumos" por "stock"
+[x] Ajustar codigo de colores. Para boton stock usar negro
+[x] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo
+[x] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado
 
 Vista de productos
 [ ] Ordenar alfabeticamente por defecto
@@ -340,12 +340,12 @@ Vista de devoluciones
 
 Componente de filtrado
 [ ] Revisar selector de categoria
-[ ] Quitar campos fecha de - hasta
+[x] Quitar campos fecha de - hasta
 [ ] Aplicar filtrados para la tabla
 
 Vista de formulario de deposito
-[ ] Cambiar creacion por "nuevo deposito"
-[ ] La geolocalizacion no debe ser obligatoria
+[x] Cambiar creacion por "nuevo deposito"
+[x] La geolocalizacion no debe ser obligatoria
 
 Formulario de compra/movimiento/devolucion
 [ ] Indicar fecha de vencimiento
