@@ -310,53 +310,53 @@ La rama ```main``` contiene la versión de producción. Los cambios se realizan 
 
 ## versión 1.0.0 (alpha)  
 
-En menu ppal
-[x] Letra de los botones en minuscula
-[x] Botones más anchos para ocupar una sola linea
-[x] Reemplazar Devoluciones por Devolver envases vacíos
-[x] Sacar sombra a las letras de EL GALPON
+En menu ppal  
+[x] Letra de los botones en minuscula  
+[x] Botones más anchos para ocupar una sola linea  
+[x] Reemplazar Devoluciones por Devolver envases vacíos  
+[x] Sacar sombra a las letras de EL GALPON  
 
-Vista de depositos
-[x] Quitar campos de creado y modificado
-[x] Cambiar "insumos" por "stock"
-[x] Ajustar codigo de colores. Para boton stock usar negro
-[x] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo
-[x] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado
+Vista de depositos  
+[x] Quitar campos de creado y modificado  
+[x] Cambiar "insumos" por "stock"  
+[x] Ajustar codigo de colores. Para boton stock usar negro  
+[x] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo  
+[x] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado  
 
-Vista de productos
-[ ] Ordenar alfabeticamente por defecto
+Vista de productos  
+[ ] Ordenar alfabeticamente por defecto  
 [ ] Formato de presentaciones  
 
-Vista de stock
-[x] Ordenar alfabeticamente por defecto
-[x] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"
+Vista de stock  
+[x] Ordenar alfabeticamente por defecto  
+[x] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"  
 [ ] Corregir seleccion de items (se selecciona uno diferente al clickeado).  
-[ ] Formato de presentaciones
-[ ] Reemplazar "stock seleccionado" por "productos seleccionados"
-[ ] Eliminar columna de envases vacios
-[ ] Corregir botones de accion
+[ ] Formato de presentaciones  
+[ ] Reemplazar "stock seleccionado" por "productos seleccionados"  
+[ ] Eliminar columna de envases vacios  
+[ ] Corregir botones de accion  
 
-Vista de devoluciones
-[ ] Ordenar alfabeticamente por defecto
-[ ] Quitar "Comprar insumos"
-[ ] Eliminar columna de datos de vencimiento
-[ ] Eliminar columna de stock
-[ ] Corregir botones de accion
+Vista de devoluciones  
+[ ] Ordenar alfabeticamente por defecto  
+[ ] Quitar "Comprar insumos"  
+[ ] Eliminar columna de datos de vencimiento  
+[ ] Eliminar columna de stock  
+[ ] Corregir botones de accion  
 
-Componente de filtrado
-[ ] Selector de categoria tapa el teclado
-[x] Quitar campos fecha de - hasta
-[ ] Aplicar filtrados para las tablas
+Componente de filtrado  
+[ ] Selector de categoria tapa el teclado  
+[x] Quitar campos fecha de - hasta  
+[ ] Aplicar filtrados para las tablas  
 
-Vista de formulario de productos
+Vista de formulario de productos  
 [ ] Formato y cálculo de presentaciones.  
 
-Vista de formulario de deposito
-[x] Cambiar creacion por "nuevo deposito"
-[x] La geolocalizacion no debe ser obligatoria
+Vista de formulario de deposito  
+[x] Cambiar creacion por "nuevo deposito"  
+[x] La geolocalizacion no debe ser obligatoria  
 
-Formulario de compra/movimiento/devolucion
-[ ] Indicar fecha de vencimiento
-[ ] Campos para configurar alarma de stock bajo
-[ ] Adaptar campos segun la operacion
-[ ] Registrar operacion en la DB
+Formulario de compra/movimiento/devolucion  
+[ ] Indicar fecha de vencimiento  
+[ ] Campos para configurar alarma de stock bajo  
+[ ] Adaptar campos segun la operacion  
+[ ] Registrar operacion en la DB  

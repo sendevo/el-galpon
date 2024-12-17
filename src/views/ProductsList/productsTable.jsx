@@ -22,7 +22,7 @@ const ProductsTable = ({products, setProducts}) => {
     const { t } = useTranslation('productsList');
 
     const attributes = ["name", "presentations", "expirable", "returnable", "brand", "sku", "comments", "categories"];
-    const sortableFields = ["name", "expirable", "returnable", "brand", "sku", "categories"];
+    const sortableFields = ["name", "brand", "sku", "categories"];
 
     const selected = products.filter(p => p.selected);
 
@@ -52,6 +52,7 @@ const ProductsTable = ({products, setProducts}) => {
     };
 
     const requestSort = (key) => {
+        if(!sortableFields.includes(key)) return;
         const direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
         setSortConfig({ key, direction });
     };
