@@ -14,7 +14,7 @@ import error from "./views/error";
 import productsList from "./views/productsList";
 
 import search from "./components/search";
-import operationsBlock from "./components/operationsBlock";
+
 
 
 // import { useTranslation } from 'react-i18next';
@@ -41,7 +41,6 @@ const dictionaries = {
 
     // Components
     search,
-    operationsBlock,
     productBlock
 };
 

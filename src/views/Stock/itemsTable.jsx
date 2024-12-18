@@ -65,7 +65,15 @@ const ItemsTable = ({items, setItems, columns}) => {
         }
     }
 
-    const sortedItems = [...items].sort((a, b) => 
+    // stock and empty_packs columns are not shown simultaneously, so filter null data
+    // For the case of empty_packs, it is not necessary because its done in the DB query
+    const filteredItems = items.filter(it => {
+        if(columns.includes("stock")) return it.stock > 0;
+        //if(columns.includes("empty_packs")) return it.empty_packs > 0;
+        return true;
+    });
+
+    const sortedItems = [...filteredItems].sort((a, b) => 
         sortConfig.direction === "asc" ? 
             sortingFunction(a, b) : sortingFunction(b, a));
 

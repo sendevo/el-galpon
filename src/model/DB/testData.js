@@ -389,8 +389,17 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Dicamba"),
         store_id: getId(stores, "Galpón"),
-        stock: 400,
+        stock: 0,
         empty_packs: 5,
+        presentation_index: 0,
+        expiration_date: getDate()
+    },
+    {
+        id: generateId(),
+        product_id: getId(products, "Dicamba"),
+        store_id: getId(stores, "Agronomia"),
+        stock: 400,
+        empty_packs: 0,
         presentation_index: 0,
         expiration_date: getDate()
     },

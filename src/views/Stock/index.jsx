@@ -1,24 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Box, Button } from "@mui/material";
+import { Box, Button, Paper, Grid } from "@mui/material";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
+import EmptyList from "../../components/EmptyList";
 import ProductDetails from "./productDetails";
 import StoreDetails from "./storeDetails";
 import ItemsTable from "./itemsTable";
-import OperationsBlock from "./operationsBlock";
-import EmptyList from "../../components/EmptyList";
+import { componentsStyles } from "../../themes";
 
-
-const buyButtonStyle = {
-    marginTop: "20px",
-    display:"flex", 
-    alignItems:"center", 
-    justifyContent:"center"
-};
 
 const View = () => {
     const db = useDatabase();   
@@ -62,12 +55,6 @@ const View = () => {
         if(index > -1) tableColumns[index] = "empty_packs";
     }
 
-    // TODO: TEMP
-    const enabledOperations = ["BUY", "BUY_OTHER", "MOVE_STOCK", "RETURN_PACKS", "MOVE_PACKS", "SPEND"].reduce((acc, op) => {
-        acc[op] = true;
-        return acc;
-    }, {});
-
     useEffect(() => {
         db.query("items", [], searchParams.toString())
             .then(iData => {
@@ -79,18 +66,21 @@ const View = () => {
     }, []);
 
     const handleOperation = operationType => {// Redirect to operation form 
+
+        console.log(operationType);
+        console.log(selectedItems);
+        return;
+
         if(operationType === "BUY_OTHER"){ // No product selected
             navigate("/products-list"); // Go to product list
         }else{ // Go to operation form
-            if(enabledOperations[operationType]){
-                const products = selectedItems.map(it => it.product_id);
-                const urlProductList = products.length > 0 ? `&products=${products.join("_")}` : "";
-                const urlItemList = (selectedItems.length > 0 && operationType !=="BUY") ? `&items=${selectedItems.map(it => it.id).join("_")}` : "";
-                navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
-            } else {
-                toast(t('operationError'), "error");
-                console.error("Operation not allowed:", operationType);
-            }
+            const productList = selectedItems.map(it => it.product_id).join("_");
+            const urlProductList = products.length > 0 ? `&products=${productList}` : "";
+            
+            const itemList = selectedItems.map(it => it.id).join("_");
+            const urlItemList = (selectedItems.length > 0 && operationType !=="BUY") ? `&items=${itemList}` : "";
+            
+            navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
         }
     };
 
@@ -107,7 +97,7 @@ const View = () => {
     };
 
     return (
-        <MainView title={t("stock")}>
+        <MainView title={emptyPacksView ? t("returns") : t("stock")}>
             <SearchForm 
                 sx={{mb:2}}
                 fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
@@ -135,15 +125,72 @@ const View = () => {
                 <EmptyList message={t("emptyList")}/>
             }
             
-            { enabledOperations.BUY_OTHER &&
-                <Box style={buyButtonStyle}>
-                    <Button 
-                        color="success"
-                        variant="contained"
-                        onClick={()=>handleOperation("BUY_OTHER")}>
-                        {t('buy')}
-                    </Button>
-                </Box>
+            {emptyPacksView ? 
+                selectedItems.length > 0 &&
+                    <Paper sx={{...componentsStyles.paper, mt:2}}>
+                        <Box sx={{p:1}}>
+                            <Button 
+                                size="small"
+                                fullWidth
+                                color="red"
+                                variant="contained"
+                                onClick={()=>handleOperation("RETURN")}>
+                                {t('return')}
+                            </Button>
+                        </Box>
+                    </Paper>
+                :
+                <Paper sx={{...componentsStyles.paper, mt:2}}>
+                    { selectedItems.length > 0 && 
+                        <Grid container direction="row" justifyContent="space-around">
+                            
+                            <Grid item>
+                                <Button
+                                    size="small"
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={()=>handleOperation("BUY")}>
+                                    {t('buy')}
+                                </Button>
+                            </Grid>
+                            
+                            <Grid item>
+                                <Button
+                                    size="small"
+                                    disabled={selectedItems.every(it => it.stock <= 0)}
+                                    color="secondary"
+                                    variant="contained"
+                                    onClick={()=>handleOperation("MOVE")}>
+                                    {t('move')}
+                                </Button>
+                            </Grid>
+                            
+                            <Grid item>
+                                <Button
+                                    size="small"
+                                    disabled={selectedItems.every(it => it.stock <= 0)}
+                                    color="red"
+                                    variant="contained"
+                                    onClick={()=>handleOperation("SPEND")}>
+                                    {t('spend')}
+                                </Button>
+                            </Grid>
+                            
+                        </Grid>
+                    }
+                    { selectedItems.length === 0 && !emptyPacksView &&
+                        <Box sx={{p:1}}>
+                            <Button 
+                                size="small"
+                                fullWidth
+                                color="success"
+                                variant="contained"
+                                onClick={()=>handleOperation("BUY_OTHER")}>
+                                {t('buy_other')}
+                            </Button>
+                        </Box>
+                    }
+                </Paper>
             }
             
         </MainView>
