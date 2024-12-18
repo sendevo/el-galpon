@@ -12,13 +12,9 @@ import {
 import { UNITS } from "../../model/constants";
 import { capitalize } from "../../model/utils";
 
-const PresentationInput = ({
-    editable,
-    packSize,
-    packUnit,
-    onChange
-}) => {
+const PresentationInput = ({editable, presentation, onChange}) => {
     
+    const { pack_size, unit, bulk } = presentation;
     const { t } = useTranslation("productForm");
 
     const packUnitOptions = Object
@@ -28,13 +24,12 @@ const PresentationInput = ({
                                 value: key
                             }));
 
-    const handleInputChange = event => {
-        let {name, value} = event.target;
-        if(name === "bulk"){
-            name = "packSize";
-            value = value ? -1:1;
-        }
-        onChange({target:{name, value}});
+    const handlePresentationChange = event => {
+        const { name, value } = event.target;
+        onChange(
+            {...presentation, 
+                [name]: value
+            });
     };
 
     return(
@@ -44,25 +39,26 @@ const PresentationInput = ({
                 container 
                 direction={"row"} 
                 spacing={1}>
-                {packSize !== -1 && <Grid item xs={6}>
+                {!Boolean(bulk) && 
+                    <Grid item xs={6}>
                         <Input 
                             disabled={!editable}
                             label={t("size")+"*"}
-                            name={"packSize"}
+                            name={"pack_size"}
                             type="number"
-                            value={packSize || ""}
-                            error={packSize === ""}
-                            onChange={handleInputChange}/>
+                            value={pack_size || ""}
+                            error={pack_size === ""}
+                            onChange={handlePresentationChange}/>
                     </Grid>}
-                <Grid item xs={packSize !== -1 ? 6:12}>
+                <Grid item xs={!Boolean(bulk) ? 6:12}>
                     <Select
                         disabled={!editable}
                         label={t("unit_label")+"*"}
-                        name={"packUnit"}
-                        value={packUnit || ""}
-                        error={packUnit === ""}
+                        name={"unit"}
+                        value={unit || ""}
+                        error={unit === ""}
                         options={packUnitOptions}
-                        onChange={handleInputChange}/>
+                        onChange={handlePresentationChange}/>
                 </Grid>
             </Grid>
 
@@ -73,8 +69,8 @@ const PresentationInput = ({
                     labelTrue={capitalize(t("bulk"))}
                     labelFalse={capitalize(t("pack_label"))}
                     name="bulk"
-                    value={packSize === -1}
-                    onChange={handleInputChange}/>
+                    value={Boolean(bulk)}
+                    onChange={handlePresentationChange}/>
             </Grid>
         </Grid>
     );

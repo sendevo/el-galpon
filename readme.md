@@ -165,7 +165,7 @@ Los productos no se pueden eliminar si hay stock asociado.
         {
             unit: "liter", // Keyword
             bulk: false, // Si se vende a granel
-            pack_size: 20 || null // Tamanio de envase (si aplica)
+            pack_size: 20 || null // Tamanio de envase. Null si bulk===true
         }
     ]
     expirable: false,
@@ -324,8 +324,11 @@ Vista de depositos
 [x] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado  
 
 Vista de productos  
-[ ] Ordenar alfabeticamente por defecto  
-[ ] Formato de presentaciones  
+[x] Ordenar alfabeticamente por defecto  
+[x] Formato de presentaciones  
+
+Vista de formulario de productos  
+[ ] Formato y cálculo de presentaciones.  
 
 Vista de stock  
 [x] Ordenar alfabeticamente por defecto  
@@ -343,13 +346,10 @@ Vista de devoluciones
 [ ] Eliminar columna de stock  
 [ ] Corregir botones de accion  
 
-Componente de filtrado  
+Filtrado de tablas
 [ ] Selector de categoria tapa el teclado  
 [x] Quitar campos fecha de - hasta  
 [ ] Aplicar filtrados para las tablas  
-
-Vista de formulario de productos  
-[ ] Formato y cálculo de presentaciones.  
 
 Vista de formulario de deposito  
 [x] Cambiar creacion por "nuevo deposito"  

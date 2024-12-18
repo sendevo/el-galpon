@@ -27,24 +27,22 @@ import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
 // Required fields: name, presentations
 const validateForm = productData => {
     const missingFields = [];
+    // Name required
     if(!productData.name) missingFields.push("name");
-    if(productData.presentations.some(s => !s) || productData.presentations.length === 0) missingFields.push("presentations");
+    // At least one presentation required
+    if(productData.presentations.length === 0) missingFields.push("presentations");
+    // Validate presentations values
+    productData.presentations.forEach(presentation => {
+        // Unit is always required
+        if(!presentation.unit) missingFields.push("presentations");
+        // If not bulk, pack_size is required
+        if(!presentation.bulk)
+            if(!presentation.pack_size) missingFields.push("presentations");
+        
+    });
     return missingFields;
 };
 
-const removeButtonStyle = {
-    container: {
-        display: "flex",
-        justifyContent: "center"
-    },
-    button: {
-        minWidth: "30px",
-        minHeight: "30px",
-        padding: "0px",
-        bottom: "4px",
-        borderRadius: "50%"
-    }
-};
 
 const View = () => {
 
@@ -78,7 +76,7 @@ const View = () => {
                         setInmutablePresentation(product.presentations.length);
                         setProductData(product);
                     }else{
-                        debug("Error when queryin data: more than one product", "error");
+                        debug("Error in query data: more than one product", "error");
                     }
                 })
                 .catch(console.error);
@@ -86,9 +84,15 @@ const View = () => {
     }, []);
 
     const handleAddPresentation = () => {
-        setProductData({
-            ...productData,
-            presentations: [...presentations, undefined]
+        setProductData(prevProductData =>{
+            return {
+                ...prevProductData,
+                presentations: [...prevProductData.presentations, {
+                    pack_size: undefined,
+                    unit: undefined,
+                    bulk: undefined
+                }]
+            }  
         });
     };
 
@@ -108,23 +112,13 @@ const View = () => {
         });
     };
 
-    const handlePresentationChange = (event, index) => {
-        const newProductData = productData;
-        const {name, value} = event.target;
-
-        if(name === "packSize") {
-            newProductData.presentations[index].pack_size = value;
-        }
-
-        if(name === "packUnit") {
-            newProductData.presentations[index].unit = value;
-        }
-
-        setProductData(currentState => ({
-            ...currentState,
-            ...newProductData
-        }));
-    }
+    const handlePresentationChange = (presentation, index) => {
+        const newPresentations = productData.presentations.map((p, i) => i === index ? presentation : p);
+        setProductData({
+            ...productData,
+            presentations: newPresentations
+        });
+    };
 
     const handleInputChange = event => {
         let {name, value} = event.target;
@@ -149,6 +143,7 @@ const View = () => {
             })
             return;
         }
+
         db.insert("products", productData)
             .then(()=>{
                 if(productData.id){ // Editing
@@ -191,10 +186,9 @@ const View = () => {
                                     <Grid container alignItems={"flex-start"}>
                                         <Grid item xs>
                                             <PresentationInput 
-                                                editable={index >= inmutablePresentation || viewTitle === "creation_title"}
-                                                packSize={productData.presentations[index].pack_size}
-                                                packUnit={productData.presentations[index].unit}
-                                                onChange={e => handlePresentationChange(e, index)}/>
+                                                editable={index >= inmutablePresentation || !Boolean(productData.id)}
+                                                presentation={productData.presentations[index]}
+                                                onChange={presentation => handlePresentationChange(presentation, index)}/>
                                         </Grid>
                                         <Grid item>
                                             <IconButton 

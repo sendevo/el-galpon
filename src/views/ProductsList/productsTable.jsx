@@ -57,15 +57,30 @@ const ProductsTable = ({products, setProducts}) => {
         setSortConfig({ key, direction });
     };
 
+    
     const sortingFunction = (a, b) => {
-        switch(sortConfig.key){
+        let cond = false;
+        switch(sortConfig.key) {
             case "name":
-                return a.name.localeCompare(b.name);
-            
+                cond = a.name > b.name;
+                break;
+            case "brand":
+                cond = a.brand > b.brand;
+                break;
+            case "sku":
+                cond = a.sku > b.sku;
+                break;
+            case "categories":
+                const aCat = a.categories?.join(", ");
+                const bCat = b.categories?.join(", ");
+                cond = aCat > bCat;
+                break;
             default:
                 return 0;
-        }
-    }
+        };
+        return cond ? 1 : -1;
+    };
+    
 
     const sortedProducts = [...products].sort((a, b) => 
         sortConfig.direction === "asc" ? 
@@ -105,7 +120,7 @@ const ProductsTable = ({products, setProducts}) => {
                         <TableCell sx={componentsStyles.tableCell}>{product.brand || "-"}</TableCell>
                         <TableCell sx={componentsStyles.tableCell}>{product.sku || ""}</TableCell>
                         <TableCell sx={componentsStyles.tableCell}>{cropString(product.comments || "-", 10)}</TableCell>
-                        <TableCell sx={componentsStyles.tableCell}>{product.categories?.join(', ') || "-"}</TableCell>
+                        <TableCell sx={componentsStyles.tableCell}>{product.categories?.join(",") || "-"}</TableCell>
                     </TableRow>
                 ))}
                 </TableBody>
