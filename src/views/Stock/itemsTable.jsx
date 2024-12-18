@@ -101,7 +101,7 @@ const ItemsTable = ({items, setItems, columns}) => {
                                     {columns.includes("product_id") && <TableCell sx={componentsStyles.tableCell}>{item.productData.name || "S/D"}</TableCell>}
                                     {columns.includes("store_id") && <TableCell sx={componentsStyles.tableCell}>{item.storeData.name || "S/D"}</TableCell>}
                                     {columns.includes("stock") && <TableCell sx={componentsStyles.tableCell}>{item.stock ? getStock(item) : ""}</TableCell>}
-                                    {columns.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : ""}</TableCell>}
+                                    {columns.includes("empty_packs") && <TableCell sx={componentsStyles.tableCell}>{item.empty_packs ? item.empty_packs : "0"}</TableCell>}
                                     {columns.includes("expiration_date") && <TableCell sx={componentsStyles.tableCell}>{item.productData?.expirable ? moment(item.expiration_date).format("DD/MM/YYYY") : "-"}</TableCell>}
                                 </TableRow>
                         ))}

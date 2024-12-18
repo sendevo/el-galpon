@@ -328,7 +328,7 @@ Vista de productos
 [x] Formato de presentaciones  
 
 Vista de formulario de productos  
-[ ] Formato y cálculo de presentaciones.  
+[x] Formato y cálculo de presentaciones.  
 
 Vista de stock  
 [x] Ordenar alfabeticamente por defecto  
@@ -340,7 +340,7 @@ Vista de stock
 [ ] Corregir botones de accion  
 
 Vista de devoluciones  
-[ ] Ordenar alfabeticamente por defecto  
+[x] Ordenar alfabeticamente por defecto  
 [ ] Quitar "Comprar insumos"  
 [ ] Eliminar columna de datos de vencimiento  
 [ ] Eliminar columna de stock  

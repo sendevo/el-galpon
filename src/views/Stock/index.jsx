@@ -20,8 +20,6 @@ const buyButtonStyle = {
     justifyContent:"center"
 };
 
-//const itemAttrs = ["id", "store_id", "product_id", "stock", "empty_packs", "expiration_date"];
-
 const View = () => {
     const db = useDatabase();   
     const navigate = useNavigate();
@@ -33,7 +31,38 @@ const View = () => {
     const [items, setItems] = useState([]);
     const selectedItems = items.filter(it => it.selected);
 
-    // TEMP
+    // Default table columns. Some are removed depending of following conditions
+    const tableColumns = ["product_id", "store_id", "stock", "expiration_date"];
+
+    // Check if all items have same store_id
+    const sameStore = items.length > 0 && items.every(it => it.store_id === items[0].store_id);
+    // If same store, remove store_id column
+    if(sameStore){
+        const index = tableColumns.indexOf("store_id");
+        if(index > -1) tableColumns.splice(index, 1);
+    }
+
+    // Check if all items have same product_id
+    let sameProduct = items.length > 0 && items.every(it => it.product_id === items[0].product_id);
+    // If the store has a unique product, do not show productDetails card 
+    if(sameStore && sameProduct) 
+        sameProduct = false; 
+    // If same product, remove product_id column
+    if(sameProduct){
+        const index = tableColumns.indexOf("product_id");
+        if(index > -1) tableColumns.splice(index, 1);
+    }
+
+    // Check if query string is empty_packs:gt:0 (used when coming from returns menu)
+    const decodedSearchParams = decodeURIComponent(searchParams.toString());
+    const emptyPacksView = decodedSearchParams === "empty_packs:gt:0=";
+    // If the table needs to show empty packs only, then remove stock column, and add the empty_packs column instead
+    if(emptyPacksView){
+        const index = tableColumns.indexOf("stock");
+        if(index > -1) tableColumns[index] = "empty_packs";
+    }
+
+    // TODO: TEMP
     const enabledOperations = ["BUY", "BUY_OTHER", "MOVE_STOCK", "RETURN_PACKS", "MOVE_PACKS", "SPEND"].reduce((acc, op) => {
         acc[op] = true;
         return acc;
@@ -79,20 +108,21 @@ const View = () => {
 
     return (
         <MainView title={t("stock")}>
-            {false && <ProductDetails productData={items[0]?.productData}/>}
-            {false && <StoreDetails storeData={items[0]?.storeData}/>}
+            <SearchForm 
+                sx={{mb:2}}
+                fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
+                onFiltersChange={handleFilter}
+                onQueryChange={handleSearch}/>
+
+            {sameStore && <StoreDetails storeData={items[0]?.storeData}/>}
+            {sameProduct && <ProductDetails productData={items[0]?.productData}/>}
+            
             {items.length > 0 ? 
                 <Box>
-                    <SearchForm 
-                        sx={{mb:2}}
-                        fields={["categories", "expirable", "returnable", "dateFrom", "dateTo", "brand"]} 
-                        onFiltersChange={handleFilter}
-                        onQueryChange={handleSearch}/>
-
                     <ItemsTable 
                         items={items} 
                         setItems={setItems}
-                        columns={["product_id", "store_id", "stock", "empty_packs", "expiration_date"]}/>
+                        columns={tableColumns}/>
 
                     {/*
                     <OperationsBlock
