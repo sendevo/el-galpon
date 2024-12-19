@@ -6,17 +6,18 @@ import { trimString } from "../../model/utils";
 import amountIcon from "../../assets/icons/productos.png";
 import storeIcon from "../../assets/icons/barn.png"; 
 
-const prodNameTrim = 30;
+const prodNameTrim = 30; // Maximum length of product name to display
 const getStoreData = (stores, storeId) => stores.find(s => s.id === storeId);
 
 // The following function computes size, unit and amount to generate strings for the presentation
-const getPresentationData = (product, presentationIndex, translatingFc) => {
-    const blk = product.presentations[presentationIndex].bulk;
-    const packSize = blk ? "" : product.presentations[presentationIndex].pack_size;
+const getPresentationData = (product, presentation_index, translatingFc) => {
+
+    const blk = product.presentations[presentation_index].bulk;
+    const packSize = blk ? "" : product.presentations[presentation_index].pack_size;
     const unitSuffix = blk ? `(${translatingFc("bulk")})` : "";
-    const unit = translatingFc(product.presentations[presentationIndex].unit) + " " + unitSuffix;
-    const amount = (blk ? product.amount : product.amount * product.presentations[presentationIndex].pack_size);
-    const totalAmount = amount + " " + translatingFc(product.presentations[presentationIndex].unit) + " " + unitSuffix;
+    const unit = translatingFc(product.presentations[presentation_index].unit) + " " + unitSuffix;
+    const amount = (blk ? product.amount : product.amount * product.presentations[presentation_index].pack_size);
+    const totalAmount = amount + " " + translatingFc(product.presentations[presentation_index].unit) + " " + unitSuffix;
     return {
         packSize,
         unit,
@@ -24,15 +25,17 @@ const getPresentationData = (product, presentationIndex, translatingFc) => {
     };
 };
 
-const ProductBlock = ({
+const ProductBlock = props => {
+
+    const {
         product, 
         stores, 
-        storeSelectionError,
-        hideStoreInput,
+        showStoreTo,
+        //storeSelectionError,
         onPropChange
-    }) => {
+    } = props;
 
-    const { t } = useTranslation("productBlock");
+    const { t } = useTranslation("operations");
 
     // Get list of presentations for the select input
     const presentations = product.presentations.map((_, index) => {
@@ -43,7 +46,7 @@ const ProductBlock = ({
         }
     });
     // Total amount is displayed at the bottom of the product block
-    const { totalAmount } = getPresentationData(product, product.presentationIndex, t);
+    const { totalAmount } = getPresentationData(product, product.presentation_index, t);
 
     return (
         <Paper sx={{...componentsStyles.paper, mt:1}}>
@@ -53,37 +56,33 @@ const ProductBlock = ({
                 direction={"column"} 
                 spacing={1}>
                 <Grid item xs={12}>
-                    <Typography lineHeight={"2em"} paddingBottom={"5px"}><b>{t("product") + ": "}</b>{trimString(product.name, prodNameTrim)}</Typography>
+                    <Typography sx={{lineHeight:"1em", pt:1}}><b>{t("product") + ": "}</b>{trimString(product.name, prodNameTrim)}</Typography>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <Typography>{t("presentation") + ": " + product.category}</Typography>
-                </Grid>
+                {presentations.length > 1 ? 
+                    <Grid item xs={12}>
+                        <Select
+                            icon={amountIcon}
+                            label={t("presentation") + "*"}
+                            value={product.presentation_index}
+                            options={presentations}
+                            onChange={e => onPropChange("presentation_index", e.target.value)}/>
+                    </Grid>
+                    :
+                    <Grid item xs={12}>
+                        <Typography sx={{lineHeight:"1em", pb:1}}><b>{t("presentation") + ": "}</b> {presentations[product.presentation_index].label}</Typography>
+                    </Grid>
+                }
 
                 <Grid item xs={12}>
                     <Input 
                         icon={amountIcon}
-                        label={t("quantity") + " (" + t(product.presentations[product.presentationIndex].unit) + ")"}
-                        /*label={
--                            ( t("quantity") +
--                            ` (${product.presentations[product.presentationIndex].pack_size === -1 ? "" : ("×"+t(product.presentations[product.presentationIndex].pack_size))}${t(product.presentations[product.presentationIndex].unit)}) *`)
--                        }*/
+                        label={t("quantity") + " (" + t(product.presentations[product.presentation_index].unit) + ")"}
                         type="number"
                         value={product.amount > 0 ? product.amount : ""}
                         error={product.amount == ""}
                         onChange={e => onPropChange("amount", e.target.value)}/>
                 </Grid>
-
-                {presentations.length > 1 && 
-                    <Grid item xs={12}>
-                        <Select
-                            icon={amountIcon}
-                            label={t("presentation") + "*"}
-                            value={product.presentationIndex}
-                            options={presentations}
-                            onChange={e => onPropChange("presentationIndex", e.target.value)}/>
-                    </Grid>
-                }
                 
                 {Boolean(product.amount) && 
                     <>
@@ -96,7 +95,7 @@ const ProductBlock = ({
                     </>
                 }
 
-                {!hideStoreInput && 
+                {showStoreTo && 
                     <Grid item xs={12}>
                         <Select
                             icon={storeIcon}
@@ -108,14 +107,14 @@ const ProductBlock = ({
                     </Grid>
                 }
                 
-                { product.currentStoreId &&
+                { product.fromStoreId &&
                     <Grid item xs={12}>
                         <Typography sx={{
                                 ...componentsStyles.hintText, 
                                 textAlign:"right", 
-                                color: storeSelectionError ? "#d32f2f" : "rgb(100,100,100)"
+                                //color: storeSelectionError ? "#d32f2f" : "rgb(100,100,100)"
                             }}>
-                            {t("current_location")}: {getStoreData(stores,product.currentStoreId).name}
+                            {t("current_location")}: {getStoreData(stores,product.fromStoreId).name}
                         </Typography>
                     </Grid>
                 }

@@ -3,7 +3,7 @@ import { UNITS_ABBRS } from "../../constants";
 const itemList = {
     en: {
         emptyPacks: "Empty packs",
-        selected: "Selected items",
+        selected: "Selected products",
         buy: "Buy",
         spend: "Spend",
         move: "Move",
@@ -31,11 +31,12 @@ const itemList = {
         created: "Created",
         modified: "Modified",
         viewMap: "View on Google Maps",
+        operationURLError: "Error redirecting to operation",
         ...UNITS_ABBRS.en
     },
     es: {
         emptyPacks: "Envases vacíos",
-        selected: "Items seleccionados",
+        selected: "Productos seleccionados",
         buy: "Comprar",
         spend: "Usar",
         move: "Mover",
@@ -63,6 +64,7 @@ const itemList = {
         created: "Creado",
         modified: "Modificado",
         viewMap: "Ver en Google Maps",
+        operationURLError: "Error al redirigir a la operación",
         ...UNITS_ABBRS.es
     }
 };

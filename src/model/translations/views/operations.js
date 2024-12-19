@@ -8,7 +8,6 @@ const operations = {
         same_location: "Same location",
         choose_each: "Choose for each",
         destination: "Destination",
-        errorLoading: "Error loading operations",
         expand_details: "Details",
         details: "Operation details",
         date: "Date",
@@ -30,6 +29,18 @@ const operations = {
         undef: "Undef",
         buttons_tip: "Tip: Tap the buttons of the inputs to get more information",
         operation_completed: "Operation saved successfully",
+        quantity: "Quantity",
+        current_location: "Current location",
+        total_amount: "Total amount",
+        bulk: "Bulk",
+
+        // Error messages
+        invalid_url_params: "Form error",
+        product_amount_error: "incorrect product amount",
+        same_store_error: "Incorrect store selection",
+        operation_error: "Operation error",
+        return_amount_error: "Incorrect packs amount",
+        
         ...UNITS_ABBRS.en
     },
     es: {
@@ -39,7 +50,6 @@ const operations = {
         same_location: "Mismo depósito",
         choose_each: "Elegir cada uno",
         destination: "Destino",
-        errorLoading: "Error al cargar movimientos",
         expand_details: "Detalles",
         details: "Detalles de movimiento",
         date: "Fecha",
@@ -61,6 +71,18 @@ const operations = {
         undef: "Indefinido",
         buttons_tip: "Tip: Toque los botones los campos para obtener más información",
         operation_completed: "Movimiento guardado con éxito",
+        quantity: "Cantidad",
+        current_location: "Ubicación actual",
+        total_amount: "Cantidad total",
+        bulk: "A granel",
+
+        // Error messages
+        invalid_url_params: "Error de formulario",
+        product_amount_error: "Cantidad de producto incorrecta",
+        same_store_error: "Selección de deopósitos incorrecta",
+        operation_error: "Error de operación",
+        return_amount_error: "Cantidad de envases incorrecta",
+
         ...UNITS_ABBRS.es
     }
 };

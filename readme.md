@@ -333,23 +333,17 @@ Vista de formulario de productos
 Vista de stock  
 [x] Ordenar alfabeticamente por defecto  
 [x] Reemplazar "Comprar otro insumo" por "ingresar otro insumo"  
-[ ] Corregir seleccion de items (se selecciona uno diferente al clickeado).  
-[ ] Formato de presentaciones  
-[ ] Reemplazar "stock seleccionado" por "productos seleccionados"  
-[ ] Eliminar columna de envases vacios  
-[ ] Corregir botones de accion  
+[x] Corregir seleccion de items (se selecciona uno diferente al clickeado).  
+[x] Formato de presentaciones  
+[x] Reemplazar "stock seleccionado" por "productos seleccionados"  
+[x] Eliminar columna de envases vacios  
+[x] Corregir botones de accion  
 
 Vista de devoluciones  
 [x] Ordenar alfabeticamente por defecto  
-[ ] Quitar "Comprar insumos"  
-[ ] Eliminar columna de datos de vencimiento  
-[ ] Eliminar columna de stock  
-[ ] Corregir botones de accion  
-
-Filtrado de tablas
-[ ] Selector de categoria tapa el teclado  
-[x] Quitar campos fecha de - hasta  
-[ ] Aplicar filtrados para las tablas  
+[x] Quitar "Comprar insumos"  
+[x] Eliminar columna de stock  
+[x] Corregir botones de accion  
 
 Vista de formulario de deposito  
 [x] Cambiar creacion por "nuevo deposito"  
@@ -360,3 +354,8 @@ Formulario de compra/movimiento/devolucion
 [ ] Campos para configurar alarma de stock bajo  
 [ ] Adaptar campos segun la operacion  
 [ ] Registrar operacion en la DB  
+
+Filtrado de tablas
+[ ] Selector de categoria tapa el teclado  
+[x] Quitar campos fecha de - hasta  
+[ ] Aplicar filtrados para las tablas  

@@ -16,132 +16,59 @@ import {
     Input
 } from "../../components/Inputs";
 import ProductBlock from "./productBlock";
+import { getMissingFields, getURLParams, getProductData } from "./helpers";
 import { debug } from "../../model/utils";
-import { validOperationType, OPERATION_TYPES_NAMES } from "../../model/constants";
 import { componentsStyles } from "../../themes";
 import storeIcon from "../../assets/icons/barn.png";
-import observationsIcoon from "../../assets/icons/observations.png";
+import observationsIcon from "../../assets/icons/observations.png";
 
-
-const requireStock = ["MOVE_STOCK", "SPEND"];
-const requirePacks = ["MOVE_PACKS", "RETURN_PACKS"];
-const requireStore = ["MOVE_STOCK", "MOVE_PACKS", "BUY"];
-const requireDestination = ["SPEND", "RETURN_PACKS"];
-
-const validForm = formData => {
-    const {operation, products} = formData;
-    switch(operation){
-        case "MOVE_STOCK":
-        case "MOVE_PACKS":
-        case "BUY":
-            return products.every(p => p.amount > 0 && p.toStoreId !== "");
-        case "SPEND":
-        case "RETURN_PACKS":
-            return products.every(p => p.amount > 0);
-        default:
-            return false;
-    }
-};
-
-const validateParams = searchParams => {
-    const operation = searchParams.get("type");
-    const itemsId = searchParams.get("items");
-    const productsId = searchParams.get("products");
-    const ids = itemsId ? itemsId.split("_") : productsId ? productsId.split("_") : [];
-    const table = itemsId ? "items" : productsId ? "products" : "";
-    return { 
-        operation,
-        table, 
-        ids, 
-        valid: validOperationType(operation) && ids.length > 0 
-    };
-};
-
-const getMaxAmount = (item, operation) => {
-    if(requireStock.includes(operation))
-        return item?.stock;
-    if(requirePacks.includes(operation))
-        return item?.empty_packs;
-    return -1;
-};
 
 const View = () => {
 
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    
     const { t } = useTranslation("operations");
-
-    const toast = useToast();
-    
+    const toast = useToast();    
     const db = useDatabase();
 
-    const [viewTitle, setViewTitle] = useState(t("new_operation"));
-    const [stores, setStores] = useState([]);
+    const [stores, setStores] = useState([]); // Download all stores for selects
+
     const [formData, setFormData] = useState({
-        operation: "",
-        products: [],
-        stores: [],
-        sameStore: true,
-        globalStoreId: "",
-        obs: ""
+        products: [], // at least: {product_id, presentations, presentation_index, name, toStoreId, fromStoreId, amount}
+        sameStore: false, // Use same store for all products
+        globalStoreId: "", // For the switch
+        obs: "" // Observations field
     });
 
-    const hasDestination = requireDestination.includes(formData.operation);
-    const showGlobalStoreBlock = !hasDestination && formData.products.length > 1;
-    const hideStoreInput = (formData.products.length > 1 && formData.sameStore) || hasDestination;
+    const operation = searchParams.get("type");
+    const needLocation = operation !== "SPEND" && !formData.sameStore;
 
     useEffect(() => {
-        const queryData = validateParams(searchParams);
-        if(queryData.valid) {
-            db.query("stores", []).then(storesData => {
-                const stores = storesData.map(s => ({id: s.id, name: s.name}));
-                const operation = queryData.operation;
-                // Generate list of products to apply operation
-                // For repeated ids, db.query will not return duplicates
-                db.query(queryData.table, queryData.ids) // Get items or products depending on operation
-                    .then(data => {
-                        const products = data.map(row => {
-                            let product, amount, maxAmount, toStoreId, currentStoreId;
-                            if(queryData.table === "items"){ // Selected from existing stock
-                                product = row.productData;
-                                maxAmount = getMaxAmount(row, operation);
-                                amount = maxAmount;
-                                toStoreId = row.store_id;
-                                currentStoreId = row.store_id; // Inmutable
-                            } else { // Selected from product list
-                                product = row;
-                                amount = 0;
-                                maxAmount = -1; // No limit
-                                toStoreId = "";
-                                currentStoreId = ""; // Inmutable
-                            }
-                            const {id, name, presentations, brand} = product;
-                            return {
-                                presentationIndex: 0, // By default, select first presentation
-                                id, 
-                                name, 
-                                presentations, 
-                                brand, 
-                                amount, 
-                                maxAmount,
-                                toStoreId,
-                                currentStoreId
-                            };
-                        });
-                        setViewTitle(OPERATION_TYPES_NAMES[operation]);
-                        setStores(stores);
-                        setFormData({
-                            ...formData,
-                            products,
-                            stores,
-                            operation
-                        });
-                    })
-                    .catch(console.error);
-            });
+        const urlParams = getURLParams(searchParams);
+        if(urlParams.valid){
+            db.query("stores") // First, get list of stores for selects
+                .then(stores => { // Then get item or products data depending on URL params
+                    const {table, ids} = urlParams;
+                    if(table === "items" || table === "products"){
+                        db.query(table, ids)
+                            .then(data => { // Data may be items of products
+                                setFormData({
+                                    ...formData,
+                                    products: getProductData(table, data)
+                                });
+                                setStores(stores);
+                            })
+                            .catch(console.error);
+                    }else{
+                        debug("Invalid table", "error");
+                        toast(t("invalid_url_params"), "error");
+                        navigate(-1);
+                    }
+                })
+                .catch(console.error);
         }else{
-            console.error("Invalid URL parameters");
+            debug("Invalid operation", "error");
+            toast(t("invalid_url_params"), "error");
             navigate(-1);
         }
     }, []);
@@ -179,7 +106,10 @@ const View = () => {
     };
 
     const handleSubmit = () => { /* Set operation data and add to DB*/
-        if(validForm(formData)){
+
+        const missingFields = getMissingFields(formData);
+
+        if(missingFields.length === 0){
             console.log(formData.operation);
             console.log(formData.products); // Product list
             
@@ -191,25 +121,22 @@ const View = () => {
                 })
                 .catch(console.error);
             */
-
-            toast(t("operation_completed"), "success", 2000);
-            setTimeout(() => navigate(-1), 1000);
         }else{
             debug("Complete all fields", "error");
-            toast("Complete los campos obligatorios", "error");
+            toast(t(missingFields), "error");
         }
     };
 
-    return(
-        <MainView title={t(viewTitle)}>
+    return (
+        <MainView title={t(operation.toLowerCase())}>
             <Grid container spacing={1} direction="column">
                 {/*This block shows global configuration when more than one product is selected*/}
-                {showGlobalStoreBlock &&
+                {formData.products.length > 1 && needLocation &&
                     <Grid item xs={12}>
                         <Paper sx={componentsStyles.paper}>
                             <Grid container direction="column" spacing={2}> 
                                 <Grid item>
-                                    <Typography lineHeight={"1em"}>{t("destination")}</Typography>
+                                    <Typography sx={{lineHeight:"1em", fontWeight:"bold"}}>{t("destination")}</Typography>
                                 </Grid>
                                 <Grid item>
                                     <Switch 
@@ -241,8 +168,8 @@ const View = () => {
                         <ProductBlock 
                             key={pIndex}
                             product={product} 
-                            hideStoreInput={hideStoreInput}
-                            storeSelectionError={product.toStoreId === product.currentStoreId && requireStore.includes(formData.operation)}
+                            //storeSelectionError={false}
+                            showStoreTo={needLocation}
                             stores={stores} 
                             onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
                     ))}
@@ -251,7 +178,7 @@ const View = () => {
                 <Grid item>
                     <Paper sx={componentsStyles.paper}>
                         <Input
-                            icon={observationsIcoon}
+                            icon={observationsIcon}
                             label={t("observations")}
                             name="obs"
                             type="text"

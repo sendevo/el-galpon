@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Paper, Grid } from "@mui/material";
+import { Box, Button, Paper, Grid, Typography } from "@mui/material";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
@@ -60,27 +60,30 @@ const View = () => {
             .then(iData => {
                 setItems(iData.map(it => ({
                     ...it, 
-                    selected: false
+                    selected: emptyPacksView
                 })));
             });
     }, []);
 
     const handleOperation = operationType => {// Redirect to operation form 
-
-        console.log(operationType);
-        console.log(selectedItems);
-        return;
-
         if(operationType === "BUY_OTHER"){ // No product selected
             navigate("/products-list"); // Go to product list
-        }else{ // Go to operation form
-            const productList = selectedItems.map(it => it.product_id).join("_");
-            const urlProductList = products.length > 0 ? `&products=${productList}` : "";
+        }else{ // Go to operation form            
             
-            const itemList = selectedItems.map(it => it.id).join("_");
-            const urlItemList = (selectedItems.length > 0 && operationType !=="BUY") ? `&items=${itemList}` : "";
+            const itemIds = selectedItems.map(it => it.id).join("_");
+            const itemsURLParams = selectedItems.length > 0 ? `&items=${itemIds}` : "";
             
-            navigate(`/operation-form?type=${operationType}${urlItemList}${urlProductList}`);
+            if(itemsURLParams === ""){ 
+                console.error("Error redirecting to operation"); // Check buttons enabling logic
+                toast(t("operationURLError"), "error");
+                return;
+            }
+            
+            const operationURL = `/operation-form?type=${operationType}${itemsURLParams}`;
+
+            console.log(operationURL);
+
+            navigate(operationURL);
         }
     };
 
@@ -142,41 +145,44 @@ const View = () => {
                 :
                 <Paper sx={{...componentsStyles.paper, mt:2}}>
                     { selectedItems.length > 0 && 
-                        <Grid container direction="row" justifyContent="space-around">
-                            
-                            <Grid item>
-                                <Button
-                                    size="small"
-                                    color="primary"
-                                    variant="contained"
-                                    onClick={()=>handleOperation("BUY")}>
-                                    {t('buy')}
-                                </Button>
+                        <>
+                            <Typography sx={{mb:1}}>{t('selected')}</Typography>
+                            <Grid container direction="row" justifyContent="space-around">
+                                
+                                <Grid item>
+                                    <Button
+                                        size="small"
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={()=>handleOperation("BUY")}>
+                                        {t('buy')}
+                                    </Button>
+                                </Grid>
+                                
+                                <Grid item>
+                                    <Button
+                                        size="small"
+                                        disabled={selectedItems.every(it => it.stock <= 0)}
+                                        color="secondary"
+                                        variant="contained"
+                                        onClick={()=>handleOperation("MOVE_STOCK")}>
+                                        {t('move')}
+                                    </Button>
+                                </Grid>
+                                
+                                <Grid item>
+                                    <Button
+                                        size="small"
+                                        disabled={selectedItems.every(it => it.stock <= 0)}
+                                        color="red"
+                                        variant="contained"
+                                        onClick={()=>handleOperation("SPEND")}>
+                                        {t('spend')}
+                                    </Button>
+                                </Grid>
+                                
                             </Grid>
-                            
-                            <Grid item>
-                                <Button
-                                    size="small"
-                                    disabled={selectedItems.every(it => it.stock <= 0)}
-                                    color="secondary"
-                                    variant="contained"
-                                    onClick={()=>handleOperation("MOVE")}>
-                                    {t('move')}
-                                </Button>
-                            </Grid>
-                            
-                            <Grid item>
-                                <Button
-                                    size="small"
-                                    disabled={selectedItems.every(it => it.stock <= 0)}
-                                    color="red"
-                                    variant="contained"
-                                    onClick={()=>handleOperation("SPEND")}>
-                                    {t('spend')}
-                                </Button>
-                            </Grid>
-                            
-                        </Grid>
+                        </>
                     }
                     { selectedItems.length === 0 && !emptyPacksView &&
                         <Box sx={{p:1}}>
