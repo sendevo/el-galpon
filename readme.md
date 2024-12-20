@@ -329,6 +329,7 @@ Vista de productos
 
 Vista de formulario de productos  
 [x] Formato y cálculo de presentaciones.  
+[ ] CUando el producto es retornable, no puede ser venta a granel.
 
 Vista de stock  
 [x] Ordenar alfabeticamente por defecto  

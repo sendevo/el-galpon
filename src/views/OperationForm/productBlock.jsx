@@ -1,5 +1,6 @@
 import { Typography, Paper, Grid, Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { Input, Select } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
 import { trimString } from "../../model/utils";
@@ -10,24 +11,6 @@ import scaleIcon from "../../assets/icons/scale.png";
 const prodNameTrim = 30; // Maximum length of product name to display
 const getStoreData = (stores, storeId) => stores.find(s => s.id === storeId);
 
-// The following function computes size, unit and amount to generate strings for the presentation
-const getPresentationData = (product, presentation_index, translatingFc) => {
-    const blk = product.presentations[presentation_index].bulk;
-    const packSize = blk ? "" : product.presentations[presentation_index].pack_size;
-    const unitSuffix = blk ? `(${translatingFc("bulk")})` : "";
-    const unit = translatingFc(product.presentations[presentation_index].unit) + " " + unitSuffix;
-    let amount;
-    if(blk)
-        amount = product.amount;
-    else  
-        amount = Math.ceil(product.amount / product.presentations[presentation_index].pack_size);
-    const totalAmount = amount + " " + translatingFc(product.presentations[presentation_index].unit) + " " + unitSuffix;
-    return {
-        packSize,
-        unit,
-        totalAmount
-    };
-};
 
 const ProductBlock = props => {
 
@@ -39,18 +22,30 @@ const ProductBlock = props => {
         onPropChange
     } = props;
 
+    const [searchParams] = useSearchParams();
     const { t } = useTranslation("operations");
+    
+    const operation = searchParams.get("type");
+
+    // Total amount is displayed at the bottom of the product block
+    //const { totalAmount } = getPresentationData(product, product.presentation_index, t);
+    let amount;
+    const presentation = product.presentations[product.presentation_index];
+    if(presentation.bulk)
+        amount = product.amount;
+    else
+        amount = Math.ceil(product.amount / presentation.pack_size);
+    const unitSuffix = presentation.bulk ? `(${t("bulk")})` : "";
+    const totalAmount = amount + " " + t(presentation.unit) + " " + unitSuffix;
 
     // Get list of presentations for the select input
-    const presentations = product.presentations.map((_, index) => {
-        const {packSize, unit} = getPresentationData(product, index, t);
+    const presentations = product.presentations.map((p, index) => {
+        const {bulk, pack_size, unit} = p;
         return {
-            label: packSize + " " + unit, 
+            label: bulk ? t(unit) : pack_size + " " + t(unit), 
             value: index
-        }
+        };
     });
-    // Total amount is displayed at the bottom of the product block
-    const { totalAmount } = getPresentationData(product, product.presentation_index, t);
 
     return (
         <Paper sx={{...componentsStyles.paper, mt:1}}>
@@ -60,7 +55,9 @@ const ProductBlock = props => {
                 direction={"column"} 
                 spacing={1}>
                 <Grid item xs={12}>
-                    <Typography sx={{lineHeight:"1em", pt:1}}><b>{t("product") + ": "}</b>{trimString(product.name, prodNameTrim)}</Typography>
+                    <Typography sx={{lineHeight:"1em", pt:1}}>
+                        <b>{t("product") + ": "}</b> {trimString(product.name, prodNameTrim)}
+                    </Typography>
                 </Grid>
 
                 {presentations.length > 1 ? 
@@ -73,8 +70,10 @@ const ProductBlock = props => {
                             onChange={e => onPropChange("presentation_index", e.target.value)}/>
                     </Grid>
                     :
-                    <Grid item xs={12}>
-                        <Typography sx={{lineHeight:"1em", pb:1}}><b>{t("presentation") + ": "}</b> {presentations[product.presentation_index].label}</Typography>
+                    <Grid item xs={12}> 
+                        <Typography sx={{lineHeight:"1em", pb:1}}>
+                            <b>{t("presentation") + ": "}</b> {presentations[0].label}
+                        </Typography>
                     </Grid>
                 }
 

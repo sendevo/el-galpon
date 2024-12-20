@@ -137,7 +137,7 @@ const View = () => {
                                 fullWidth
                                 color="red"
                                 variant="contained"
-                                onClick={()=>handleOperation("RETURN")}>
+                                onClick={()=>handleOperation("RETURN_PACKS")}>
                                 {t('return')}
                             </Button>
                         </Box>

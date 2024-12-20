@@ -16,7 +16,7 @@ const getMissingFields = (products, operation) => { // Form validation
                 missingFields.push("store_error");
             break;
         case "SPEND":
-        case "RETURN":
+        case "RETURN_PACKS":
             break;
         default:
             missingFields.push("operation_error");
