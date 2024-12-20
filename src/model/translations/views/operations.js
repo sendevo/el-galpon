@@ -13,6 +13,8 @@ const operations = {
         details: "Operation details",
         date: "Date",
         type: "Operation",
+        amount: "Amount",
+        packs: "Packs",
         product: "Product",
         presentation: "Presentation",
         store_from: "Origin store",
@@ -34,6 +36,7 @@ const operations = {
         current_location: "Current location",
         total_amount: "Total amount",
         bulk: "Bulk",
+        validate: "Validate",
 
         // Error messages
         invalid_url_params: "Form error",
@@ -62,6 +65,7 @@ const operations = {
         store_to: "Depósito destino",
         stock: "Cantidad",
         amount: "Cantidad",
+        packs: "Envases",
         observations: "Observaciones",
         operation_saved: "Movimiento registrado",
         buy: "Compra",
@@ -77,6 +81,7 @@ const operations = {
         current_location: "Ubicación actual",
         total_amount: "Cantidad total",
         bulk: "A granel",
+        validate: "Validar",
 
         // Error messages
         invalid_url_params: "Error de formulario",

@@ -1,4 +1,4 @@
-const common = {
+const actionsBlock = {
     en: {
         confirm: "Confirm",
         cancel: "Cancel"
@@ -9,4 +9,4 @@ const common = {
     }
 };
 
-export default common;
+export default actionsBlock;

@@ -1,7 +1,5 @@
-import common from "./common";
 import home from "./views/home";
 import itemList from "./views/itemsList";
-import productForm from "./views/productForm";
 import storesList from "./views/storesList";
 import storeForm from "./views/storeForm";
 import returns from "./views/returns";
@@ -11,18 +9,17 @@ import alerts from "./views/alerts";
 import error from "./views/error";
 
 import productsList from "./views/productsList";
+import productForm from "./views/productForm";
 
 import search from "./components/search";
+import actionsBlock from "./components/actionsBlock";
 
 
-
+// Use:
 // import { useTranslation } from 'react-i18next';
 // {t('')}
 
 const dictionaries = {
-    // Common
-    common,
-
     // Primary views
     home, 
     itemList,
@@ -39,7 +36,8 @@ const dictionaries = {
     productForm,
 
     // Components
-    search
+    search,
+    actionsBlock
 };
 
 const languages = ["es", "en"];

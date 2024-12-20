@@ -128,7 +128,7 @@ const View = () => {
         <MainView title={t(operation.toLowerCase())}>
             <Grid container spacing={1} direction="column">
                 {/*This block shows global configuration when more than one product is selected*/}
-                {formData.products.length > 1 && operation !== "SPEND" &&
+                {formData.products.length > 1 && operation !== "SPEND" && operation !== "RETURN_PACKS" &&
                     <DestinationBlock
                         formData={formData}
                         stores={stores}
@@ -170,6 +170,7 @@ const View = () => {
 
                 <Grid item>
                     <ActionsBlock 
+                        submitText={t('validate')}
                         onSubmit={handleSubmit} 
                         onCancel={() => navigate(-1)}/>
                 </Grid>

@@ -29,15 +29,10 @@ const ProductBlock = props => {
 
     // Total amount is displayed at the bottom of the product block
     //const { totalAmount } = getPresentationData(product, product.presentation_index, t);
-    let amount;
+    
     const presentation = product.presentations[product.presentation_index];
-    if(presentation.bulk)
-        amount = product.amount;
-    else
-        amount = Math.ceil(product.amount / presentation.pack_size);
-    const unitSuffix = presentation.bulk ? `(${t("bulk")})` : "";
-    const totalAmount = amount + " " + t(presentation.unit) + " " + unitSuffix;
-
+    const amount = Math.ceil(product.amount / presentation.pack_size);
+    
     // Get list of presentations for the select input
     const presentations = product.presentations.map((p, index) => {
         const {bulk, pack_size, unit} = p;
@@ -46,6 +41,9 @@ const ProductBlock = props => {
             value: index
         };
     });
+
+    // The label of the amount input
+    const quantityInputLabel = t("quantity") + " " + (operation==="RETURN_PACKS" ? t("packs").toLocaleLowerCase() : "(" + t(presentation.unit) + ")");
 
     return (
         <Paper sx={{...componentsStyles.paper, mt:1}}>
@@ -80,25 +78,25 @@ const ProductBlock = props => {
                 <Grid item xs={12}>
                     <Input 
                         icon={scaleIcon}
-                        label={t("quantity") + " (" + t(product.presentations[product.presentation_index].unit) + ")"}
+                        label={quantityInputLabel}
                         type="number"
                         value={product.amount > 0 ? product.amount : ""}
                         error={product.amount == ""}
                         onChange={e => onPropChange("amount", e.target.value)}/>
                 </Grid>
                 
-                {Boolean(product.amount) && 
+                {Boolean(product.amount) && !presentation.bulk && operation!=="RETURN_PACKS" && 
                     <>
                         <Grid item xs={12}>
                             <Typography sx={{...componentsStyles.hintText, textAlign:"right", mb:1}}>
-                                {t('total_amount')} = {totalAmount}
+                                {t('total_amount')} = {amount} {t('packs').toLocaleLowerCase()}
                             </Typography>
                         </Grid>
                         {/*<Divider sx={{m:1}}/>*/}
                     </>
                 }
 
-                {showStoreTo && 
+                {showStoreTo && operation !== "RETURN_PACKS" && 
                     <Grid item xs={12}>
                         <Select
                             icon={storeIcon}

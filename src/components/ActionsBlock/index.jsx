@@ -1,8 +1,8 @@
 import { Button, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-const ActionsBlock = ({onSubmit, onCancel}) => {
-    const {t} = useTranslation('common');
+const ActionsBlock = ({submitText, cancelText, onSubmit, onCancel}) => {
+    const {t} = useTranslation('actionsBlock');
 
     return (
         <Grid 
@@ -15,7 +15,7 @@ const ActionsBlock = ({onSubmit, onCancel}) => {
                     variant="contained"
                     color="success"
                     onClick={onSubmit}>
-                    {t('confirm')}
+                    {submitText || t('confirm')}
                 </Button>
             </Grid>
             <Grid item>
@@ -23,7 +23,7 @@ const ActionsBlock = ({onSubmit, onCancel}) => {
                     variant="contained"
                     color="error"
                     onClick={onCancel}>
-                    {t('cancel')}
+                    {cancelText || t('cancel')}
                 </Button>
             </Grid>
         </Grid>
