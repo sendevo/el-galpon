@@ -11,15 +11,13 @@ import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
 import ActionsBlock from "../../components/ActionsBlock";
 import { 
-    Select,
-    Switch,
     Input
 } from "../../components/Inputs";
 import ProductBlock from "./productBlock";
+import DestinationBlock from "./destinationBlock";
 import { getMissingFields, getURLParams, getProductData } from "./helpers";
 import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
-import storeIcon from "../../assets/icons/barn.png";
 import observationsIcon from "../../assets/icons/observations.png";
 
 
@@ -41,7 +39,6 @@ const View = () => {
     });
 
     const operation = searchParams.get("type");
-    const needLocation = operation !== "SPEND" && !formData.sameStore;
 
     useEffect(() => {
         const urlParams = getURLParams(searchParams);
@@ -51,7 +48,7 @@ const View = () => {
                     const {table, ids} = urlParams;
                     if(table === "items" || table === "products"){
                         db.query(table, ids)
-                            .then(data => { // Data may be items of products
+                            .then(data => { // Data may be items or products
                                 setFormData({
                                     ...formData,
                                     products: getProductData(table, data)
@@ -107,10 +104,10 @@ const View = () => {
 
     const handleSubmit = () => { /* Set operation data and add to DB*/
 
-        const missingFields = getMissingFields(formData);
+        const missingFields = getMissingFields(formData.products, operation);
 
         if(missingFields.length === 0){
-            console.log(formData.operation);
+            console.log(operation);
             console.log(formData.products); // Product list
             
             /*
@@ -122,7 +119,7 @@ const View = () => {
                 .catch(console.error);
             */
         }else{
-            debug("Complete all fields", "error");
+            console.error(missingFields);
             toast(t(missingFields), "error");
         }
     };
@@ -131,36 +128,12 @@ const View = () => {
         <MainView title={t(operation.toLowerCase())}>
             <Grid container spacing={1} direction="column">
                 {/*This block shows global configuration when more than one product is selected*/}
-                {formData.products.length > 1 && needLocation &&
-                    <Grid item xs={12}>
-                        <Paper sx={componentsStyles.paper}>
-                            <Grid container direction="column" spacing={2}> 
-                                <Grid item>
-                                    <Typography sx={{lineHeight:"1em", fontWeight:"bold"}}>{t("destination")}</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Switch 
-                                        labelFalse={t("choose_each")}
-                                        labelTrue={t("same_location")}
-                                        name="sameStore"
-                                        value={formData.sameStore}
-                                        onChange={e => handleSwitchChange(e.target.value)}/>
-                                </Grid>
-                                { formData.sameStore &&
-                                    <Grid item>
-                                        <Select
-                                            icon={storeIcon}
-                                            label={t("select_location") + "*"}
-                                            name="globalStore"
-                                            value={formData.globalStoreId || ""}
-                                            error={formData.globalStore === ""}
-                                            options={stores.map(s => ({label: s.name, value: s.id}))}
-                                            onChange={e => handleGlobalStoreSelect(e.target.value)}/>
-                                    </Grid> 
-                                }
-                            </Grid>
-                        </Paper>
-                    </Grid>
+                {formData.products.length > 1 && operation !== "SPEND" &&
+                    <DestinationBlock
+                        formData={formData}
+                        stores={stores}
+                        handleSwitchChange={handleSwitchChange}
+                        handleGlobalStoreSelect={handleGlobalStoreSelect}/>
                 }
 
                 <Grid item>
@@ -169,7 +142,7 @@ const View = () => {
                             key={pIndex}
                             product={product} 
                             //storeSelectionError={false}
-                            showStoreTo={needLocation}
+                            showStoreTo={operation !== "SPEND" && !formData.sameStore}
                             stores={stores} 
                             onPropChange={(prop, value) => handleProductPropChange(prop, pIndex, value)}/>
                     ))}
@@ -194,18 +167,6 @@ const View = () => {
                             * {t("mandatory_fields")}
                     </Typography>
                 </Grid>
-
-                {/*}
-                <Grid item>
-                    <Typography 
-                        fontSize="12px"
-                        color="#666"
-                        lineHeight={"1em"}
-                        mb={1}>
-                            <i>{t("buttons_tip")}</i>
-                    </Typography>
-                </Grid>
-                */}
 
                 <Grid item>
                     <ActionsBlock 

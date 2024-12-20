@@ -5,18 +5,22 @@ import { componentsStyles } from "../../themes";
 import { trimString } from "../../model/utils";
 import amountIcon from "../../assets/icons/productos.png";
 import storeIcon from "../../assets/icons/barn.png"; 
+import scaleIcon from "../../assets/icons/scale.png";
 
 const prodNameTrim = 30; // Maximum length of product name to display
 const getStoreData = (stores, storeId) => stores.find(s => s.id === storeId);
 
 // The following function computes size, unit and amount to generate strings for the presentation
 const getPresentationData = (product, presentation_index, translatingFc) => {
-
     const blk = product.presentations[presentation_index].bulk;
     const packSize = blk ? "" : product.presentations[presentation_index].pack_size;
     const unitSuffix = blk ? `(${translatingFc("bulk")})` : "";
     const unit = translatingFc(product.presentations[presentation_index].unit) + " " + unitSuffix;
-    const amount = (blk ? product.amount : product.amount * product.presentations[presentation_index].pack_size);
+    let amount;
+    if(blk)
+        amount = product.amount;
+    else  
+        amount = Math.ceil(product.amount / product.presentations[presentation_index].pack_size);
     const totalAmount = amount + " " + translatingFc(product.presentations[presentation_index].unit) + " " + unitSuffix;
     return {
         packSize,
@@ -76,7 +80,7 @@ const ProductBlock = props => {
 
                 <Grid item xs={12}>
                     <Input 
-                        icon={amountIcon}
+                        icon={scaleIcon}
                         label={t("quantity") + " (" + t(product.presentations[product.presentation_index].unit) + ")"}
                         type="number"
                         value={product.amount > 0 ? product.amount : ""}
@@ -91,7 +95,7 @@ const ProductBlock = props => {
                                 {t('total_amount')} = {totalAmount}
                             </Typography>
                         </Grid>
-                        <Divider sx={{m:1}}/>
+                        {/*<Divider sx={{m:1}}/>*/}
                     </>
                 }
 
@@ -99,7 +103,7 @@ const ProductBlock = props => {
                     <Grid item xs={12}>
                         <Select
                             icon={storeIcon}
-                            label={t("destination") + "*"}
+                            label={t("product_destination") + "*"}
                             value={product.toStoreId || ""}
                             error={product.toStoreId == ""}
                             options={stores?.map(s => ({label: s.name, value: s.id}))}

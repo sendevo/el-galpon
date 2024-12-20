@@ -143,8 +143,8 @@ const products = [
         sku: "",
         presentations: [
             {
-                unit: "seeds",
-                pack_size: 80000,
+                unit: "bag",
+                pack_size: 1,
                 bulk: false
             }
         ],
@@ -162,8 +162,8 @@ const products = [
         sku: "",
         presentations: [
             {
-                unit: "seeds",
-                pack_size: 180000,
+                unit: "bag",
+                pack_size: 1,
                 bulk: false
             },
             {

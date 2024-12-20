@@ -1,22 +1,23 @@
 import { validOperationType } from "../../model/constants";
 
 
-const getMissingFields = formData => { // Form validation
-    const {operation, products} = formData;
+const getMissingFields = (products, operation) => { // Form validation
     const missingFields = [];
+    if(!products.every(p => p.amount > 0))
+        missingFields.push("product_amount_error");
     switch(operation){
         case "MOVE_STOCK":
         case "MOVE_PACKS":
+            if(products.some(p => p.toStoreId === p.fromStoreId || p.toStoreId === "" || p.fromStoreId === ""))
+                missingFields.push("store_error");
+            break;
         case "BUY":
-            if(!products.every(p => p.amount > 0))
-                missingFields.push("product_amount_error");
-            if(p.toStoreId !== p.fromStoreId)
-                missingFields.push("same_store_error");
+            if(products.some(p => p.toStoreId === ""))
+                missingFields.push("store_error");
             break;
         case "SPEND":
-        case "RETURN_PACKS":
-            if(products.every(p => p.amount > 0))
-                missingFields.push("return_amount_error");
+        case "RETURN":
+            break;
         default:
             missingFields.push("operation_error");
     }

@@ -7,7 +7,8 @@ const operations = {
         select_location: "Select location",
         same_location: "Same location",
         choose_each: "Choose for each",
-        destination: "Destination",
+        destination: "Products destination",
+        product_destination: "Destination",
         expand_details: "Details",
         details: "Operation details",
         date: "Date",
@@ -49,7 +50,8 @@ const operations = {
         select_location: "Elegir ubicación",
         same_location: "Mismo depósito",
         choose_each: "Elegir cada uno",
-        destination: "Destino",
+        destination: "Destino de los productos",
+        product_destination: "Destino",
         expand_details: "Detalles",
         details: "Detalles de movimiento",
         date: "Fecha",
@@ -79,7 +81,7 @@ const operations = {
         // Error messages
         invalid_url_params: "Error de formulario",
         product_amount_error: "Cantidad de producto incorrecta",
-        same_store_error: "Selección de deopósitos incorrecta",
+        store_error: "Selección de deopósitos incorrecta",
         operation_error: "Error de operación",
         return_amount_error: "Cantidad de envases incorrecta",
 
