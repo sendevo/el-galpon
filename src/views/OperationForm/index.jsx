@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { 
     Grid,
     Typography,
-    Paper
+    Paper,
+    Modal
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -10,11 +11,10 @@ import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";
 import ActionsBlock from "../../components/ActionsBlock";
-import { 
-    Input
-} from "../../components/Inputs";
+import { Input } from "../../components/Inputs";
 import ProductBlock from "./productBlock";
 import DestinationBlock from "./destinationBlock";
+import ConfirmModal from "./confirmModal";
 import { getMissingFields, getURLParams, getProductData } from "./helpers";
 import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
@@ -37,6 +37,9 @@ const View = () => {
         globalStoreId: "", // For the switch
         obs: "" // Observations field
     });
+
+    // The validation modal shows operation data before confirming
+    const [modalOpen, setModalOpen] = useState(false);
 
     const operation = searchParams.get("type");
 
@@ -102,26 +105,32 @@ const View = () => {
         }));
     };
 
-    const handleSubmit = () => { /* Set operation data and add to DB*/
-
+    const handleValidate = () => {
         const missingFields = getMissingFields(formData.products, operation);
 
         if(missingFields.length === 0){
-            console.log(operation);
-            console.log(formData.products); // Product list
+
             
-            /*
-            db.handleOperation(formData.operation, formData.products)
-                .then(() => {
-                    toast(t("operation_saved"), "success", 2000);
-                    navigate(-1);
-                })
-                .catch(console.error);
-            */
+            // TODO: Data validation (stock, operatcions, etc)
+
+
+            setModalOpen(true);
         }else{
             console.error(missingFields);
             toast(t(missingFields), "error");
         }
+    }
+
+    const handleSubmit = () => { /* Set operation data and add to DB*/
+
+        /*
+        db.handleOperation(formData.operation, formData.products)
+            .then(() => {
+                toast(t("operation_saved"), "success", 2000);
+                navigate(-1);
+            })
+            .catch(console.error);
+        */
     };
 
     return (
@@ -171,10 +180,19 @@ const View = () => {
                 <Grid item>
                     <ActionsBlock 
                         submitText={t('validate')}
-                        onSubmit={handleSubmit} 
+                        onSubmit={handleValidate} 
                         onCancel={() => navigate(-1)}/>
                 </Grid>
-            </Grid>     
+            </Grid>
+
+            <Modal 
+                open={modalOpen} 
+                onClose={()=>setModalOpen(false)}>
+                <ConfirmModal
+                    products={formData.products}
+                    onConfirm={()=>setModalOpen(false)}
+                    onCancel={()=>setModalOpen(false)}/>
+            </Modal>     
         </MainView>
     );
 };

@@ -36,7 +36,15 @@ const operations = {
         current_location: "Current location",
         total_amount: "Total amount",
         bulk: "Bulk",
+        stock_limit_alert: "Stock limit alert",
+        stock_alert_message: "You will receive a notification when the stock is lower than ",
+        no_stock_alert_message: "No low stock alert",  
+        
+        // Modal and form buttons
         validate: "Validate",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        confirm_operation: "Operation details",
 
         // Error messages
         invalid_url_params: "Form error",
@@ -44,6 +52,7 @@ const operations = {
         same_store_error: "Incorrect store selection",
         operation_error: "Operation error",
         return_amount_error: "Incorrect packs amount",
+        expiration_date: "Expiration date",
         
         ...UNITS_ABBRS.en
     },
@@ -81,7 +90,17 @@ const operations = {
         current_location: "Ubicación actual",
         total_amount: "Cantidad total",
         bulk: "A granel",
+        
+        stock_limit_alert: "Alerta de stock bajo",
+        stock_alert_message: "Recibirá una notificación cuando el stock sea menor que ",
+        no_stock_alert_message: "Sin alerta de stock bajo",
+        expiration_date: "Fecha de vencimiento",
+
+        // Modal and form buttons
         validate: "Validar",
+        confirm: "Confirmar",
+        cancel: "Cancelar",
+        confirm_operation: "Detalles del movimiento",
 
         // Error messages
         invalid_url_params: "Error de formulario",

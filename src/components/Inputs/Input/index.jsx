@@ -53,7 +53,7 @@ const Input = props => {
                     error={error}
                     sx={{zIndex: 0}}
                     InputProps={unit ? {
-                        endAdornment:<InputAdornment position="end">{unit}</InputAdornment>
+                        endAdornment:<InputAdornment position="start">{unit}</InputAdornment>
                     } : null}/>  
             </Grid>
         </Grid>

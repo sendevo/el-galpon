@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Paper, Grid, Typography } from "@mui/material";
+import { 
+    Box, 
+    Button, 
+    Paper, 
+    Grid, 
+    Typography
+} from "@mui/material";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
 import MainView from "../../components/MainView";

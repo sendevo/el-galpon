@@ -186,7 +186,8 @@ Los insumos son instancias de productos que se encuentran almacenadas en un dep√
     stock: 0,
     empty_packs: 0 || null, // Si returnable = true
     presentation_index: 0,
-    expiration_date: 0 || null // Si expirable = true
+    expiration_date: 0 || null, // Si expirable = true
+    stock_limit_alert: 0 || null // Se compara contra stock
 }
 ```
 
@@ -351,9 +352,14 @@ Vista de formulario de deposito
 [x] La geolocalizacion no debe ser obligatoria  
 
 Formulario de compra/movimiento/devolucion  
-[ ] Indicar fecha de vencimiento  
-[ ] Campos para configurar alarma de stock bajo  
-[ ] Adaptar campos segun la operacion  
+[x] Indicar fecha de vencimiento  
+[x] Campos para configurar alarma de stock bajo  
+[x] Campo para indicar fecha de vencimiento  
+[x] Adaptar campos segun la operacion.  
+[ ] Validacion de datos de formulario:  
+    [ ] Campos obligatorios.  
+    [ ] Validez de los datos.  
+    [ ] Comparar con stock disponible o envases.  
 [ ] Registrar operacion en la DB  
 
 Filtrado de tablas

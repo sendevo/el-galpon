@@ -1,16 +1,45 @@
-import { Typography, Paper, Grid, Divider } from "@mui/material";
+import { Typography, Paper, Grid, Box } from "@mui/material";
+import Calendar from 'react-calendar';
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import moment from "moment";
 import { Input, Select } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
 import { trimString } from "../../model/utils";
 import amountIcon from "../../assets/icons/productos.png";
 import storeIcon from "../../assets/icons/barn.png"; 
 import scaleIcon from "../../assets/icons/scale.png";
+import notificationIcon from "../../assets/icons/notification.png";
+import i18next from "i18next";
 
 const prodNameTrim = 30; // Maximum length of product name to display
 const getStoreData = (stores, storeId) => stores.find(s => s.id === storeId);
 
+const localComponentStyles = { 
+    stockAlertContainer: {
+        maxWidth:"50%",
+        marginLeft:"auto",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"center",
+        textAlign:"right",
+        mb:-2
+    },
+    stockAlertText: {
+        ...componentsStyles.hintText, 
+        textAlign:"right", 
+        mb:1,
+        whiteSpace: "normal" ,
+        wordBreak: "break-word"
+    },
+    calendarContainer: {
+        m:1,
+        border:"1px solid rgb(200,200,200)",
+        borderRadius:"5px",
+        boxShadow:"0px 0px 5px 0px rgb(200,200,200)",
+        backgroundColor:"white"
+    }
+};
 
 const ProductBlock = props => {
 
@@ -18,7 +47,6 @@ const ProductBlock = props => {
         product, 
         stores, 
         showStoreTo,
-        //storeSelectionError,
         onPropChange
     } = props;
 
@@ -27,11 +55,7 @@ const ProductBlock = props => {
     
     const operation = searchParams.get("type");
 
-    // Total amount is displayed at the bottom of the product block
-    //const { totalAmount } = getPresentationData(product, product.presentation_index, t);
-    
     const presentation = product.presentations[product.presentation_index];
-    const amount = Math.ceil(product.amount / presentation.pack_size);
     
     // Get list of presentations for the select input
     const presentations = product.presentations.map((p, index) => {
@@ -42,8 +66,15 @@ const ProductBlock = props => {
         };
     });
 
-    // The label of the amount input
-    const quantityInputLabel = t("quantity") + " " + (operation==="RETURN_PACKS" ? t("packs").toLocaleLowerCase() : "(" + t(presentation.unit) + ")");
+    // Labels of the amount input:
+    
+    let quantityInputLabel = t("quantity") + " ";
+    if(operation==="RETURN_PACKS") 
+        quantityInputLabel += t("packs").toLocaleLowerCase()
+    else
+        quantityInputLabel += "(" + t(presentation.unit) + ")";
+    
+        const packAmountLabel = Math.ceil(product.amount / presentation.pack_size);
 
     return (
         <Paper sx={{...componentsStyles.paper, mt:1}}>
@@ -85,11 +116,11 @@ const ProductBlock = props => {
                         onChange={e => onPropChange("amount", e.target.value)}/>
                 </Grid>
                 
-                {Boolean(product.amount) && !presentation.bulk && operation!=="RETURN_PACKS" && 
+                {Boolean(product.amount) && !presentation.bulk && operation!=="RETURN_PACKS" && product.returnable &&
                     <>
                         <Grid item xs={12}>
                             <Typography sx={{...componentsStyles.hintText, textAlign:"right", mb:1}}>
-                                {t('total_amount')} = {amount} {t('packs').toLocaleLowerCase()}
+                                {t('total_amount')} = {packAmountLabel} {t('packs').toLocaleLowerCase()}
                             </Typography>
                         </Grid>
                         {/*<Divider sx={{m:1}}/>*/}
@@ -108,7 +139,7 @@ const ProductBlock = props => {
                     </Grid>
                 }
                 
-                { product.fromStoreId &&
+                { product.fromStoreId && operation !== "BUY" &&
                     <Grid item xs={12}>
                         <Typography sx={{
                                 ...componentsStyles.hintText, 
@@ -120,6 +151,46 @@ const ProductBlock = props => {
                     </Grid>
                 }
 
+                { operation === "BUY" &&
+                    <>
+                        <Grid item xs={12}>
+                            <Input 
+                                icon={notificationIcon}
+                                label={t("stock_limit_alert") + " (" + t(presentation.unit) + ")"}
+                                type="number"
+                                value={product.stock_limit_alert || ""}
+                                onChange={e => onPropChange("stock_limit_alert", e.target.value)}/>
+                        </Grid>
+                        
+                        <Grid item xs={12}>
+                            <Box sx={localComponentStyles.stockAlertContainer}>
+                                <Typography sx={localComponentStyles.stockAlertText}>
+                                    {product.stock_limit_alert > 0 ? 
+                                        t("stock_alert_message") + " " + parseInt(product.stock_limit_alert) + " " + t(presentation.unit)
+                                        :
+                                        t("no_stock_alert_message")
+                                    }
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        
+                        {product.expirable && 
+                            <Box sx={localComponentStyles.calendarContainer}>
+                                <Typography sx={{lineHeight:"1em", pt:1, pl:1, fontWeight:"bold"}}>
+                                    {t("expiration_date")}
+                                </Typography>
+                                <Calendar 
+                                    calendarType='US'
+                                    locale={i18next.language}
+                                    selectRange={false}
+                                    value={product.expiration_date ? new Date(product.expiration_date) : new Date()}
+                                    onChange={d => onPropChange("expiration_date", moment(d).unix()*1000)}/>
+                            </Box>
+                        }
+
+                    </>
+                }
+                
             </Grid>
         </Paper>
     );

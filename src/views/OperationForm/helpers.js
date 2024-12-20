@@ -41,11 +41,28 @@ const getURLParams = searchParams => {
 const getProductData = (table,data) => {
     // This function returns the products data required for each 
     // form block (in case of more than one).
+
+    /* Required fields to make the ProductBlock component work are:
+        - product_id
+        - name
+        - presentations
+        - presentation_index
+        - returnable
+        - expirable
+        - expiration_date
+        - toStoreId
+        - fromStoreId
+        - amount
+        - stock_limit_alert
+    */
+
     switch(table){
         case "items":
             return data.map(it => ({
-                ...it,
+                ...it, // {id, product_id, store_id, stock, empty_packs, presentation_index, expiration_date, stock_limit_alert}
                 presentations: it.productData.presentations,
+                returnable: it.productData.returnable,
+                expirable: it.productData.expirable,
                 name: it.productData.name,
                 toStoreId: "",
                 fromStoreId: it.store_id,
@@ -53,12 +70,14 @@ const getProductData = (table,data) => {
             }));
         case "products":
             return data.map(p => ({
-                ...p,
+                ...p, // {id, name, presentations, returnable, expirable}
                 product_id: p.id,
+                expiration_date: Date.now(),
                 toStoreId: "",
                 fromStoreId: "",
-                amount: 0,
-                presentation_index: 0
+                amount: "",
+                presentation_index: 0,
+                stock_limit_alert: 0
             }));
         default:
             return [];
