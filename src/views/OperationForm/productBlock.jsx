@@ -180,7 +180,7 @@ const ProductBlock = props => {
                                     {t("expiration_date")}
                                 </Typography>
                                 <Calendar 
-                                    calendarType='US'
+                                    calendarType='gregory'
                                     locale={i18next.language}
                                     selectRange={false}
                                     value={product.expiration_date ? new Date(product.expiration_date) : new Date()}

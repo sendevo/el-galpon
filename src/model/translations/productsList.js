@@ -1,4 +1,4 @@
-import { UNITS_ABBRS } from "../../constants";
+import { UNITS_ABBRS } from "../constants";
 
 const productsList = {
     en: {

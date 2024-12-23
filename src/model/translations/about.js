@@ -1,4 +1,4 @@
-import { APP_NAME, VERSION_VALUE } from "../../constants";
+import { APP_NAME, VERSION_VALUE } from "../constants";
 
 const about = {
     en: {

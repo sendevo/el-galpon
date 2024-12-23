@@ -1,56 +1,28 @@
 {
-    "id": "6as1kqfyu",
-    "product_id": "tserq014l",
-    "store_id": "rchsqd0t7",
-    "stock": 2.5,
-    "empty_packs": 0,
-    "presentation_index": 0,
-    "expiration_date": 1713791782726,
-    "productData": {
-        "id": "tserq014l",
-        "name": "Urea granulada",
-        "sku": "03-1234-1",
-        "presentations": [
-            {
-                "unit": "ton",
-                "pack_size": null,
-                "bulk": true
-            }
-        ],
-        "expirable": true,
-        "returnable": false,
-        "brand": "Profertil",
-        "comments": "",
-        "categories": [
-            "Fertilizantes"
-        ],
-        "created": 1717609523419,
-        "modified": 1712230100066
-    },
-    "storeData": {
-        "id": "rchsqd0t7",
-        "name": "Acopiador",
-        "lat": -38.385738,
-        "lng": -60.272519,
-        "contact": {
-            "name": "Mengano",
-            "phone": "291 - 235 15123",
-            "address": "Calle 1 31"
-        },
-        "created": 1718903458122,
-        "modified": 1721734806741
-    },
+    "id": "wwcopzvmf",
+    "name": "Gasoil",
+    "sku": "",
     "presentations": [
         {
-            "unit": "ton",
-            "pack_size": null,
-            "bulk": true
+            "unit": "liter",
+            "pack_size": 200,
+            "bulk": false
         }
     ],
-    "returnable": false,
-    "expirable": true,
-    "name": "Urea granulada",
-    "toStoreId": "",
-    "fromStoreId": "rchsqd0t7",
-    "amount": ""
+    "expirable": false,
+    "returnable": true,
+    "brand": "YPF",
+    "comments": "",
+    "categories": [
+        "Combustibles"
+    ],
+    "created": 1716782588950,
+    "modified": 1716068689557,
+    "product_id": "wwcopzvmf",
+    "expiration_date": 1734978329029,
+    "toStoreId": "qec8hp7n3",
+    "fromStoreId": "",
+    "amount": "12",
+    "presentation_index": 0,
+    "stock_limit_alert": 0
 }

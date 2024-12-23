@@ -189,94 +189,14 @@ export default class LocalDatabase {
         });
     }
 
-    _storeHasStock(storeId, productId){
-
-    }
-
-    _storeHasPacks(storeId, productId){
-
-    }
-
-    buyStock(productsData) {
-        // http://localhost:5173/operation-form?type=BUY&products=0394-jfuqgtdh4-23hj2h4
+    validateOperation(products, operation){
         return new Promise((resolve, reject) => {
-            const items_data = productsData.map(prod => {
-                const amt = parseInt(prod.amount);
-                return {
-                    product_id: prod.id,
-                    store_from_id: prod.currentStoreId || null,
-                    store_to_id: prod.toStoreId || null,
-                    price: prod.price,
-                    stock_amount: amt,
-                    pack_amount: prod.returnable ? amt : 0,
-                    presentation_index: prod.presentationIndex
-                };
-            });
-            const operation = {
-                timestamp: Date.now(),
-                type: OPERATION_TYPES.BUY,
-                items_data
-            };
-
-            console.log("TODO: add stock to items table");
             resolve();
-            return;
-
-            /* 
-            this.insert("operations", operation)
-                .then(ids => {
-                    resolve(ids);
-                })
-                .catch(reject);
-            */
+            /* reject({
+                // not-enough-stock, not-enough-packs, invalid-amount, invalid-store, invalid-product
+                keyword: []  
+            });*/
         });
     }
 
-    spendStock(itemsData) {
-        return new Promise((resolve, reject) => {
-            console.log(itemsData);
-            console.log("TODO: check if store has enough stock");
-            console.log("TODO: remove stock from items table");
-            console.log("TODO: if returnable, add packs to items table");
-        });
-    }
-
-    moveStock(itemsData) {
-        return new Promise((resolve, reject) => {
-
-        });
-    }
-
-    movePacks(itemsData) {
-        return new Promise((resolve, reject) => {
-
-        });
-    }
-
-    returnPacks(items, origins, amount) {
-        return new Promise((resolve, reject) => {
-
-        });
-    }
-
-    /*This function redirect to the corresponding actions, as each one has different behaviour */
-    handleOperation(operation_key, items){
-        const operation = OPERATION_TYPES[operation_key];
-        switch(operation){
-            case OPERATION_TYPES.BUY:
-                return this.buyStock(items);
-            case OPERATION_TYPES.SPEND:
-                return this.spendStock(items);
-            case OPERATION_TYPES.MOVE_STOCK:
-                return this.moveStock(items);
-            case OPERATION_TYPES.MOVE_PACKS:
-                return this.movePacks(items);
-            case OPERATION_TYPES.RETURN_PACKS:
-                return this.returnPacks(items);
-            default:
-                return new Promise((_, reject) => {
-                    reject({message:"Operation not valid.", type: ERROR_TYPES.UNKNOWN_OPERATION});
-                });
-        }
-    }
 }

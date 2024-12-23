@@ -1,8 +1,9 @@
-import { UNITS_ABBRS } from "../../constants";
+import { UNITS_ABBRS } from "../constants";
 
 const operations = {
     en: {
         title: "Operations",
+        operation: "Operation",
         new_operation: "New operation",
         select_location: "Select location",
         same_location: "Same location",
@@ -58,6 +59,7 @@ const operations = {
     },
     es: {
         title: "Movimientos",
+        operation: "Movimiento",
         new_operation: "Nuevo movimiento",
         select_location: "Elegir ubicación",
         same_location: "Mismo depósito",
@@ -100,7 +102,7 @@ const operations = {
         validate: "Validar",
         confirm: "Confirmar",
         cancel: "Cancelar",
-        confirm_operation: "Detalles del movimiento",
+        confirm_operation: "Confirmar",
 
         // Error messages
         invalid_url_params: "Error de formulario",

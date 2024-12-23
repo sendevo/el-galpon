@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {createRef, useEffect, useState } from "react";
 import { 
     Grid,
     Typography,
@@ -14,7 +14,7 @@ import ActionsBlock from "../../components/ActionsBlock";
 import { Input } from "../../components/Inputs";
 import ProductBlock from "./productBlock";
 import DestinationBlock from "./destinationBlock";
-import ConfirmModal from "./confirmModal";
+import OperationConfirmModal from "./operationConfirmModal";
 import { getMissingFields, getURLParams, getProductData } from "./helpers";
 import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
@@ -23,11 +23,13 @@ import observationsIcon from "../../assets/icons/observations.png";
 
 const View = () => {
 
+    const ref = createRef();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { t } = useTranslation("operations");
     const toast = useToast();    
     const db = useDatabase();
+    
 
     const [stores, setStores] = useState([]); // Download all stores for selects
 
@@ -47,7 +49,7 @@ const View = () => {
         const urlParams = getURLParams(searchParams);
         if(urlParams.valid){
             db.query("stores") // First, get list of stores for selects
-                .then(stores => { // Then get item or products data depending on URL params
+                .then(st => { // Then get item or products data depending on URL params
                     const {table, ids} = urlParams;
                     if(table === "items" || table === "products"){
                         db.query(table, ids)
@@ -56,7 +58,7 @@ const View = () => {
                                     ...formData,
                                     products: getProductData(table, data)
                                 });
-                                setStores(stores);
+                                setStores(st);
                             })
                             .catch(console.error);
                     }else{
@@ -77,6 +79,13 @@ const View = () => {
         const prevProducts = [...formData.products];
         // These props are attributes of the form, not the object to store in DB
         prevProducts[index][prop] = value;
+
+        // For the case of stores, add stores names to avoid passing the stores list to the modal
+        if(prop === "toStoreId")
+            prevProducts[index].toStoreName = stores.find(s => s.id === value).name;
+        if(prop === "fromStoreId")
+            prevProducts[index].fromStoreName = stores.find(s => s.id === value).name;
+        
         setFormData({
             ...formData,
             products: prevProducts
@@ -107,14 +116,15 @@ const View = () => {
 
     const handleValidate = () => {
         const missingFields = getMissingFields(formData.products, operation);
-
         if(missingFields.length === 0){
-
-            
-            // TODO: Data validation (stock, operatcions, etc)
-
-
-            setModalOpen(true);
+            db.validateOperation(formData.products, operation)
+                .then(() => {
+                    setModalOpen(true)
+                })
+                .catch(err => {
+                    console.error(err);
+                    toast(t(err.keyword), "error");
+                });
         }else{
             console.error(missingFields);
             toast(t(missingFields), "error");
@@ -186,13 +196,15 @@ const View = () => {
             </Grid>
 
             <Modal 
+                sx={{overflow:"auto"}}
                 open={modalOpen} 
                 onClose={()=>setModalOpen(false)}>
-                <ConfirmModal
+                <OperationConfirmModal
+                    ref={ref}
                     products={formData.products}
                     onConfirm={()=>setModalOpen(false)}
                     onCancel={()=>setModalOpen(false)}/>
-            </Modal>     
+            </Modal>
         </MainView>
     );
 };
