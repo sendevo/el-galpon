@@ -8,6 +8,7 @@ import {
 import { CssBaseline, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles"; 
 import useConfirm from "./hooks/useConfirm";
+import { useDatabase } from "./context/Database";
 import UIUtilsProvider from './context/UIFeedback';
 import DatabaseProvider from "./context/Database";
 import i18next from 'i18next';
@@ -26,19 +27,21 @@ i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false }
 });
 
-/* 
-const onSwitchLanguage = (lang) => { // 'es' or 'en'
-    i18n.changeLanguage(lang);
-    moment.locale(lang);
-    console.log(i18n.language);
-}
-*/
 
-const Router = () => {
+const Core = () => {
 
-    /*
-    const confirm = useConfirm();
+    const db = useDatabase();
+
+    console.log("app")
+
+//    const confirm = useConfirm();
     useEffect(() => {
+        db.query("items")
+            .then(data => {
+                console.log(data);
+            });
+
+        /*
         confirm(
             "Versión de prueba",
             "Está ejecutando una versión demostrativa, los datos son de prueba y se restablecerán al recargar la aplicación",
@@ -49,8 +52,8 @@ const Router = () => {
             "Aceptar",
             "" 
         );
+        */
     }, []);
-    */
 
     return (
         <BrowserRouter>
@@ -75,7 +78,7 @@ const App = () => (
         <GlobalStyles styles={globalStyles}/>
         <DatabaseProvider>
             <UIUtilsProvider>
-                <Router />                
+                <Core />                
             </UIUtilsProvider>
         </DatabaseProvider>
     </ThemeProvider>

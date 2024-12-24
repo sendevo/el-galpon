@@ -58,9 +58,9 @@ const ProductBlock = ({product, operation}) => {
                 </Typography>
                 
             }
-            {Boolean(product.stock_limit_alert) && 
+            {Boolean(product.min_stock) && 
                 <Typography>
-                    <b>{t("stock_limit_alert")}:</b> {product.stock_limit_alert} {t(presentation.unit)}
+                    <b>{t("stock_limit_alert")}:</b> {product.min_stock} {t(presentation.unit)}
                 </Typography>
             }
         </Box>

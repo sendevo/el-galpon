@@ -172,15 +172,15 @@ const ProductBlock = props => {
                                 icon={notificationIcon}
                                 label={t("stock_limit_alert") + " (" + t(presentation.unit) + ")"}
                                 type="number"
-                                value={product.stock_limit_alert || ""}
-                                onChange={e => onPropChange("stock_limit_alert", e.target.value)}/>
+                                value={product.min_stock || ""}
+                                onChange={e => onPropChange("min_stock", e.target.value)}/>
                         </Grid>
                         
                         <Grid item xs={12}>
                             <Box sx={localComponentStyles.stockAlertContainer}>
                                 <Typography sx={localComponentStyles.stockAlertText}>
-                                    {product.stock_limit_alert > 0 ? 
-                                        t("stock_alert_message") + " " + parseInt(product.stock_limit_alert) + " " + t(presentation.unit)
+                                    {product.min_stock > 0 ? 
+                                        t("stock_alert_message") + " " + parseInt(product.min_stock) + " " + t(presentation.unit)
                                         :
                                         t("no_stock_alert_message")
                                     }

@@ -91,7 +91,7 @@ const View = () => {
         if(prop === "fromStoreId")
             prevProducts[index].fromStoreName = stores.find(s => s.id === value).name;
 
-        if(prop === "stock_limit_alert" && value < 0)
+        if(prop === "min_stock" && value < 0)
             prevProducts[index][prop] = 0;
         
         setFormData({

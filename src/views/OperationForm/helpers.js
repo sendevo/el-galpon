@@ -78,13 +78,13 @@ const getProductData = (table,data) => {
         - toStoreId
         - fromStoreId
         - amount
-        - stock_limit_alert
+        - min_stock
     */
 
     switch(table){
         case "items":
             return data.map(it => ({
-                ...it, // {id, product_id, store_id, stock, empty_packs, presentation_index, expiration_date, stock_limit_alert}
+                ...it, // {id, product_id, store_id, stock, empty_packs, presentation_index, expiration_date, min_stock}
                 presentations: it.productData.presentations,
                 returnable: it.productData.returnable,
                 expirable: it.productData.expirable,
@@ -103,7 +103,7 @@ const getProductData = (table,data) => {
                 fromStoreId: "",
                 amount: "",
                 presentation_index: 0,
-                stock_limit_alert: 0
+                min_stock: 0
             }));
         default:
             return [];
