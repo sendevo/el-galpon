@@ -31,7 +31,7 @@ export const OPERATION_TYPES = { // Inmutable (migrate DB if changed)
     RETURN_PACKS: 6
 };
 
-export const OPERATION_TYPES_NAMES = { // If change, update translations keywords
+export const OPERATION_TYPES_NAMES = { // Example of use: OPERATION_TYPES_NAMES[OPERATION_TYPES.BUY]
     UNDEFINED: "undef",
     BUY: "buy",
     MOVE_STOCK: "move_stock",
@@ -44,9 +44,11 @@ export const validOperationType = type => Object.keys(OPERATION_TYPES).includes(
 // Alert definitions
 export const ALERT_TYPES = { // Inmutable (migrate DB if changed)
     OTHER: 1,
-    STOCK: 2,
-    EXPIRATION: 3
+    LOW_STOCK: 2,
+    EXPIRED: 3,
+    NEAR_EXPIRATION: 4
 };
+export const EXPIRATION_LIMIT_DAYS = 15;
 
 // Moment configuration for spanish
 export const MONTHS = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];

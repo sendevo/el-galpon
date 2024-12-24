@@ -5,9 +5,10 @@ const DAY = 1000 * 60 * 60 * 24;
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const getId = (table, name) => table.find(r => r.name === name)?.id || null;
 
-const startDate = new Date("2024-03-02").getTime();
+
 const maxPeriod = 200 * DAY; // 200 days
-const getDate = () => new Date(startDate + Math.random() * maxPeriod).getTime();
+const getRandomFutureDate = () => new Date(Date.now() + Math.random() * maxPeriod).getTime();
+const getRandomPastDate = () => new Date(Date.now() - Math.random() * maxPeriod).getTime();
 
 const timeAgo = (time) => Math.floor(Date.now() - time);
 
@@ -53,8 +54,8 @@ const products = [
         brand: "Estrella",
         comments: "",
         categories: ["Herbicidas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -72,8 +73,8 @@ const products = [
         brand: "Dicamax aca 58",
         comments: "",
         categories: ["Herbicidas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -91,8 +92,8 @@ const products = [
         brand: "Atrazina lq 90 (R)",
         comments: "",
         categories: ["Herbicidas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -110,8 +111,8 @@ const products = [
         brand: "Profertil",
         comments: "",
         categories: ["Fertilizantes"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -134,8 +135,8 @@ const products = [
         brand: "ACA 304",
         comments: "Cosecha 2021",
         categories: ["Semillas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -153,8 +154,8 @@ const products = [
         brand: "ACA 477",
         comments: "",
         categories: ["Semillas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -177,8 +178,8 @@ const products = [
         brand: "ACA 220",
         comments: "",
         categories: ["Semilla"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -196,8 +197,8 @@ const products = [
         brand: "Pentasilo Manta",
         comments: "Film de polietileno pentacapa (5 capas), bicolor (exterior blanco e interior negro), coextrusado con plástico virgen de altísima calidad",
         categories: ["Silobolsas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -215,8 +216,8 @@ const products = [
         brand: "Monsanto",
         comments: "",
         categories: ["Herbicidas"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -234,8 +235,8 @@ const products = [
         brand: "AF Mix ADQ Preparto Aniónica",
         comments: "Recomendamos ingresar las vacas al lote y dosificar en la ración 21 días antes del parto",
         categories: ["Nutrición animal"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -253,8 +254,8 @@ const products = [
         brand: "Biofarma",
         comments: "Aporta magnesio de rápida disponibilidad. Rsencial en la prevención de la tetania de los pastos.",
         categories: ["Nutrición animal"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -272,8 +273,8 @@ const products = [
         brand: "ER Agrícola",
         comments: "",
         categories: ["Alambrados"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
@@ -291,8 +292,8 @@ const products = [
         brand: "YPF",
         comments: "",
         categories: ["Combustibles"],
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     }
 ];
 const stores = [
@@ -306,8 +307,8 @@ const stores = [
             phone: "011 - 235 15123",
             address: "Calle 38 1231"
         },
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
         
     },
     {
@@ -320,8 +321,8 @@ const stores = [
             phone: "291 - 235 15123",
             address: "Calle 1 31"
         },
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
         
     },
     {
@@ -329,40 +330,40 @@ const stores = [
         name: "Galpón",
         lat: -39.363867,
         lng: -62.685075,
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
         name: "Silo I",
         lat: -39.365102,
         lng: -62.680214,
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
         name: "Silo IV",
         lat: -39.365102,
         lng: -62.680214,
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
         name: "Silo III",
         lat: -39.365102,
         lng: -62.680214,
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     },
     {
         id: generateId(),
         name: "Tinglado",
         lat: -39.363867,
         lng: -62.685075,
-        created: getDate(),
-        modified: getDate()
+        created: getRandomPastDate(),
+        modified: getRandomPastDate()
     }
 ];
 
@@ -383,7 +384,7 @@ const items = [
         stock: 480,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -392,7 +393,7 @@ const items = [
         stock: 0,
         empty_packs: 5,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -401,7 +402,7 @@ const items = [
         stock: 400,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -410,7 +411,7 @@ const items = [
         stock: 5.5,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -419,7 +420,7 @@ const items = [
         stock: 2,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -428,7 +429,7 @@ const items = [
         stock: 2.5,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -437,7 +438,7 @@ const items = [
         stock: 360000,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -446,7 +447,7 @@ const items = [
         stock: 2,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -464,7 +465,7 @@ const items = [
         stock: 65,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     },
     {
         id: generateId(),
@@ -473,14 +474,14 @@ const items = [
         stock: 5,
         empty_packs: 0,
         presentation_index: 0,
-        expiration_date: getDate()
+        expiration_date: getRandomFutureDate()
     }
 ];
 
 const operations = [
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "BUY",
         items_data: [{
             product_id: getId(products, "Piedra de magnesio"),
@@ -495,7 +496,7 @@ const operations = [
     },
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "BUY",
         items_data: [{
             product_id: getId(products, "Glifosato"),
@@ -519,7 +520,7 @@ const operations = [
     },
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "BUY",
         items_data: [{
             product_id: getId(products, "Urea granulada"),
@@ -534,7 +535,7 @@ const operations = [
     },
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "SPEND",
         items_data: [{
             product_id: getId(products, "Glifosato"),
@@ -582,7 +583,7 @@ const operations = [
     },
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "BUY",
         items_data: [{
             product_id: getId(products, "Trigo"),
@@ -597,7 +598,7 @@ const operations = [
     },
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "SPEND",
         items_data: [{
             product_id: getId(products, "Trigo"),
@@ -612,7 +613,7 @@ const operations = [
     },
     {
         id: generateId(),
-        timestamp: getDate(),
+        timestamp: getRandomPastDate(),
         type: "RETURN_PACKS",
         items_data: [{
             product_id: getId(products, "2,4D"),
@@ -639,43 +640,38 @@ const operations = [
 const alerts = [
     {
         id: generateId(),
+        item_id: getItemId("Trigo", "Silo I"),
         timestamp: timeAgo(2*DAY),
         type: "STOCK",
-        message: "El producto \"Trigo\" tiene stock bajo",
-        seen: true,
-        link: "stock?id:eq:"+getItemId("Trigo", "Silo I")
+        seen: true
     },
     {
         id: generateId(),
+        item_id: getItemId("Urea granulada", "Silo IV"),
         timestamp: timeAgo(3*DAY),
         type: "STOCK",
-        message: "El producto \"Urea granulada\" tiene stock bajo",
-        seen: true,
-        link: "stock?id:eq:"+getItemId("Urea granulada", "Silo IV")
+        seen: true
     },
     {
         id: generateId(),
+        item_id: getItemId("2,4D", "Galpón"),
         timestamp: Date.now(),
         type: "EXPIRATION",
-        message: "El producto \"2,4D\" está por vencer",
-        seen: false,
-        link: "stock?id:eq:"+getItemId("2,4D", "Galpón")
+        seen: false
     },
     {
         id: generateId(),
+        item_id: getItemId("Glifosato", "Galpón"),
         timestamp: timeAgo(3.4*MONTH),
         type: "EXPIRATION",
-        message: "El producto \"Glifosato\" está por vencer",
-        seen: false,
-        link: "stock?id:eq:"+getItemId("Glifosato", "Galpón")
+        seen: false
     },
     {
         id: generateId(),
+        item_id: getItemId("Glifosato", "Galpón"),
         timestamp: timeAgo(5*MONTH),
         type: "STOCK",
-        message: "El producto \"Glifosato\" tiene stock bajo",
-        seen: true,
-        link: "stock?id:eq:"+getItemId("Glifosato", "Galpón")
+        seen: true
     }
 ];
 

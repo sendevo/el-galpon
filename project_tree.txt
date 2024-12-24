@@ -1,5 +1,6 @@
 .
 ├── capacitor.config.json
+├── git-push
 ├── images
 │   ├── background
 │   │   └── galpon1.png
@@ -17,7 +18,7 @@
 │   │   ├── 7_lista_productos_2.png
 │   │   ├── 8_historial.png
 │   │   └── 9_form_compra.png
-│   ├── criiollo.jpg
+│   ├── criollo.jpg
 │   ├── favicon.png
 │   ├── icon_1024.png
 │   └── templates
@@ -28,7 +29,6 @@
 ├── package-lock.json
 ├── project_tree.txt
 ├── readme.md
-├── schema.md
 ├── src
 │   ├── App.jsx
 │   ├── assets
@@ -46,6 +46,7 @@
 │   │   ├── EmptyList
 │   │   ├── ErrorBoundary
 │   │   ├── GenericCard
+│   │   ├── HeaderCell
 │   │   ├── Inputs
 │   │   ├── MainView
 │   │   ├── NotificationIcon
@@ -88,4 +89,4 @@
 ├── vite.config.js
 └── vite.config.web.js
 
-49 directories, 40 files
+50 directories, 40 files

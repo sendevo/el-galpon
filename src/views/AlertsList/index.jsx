@@ -24,8 +24,9 @@ const View = () => {
 
     const onOpen = index => {
         onRead(index, true);
-        console.log(alerts[index].link);
-        navigate("/"+alerts[index].link);
+        const link = "stock?id:eq:" + alerts[index].item_id;
+        //console.log(link);
+        navigate(link);
     };
     
     const onRead = (index, value, callback) => {

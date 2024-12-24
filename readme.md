@@ -30,8 +30,10 @@ Detalle completo de versiones en [package.json](package.json)
 Generado con```tree -L 3 -I "node_modules|android|doc|tests" > project_tree.txt```
 
 ```plaintext
+.
 ├── capacitor.config.json
-├── images --> Contiene imágenes generales del proyecto
+├── git-push
+├── images
 │   ├── background
 │   │   └── galpon1.png
 │   ├── captura.png
@@ -54,15 +56,14 @@ Generado con```tree -L 3 -I "node_modules|android|doc|tests" > project_tree.txt`
 │   └── templates
 │       ├── barn.png
 │       └── campero.png
-├── index.html 
+├── index.html
 ├── package.json
 ├── package-lock.json
 ├── project_tree.txt
 ├── readme.md
-├── schema.md --> Formato de la base de datos
 ├── src
 │   ├── App.jsx
-│   ├── assets --> Mayormente para imagenes de la app, pero puede incluir otros recursos
+│   ├── assets
 │   │   ├── backgrounds
 │   │   ├── icons
 │   │   ├── logo_el_galpon.png
@@ -70,30 +71,31 @@ Generado con```tree -L 3 -I "node_modules|android|doc|tests" > project_tree.txt`
 │   │   ├── logo_inta_white.png
 │   │   ├── logo_ministerio_white.png
 │   │   └── working_monkey.jpg
-│   ├── components --> Componentes funcionales React reutilizables
+│   ├── components
 │   │   ├── ActionsBlock
 │   │   ├── Confirm
 │   │   ├── ContextMenu
 │   │   ├── EmptyList
 │   │   ├── ErrorBoundary
 │   │   ├── GenericCard
+│   │   ├── HeaderCell
 │   │   ├── Inputs
-│   │   ├── MainView --> Este componente es el mas importante ya que agrupa todo el contenido de cada vista
+│   │   ├── MainView
 │   │   ├── NotificationIcon
 │   │   ├── Preloader
 │   │   ├── Prompt
 │   │   ├── SearchForm
 │   │   └── Toast
-│   ├── context --> Proveedores globales de utilidades
+│   ├── context
 │   │   ├── Database
 │   │   └── UIFeedback
-│   ├── hooks --> Facilitadores para el uso de los proveedores
+│   ├── hooks
 │   │   ├── useConfirm
 │   │   ├── usePreloader
 │   │   ├── usePrompt
 │   │   └── useToast
 │   ├── main.jsx
-│   ├── model --> Declaraciones fundamentales de la app
+│   ├── model
 │   │   ├── classes.js
 │   │   ├── constants.js
 │   │   ├── DB
@@ -102,7 +104,7 @@ Generado con```tree -L 3 -I "node_modules|android|doc|tests" > project_tree.txt`
 │   │   └── utils.js
 │   ├── themes
 │   │   └── index.jsx
-│   └── views --> Listado de componentes React que se renderizan en cada vista
+│   └── views
 │       ├── About
 │       ├── AlertsList
 │       ├── Empty404
@@ -212,16 +214,17 @@ Los movimientos tienen fechas editables pero el resto son datos inmutables, perm
 ```
 
 ### Alertas (alerts)
-Son mensajes que indican informacion sobre productos por vencerse o por agotarse. El tipo de alerta preconfigura el texto que se muestra en la vista, pero se puede agregar mensajes configurables que tienen mas prioridad que el defecto. El enlace redirige a una vista particular con filtros.
+Son mensajes que indican informacion sobre productos por vencerse o por agotarse. El tipo de alerta preconfigura el texto que se muestra en la vista, pero se puede agregar mensajes configurables que tienen mas prioridad que el defecto. El enlace redirige a la vista de stock filtrando los items que generaron la alerta.
+Las alertas no se pueden eliminar, solo desaparecen cuando la condicion que las genero cambia.
 ```js
 {
     id: 0,
+    item_id: 0,
     timestamp: 0,
-    type: "", // keywords: EXPIRATION, STOCK, OTHER -> Ver translations
+    type: "", // keywords: NEAR_EXPIRATION, EXPIRED, LOW_STOCK, OTHER -> Ver translations
     ref: "",
-    message: "",
-    seen: false,
-    link: ""
+    message: "" || null,
+    seen: false
 }
 ```
 
@@ -355,11 +358,15 @@ Formulario de compra/movimiento/devolucion
 [x] Indicar fecha de vencimiento  
 [x] Campos para configurar alarma de stock bajo  
 [x] Campo para indicar fecha de vencimiento  
+[ ] Campo para habilitar alerta de vencimiento
 [x] Adaptar campos segun la operacion.  
 [ ] Validacion de datos de formulario:  
     [x] Campos obligatorios.  
-    [ ] Validez de los datos.  
+    [x] Validez de los datos.  
 [ ] Registrar operacion en la DB  
+
+Vista de alertas
+[ ] Mover consulta y logica de alertas al modelo de DB
 
 Filtrado de tablas
 [ ] Selector de categoria tapa el teclado  
