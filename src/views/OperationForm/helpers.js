@@ -25,20 +25,25 @@ const getMissingFields = (products, operation) => { // Form validation
 };
 
 const validateOperation = (products, operation) => {
+    // Once inputs are valid, check input values with database
+
     const validationErrors = [];
 
     switch(operation){
-        case "MOVE_STOCK":
-        case "MOVE_PACKS":
-            
+        case "SPEND": // Must have stock
+        case "MOVE_STOCK": // Must have stock, 
+            if(products.some(p => p.amount > p.stock))
+                validationErrors.push("stock_error");
+            break;
+        case "MOVE_PACKS": // Must have packs
+        case "RETURN_PACKS": // Must have packs
+            if(products.some(p => p.amount > p.empty_packs))
+                validationErrors.push("packs_error");
             break;
         case "BUY":
-
-        case "SPEND":
-        case "RETURN_PACKS":
             break;
         default:
-            missingFields.push("operation_error");
+            validationErrors.push("operation_error");
     }
 
     return validationErrors;

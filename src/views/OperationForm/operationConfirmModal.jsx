@@ -25,17 +25,19 @@ const containerStyle = {
   };
 
 
-const ProductBlock = ({product}) => {
+const ProductBlock = ({product, operation}) => {
     
     const { t } = useTranslation("operations");
 
     const presentation = product.presentations[product.presentation_index];
 
+    const amountUnit = (operation === "RETURN_PACKS" || operation === "MOVE_PACKS") ? t("packs") : t(presentation.unit);
+
     return (
         <Box sx={{ml:1}}>
             <Typography><b>{t("product")}:</b> {product.name}</Typography>
             <Typography>
-                <b>{t("amount")}:</b> {product.amount} {t(presentation.unit)}
+                <b>{t("amount")}:</b> {product.amount} {amountUnit}
             </Typography>
             <Typography>
                 <b>{t("presentation")}:</b> {presentation.pack_size} {t(presentation.unit)} {presentation.bulk && "("+t("bulk")+")"}
@@ -86,7 +88,7 @@ const ModalContent = forwardRef(({products, onConfirm, onCancel}, ref) => {
                         <Fragment key={index}>  
                             {products.length > 1 && 
                                 <Typography sx={{fontSize:"18px", mt:2}}>Producto {index+1}</Typography>}
-                            <ProductBlock product={product}/>
+                            <ProductBlock product={product} operation={operation}/>
                         </Fragment>
                     ))
                 }

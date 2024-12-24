@@ -74,7 +74,8 @@ const ProductBlock = props => {
     else
         quantityInputLabel += "(" + t(presentation.unit) + ")";
     
-        const packAmountLabel = Math.ceil(product.amount / presentation.pack_size);
+    const packAmountLabel = Math.ceil(product.amount / presentation.pack_size);
+    const currentStockLabel = Math.ceil(product.stock / presentation.pack_size);
 
     return (
         <Paper sx={{...componentsStyles.paper, mt:1}}>
@@ -117,14 +118,27 @@ const ProductBlock = props => {
                 </Grid>
                 
                 {Boolean(product.amount) && !presentation.bulk && operation!=="RETURN_PACKS" && product.returnable &&
-                    <>
-                        <Grid item xs={12}>
-                            <Typography sx={{...componentsStyles.hintText, textAlign:"right", mb:1}}>
-                                {t('total_amount')} = {packAmountLabel} {t('packs').toLocaleLowerCase()}
-                            </Typography>
-                        </Grid>
-                        {/*<Divider sx={{m:1}}/>*/}
-                    </>
+                    <Grid item xs={12}>
+                        <Typography sx={{...componentsStyles.hintText, textAlign:"right"}}>
+                            {t('total_amount')} = {packAmountLabel} {t('packs').toLocaleLowerCase()}
+                        </Typography>
+                    </Grid>
+                }
+
+                {Boolean(product.amount) && !presentation.bulk && (operation==="SPEND" || operation==="MOVE_STOCK") &&
+                    <Grid item xs={12}>
+                        <Typography sx={{...componentsStyles.hintText, textAlign:"right"}}>
+                            {t('available')} = {currentStockLabel} {t('packs').toLocaleLowerCase()}
+                        </Typography>
+                    </Grid>
+                }
+
+                {(operation==="RETURN_PACKS" || operation==="MOVE_PACKS") &&
+                    <Grid item xs={12}>
+                        <Typography sx={{...componentsStyles.hintText, textAlign:"right"}}>
+                            {t('available_packs')} = {product.empty_packs} {t('packs').toLocaleLowerCase()}
+                        </Typography>
+                    </Grid>
                 }
 
                 {showStoreTo && operation !== "RETURN_PACKS" && 

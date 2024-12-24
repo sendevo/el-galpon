@@ -35,7 +35,6 @@ const View = () => {
     const toast = useToast();    
     const db = useDatabase();
     
-
     const [stores, setStores] = useState([]); // Download all stores for selects
 
     const [formData, setFormData] = useState({
@@ -88,8 +87,12 @@ const View = () => {
         // For the case of stores, add stores names to avoid passing the stores list to the modal
         if(prop === "toStoreId")
             prevProducts[index].toStoreName = stores.find(s => s.id === value).name;
+        
         if(prop === "fromStoreId")
             prevProducts[index].fromStoreName = stores.find(s => s.id === value).name;
+
+        if(prop === "stock_limit_alert" && value < 0)
+            prevProducts[index][prop] = 0;
         
         setFormData({
             ...formData,
@@ -151,7 +154,7 @@ const View = () => {
         setTimeout(() => {
             toast("(Datos no registrados)", "info", 2000);
             setModalOpen(false);
-            navigate("/stock");
+            navigate("/operations-list");
         }, 2000);
         
 

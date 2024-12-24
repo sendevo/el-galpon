@@ -16,6 +16,8 @@ const operations = {
         type: "Operation",
         amount: "Amount",
         packs: "Packs",
+        available: "Available",
+        available_packs: "Available packs",
         product: "Product",
         presentation: "Presentation",
         store_from: "Origin store",
@@ -54,6 +56,8 @@ const operations = {
         operation_error: "Operation error",
         return_amount_error: "Incorrect packs amount",
         expiration_date: "Expiration date",
+        stock_error: "Insufficient stock",
+        packs_error: "Insufficient packs",
         
         ...UNITS_ABBRS.en
     },
@@ -77,6 +81,8 @@ const operations = {
         stock: "Cantidad",
         amount: "Cantidad",
         packs: "Envases",
+        available: "Disponible",
+        available_packs: "Envases existentes",
         observations: "Observaciones",
         operation_saved: "Movimiento registrado",
         buy: "Compra",
@@ -110,6 +116,8 @@ const operations = {
         store_error: "Selección de depósitos incorrecta",
         operation_error: "Error de operación",
         return_amount_error: "Cantidad de envases incorrecta",
+        stock_error: "Stock insuficiente",
+        packs_error: "Envases insuficientes",
 
         ...UNITS_ABBRS.es
     }
