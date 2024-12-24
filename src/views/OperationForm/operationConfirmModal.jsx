@@ -3,16 +3,11 @@ import { useTranslation } from "react-i18next";
 import { 
     Box, 
     Button,
-    Typography,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    Paper 
+    Typography
 } from "@mui/material";
 import moment from "moment";
 import { useSearchParams } from "react-router-dom";
-import { componentsStyles } from "../../themes";
+
 
 const containerStyle = {
     position: "absolute",
@@ -36,26 +31,34 @@ const ProductBlock = ({product}) => {
 
     const presentation = product.presentations[product.presentation_index];
 
-
-    // Dual-column table with following attributes:
-    // - Product name
-    // - Presentation
-    // - Amount
-    // - Store To
-    // - Store From
-    // - Expiration date
-    // - Stock alert
-    // - Observations
     return (
-        <Box>
-            <Typography><b>{t("product")}</b> {product.name}</Typography>
-            <Typography><b>{t("presentation")}</b> {t("amount")} {product.amount} × {t(presentation.unit)}</Typography>
-            <Typography><b>{t("store_to")}</b> {product.toStoreName}</Typography>
-            <Typography><b>{t("store_from")}</b> {product.fromStoreName}</Typography>
-            <Typography><b>{t("expiration_date")}</b> {moment(product.expiration).format("DD/MM/YYYY")}</Typography>
-            {product.stock_limit_alert && 
+        <Box sx={{ml:1}}>
+            <Typography><b>{t("product")}:</b> {product.name}</Typography>
+            <Typography>
+                <b>{t("amount")}:</b> {product.amount} {t(presentation.unit)}
+            </Typography>
+            <Typography>
+                <b>{t("presentation")}:</b> {presentation.pack_size} {t(presentation.unit)} {presentation.bulk && "("+t("bulk")+")"}
+            </Typography>
+            {product.fromStoreName && 
                 <Typography>
-                    <b>{t("stock_limit_alert")}:</b> {product.stock_limit_alert} × {t(presentation.unit)}
+                    <b>{t("store_from")}:</b> {product.fromStoreName}
+                </Typography>
+            }
+            {product.toStoreName && 
+                <Typography>
+                    <b>{t("store_to")}:</b> {product.toStoreName}
+                </Typography>
+            }
+            {product.expirable && 
+                <Typography>
+                    <b>{t("expiration_date")}:</b> {moment(product.expiration).format("DD/MM/YYYY")}
+                </Typography>
+                
+            }
+            {Boolean(product.stock_limit_alert) && 
+                <Typography>
+                    <b>{t("stock_limit_alert")}:</b> {product.stock_limit_alert} {t(presentation.unit)}
                 </Typography>
             }
         </Box>

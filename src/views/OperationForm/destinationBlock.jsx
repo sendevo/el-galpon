@@ -40,7 +40,7 @@ const DestinationBlock = ({formData, stores, handleSwitchChange, handleGlobalSto
                                 value={formData.globalStoreId || ""}
                                 error={formData.globalStore === ""}
                                 options={stores.map(s => ({label: s.name, value: s.id}))}
-                                onChange={e => handleGlobalStoreSelect(e.target.value)}/>
+                                onChange={e => handleGlobalStoreSelect("toStoreId", e.target.value)}/>
                         </Grid> 
                     }
                 </Grid>

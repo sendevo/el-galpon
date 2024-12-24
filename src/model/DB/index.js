@@ -188,15 +188,4 @@ export default class LocalDatabase {
             }
         });
     }
-
-    validateOperation(products, operation){
-        return new Promise((resolve, reject) => {
-            resolve();
-            /* reject({
-                // not-enough-stock, not-enough-packs, invalid-amount, invalid-store, invalid-product
-                keyword: []  
-            });*/
-        });
-    }
-
 }

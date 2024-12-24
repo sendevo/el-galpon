@@ -15,7 +15,12 @@ import { Input } from "../../components/Inputs";
 import ProductBlock from "./productBlock";
 import DestinationBlock from "./destinationBlock";
 import OperationConfirmModal from "./operationConfirmModal";
-import { getMissingFields, getURLParams, getProductData } from "./helpers";
+import { 
+    getMissingFields, 
+    validateOperation, 
+    getURLParams, 
+    getProductData 
+} from "./helpers";
 import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
 import observationsIcon from "../../assets/icons/observations.png";
@@ -106,25 +111,33 @@ const View = () => {
         });
     };
 
-    const handleGlobalStoreSelect = value => {
-        setFormData(prevForm => ({
-            ...prevForm,
-            globalStoreId: value,
-            products: prevForm.products.map(p => ({...p, toStoreId: value}))
-        }));
+    const handleGlobalStoreSelect = (prop, value) => {
+        if(prop === "toStoreId"){
+            const toStoreName = stores.find(s => s.id === value).name;
+            setFormData(prevForm => ({
+                ...prevForm,
+                globalStoreId: value,
+                products: prevForm.products.map(p => ({
+                    ...p, 
+                    toStoreId: value, 
+                    toStoreName}))
+            }));
+        }else{
+            console.error("Invalid prop", prop);
+        }
     };
 
     const handleValidate = () => {
         const missingFields = getMissingFields(formData.products, operation);
+
         if(missingFields.length === 0){
-            db.validateOperation(formData.products, operation)
-                .then(() => {
-                    setModalOpen(true)
-                })
-                .catch(err => {
-                    console.error(err);
-                    toast(t(err.keyword), "error");
-                });
+            const validationErrors = validateOperation(formData.products, operation);
+            if(validationErrors.length === 0){
+                setModalOpen(true);
+            }else{
+                console.error(validationErrors);
+                toast(t(validationErrors), "error");
+            }
         }else{
             console.error(missingFields);
             toast(t(missingFields), "error");
@@ -132,6 +145,15 @@ const View = () => {
     }
 
     const handleSubmit = () => { /* Set operation data and add to DB*/
+
+        console.log("Submitting operation data", formData);
+        toast("Operación finalizada", "success", 2000);
+        setTimeout(() => {
+            toast("(Datos no registrados)", "info", 2000);
+            setModalOpen(false);
+            navigate("/stock");
+        }, 2000);
+        
 
         /*
         db.handleOperation(formData.operation, formData.products)
@@ -202,7 +224,7 @@ const View = () => {
                 <OperationConfirmModal
                     ref={ref}
                     products={formData.products}
-                    onConfirm={()=>setModalOpen(false)}
+                    onConfirm={handleSubmit}
                     onCancel={()=>setModalOpen(false)}/>
             </Modal>
         </MainView>

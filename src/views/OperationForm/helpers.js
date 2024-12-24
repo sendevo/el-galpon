@@ -24,6 +24,26 @@ const getMissingFields = (products, operation) => { // Form validation
     return missingFields;
 };
 
+const validateOperation = (products, operation) => {
+    const validationErrors = [];
+
+    switch(operation){
+        case "MOVE_STOCK":
+        case "MOVE_PACKS":
+            
+            break;
+        case "BUY":
+
+        case "SPEND":
+        case "RETURN_PACKS":
+            break;
+        default:
+            missingFields.push("operation_error");
+    }
+
+    return validationErrors;
+}
+
 const getURLParams = searchParams => {
     const operation = searchParams.get("type");
     const itemsId = searchParams.get("items");
@@ -66,6 +86,7 @@ const getProductData = (table,data) => {
                 name: it.productData.name,
                 toStoreId: "",
                 fromStoreId: it.store_id,
+                fromStoreName: it.storeData.name,
                 amount: ""
             }));
         case "products":
@@ -84,4 +105,4 @@ const getProductData = (table,data) => {
     }
 };
 
-export { getMissingFields, getURLParams, getProductData };
+export { getMissingFields, validateOperation, getURLParams, getProductData };

@@ -72,7 +72,7 @@ const operations = {
         type: "Movimiento",
         product: "Producto",
         presentation: "Presentación",
-        store_from: "Origen",
+        store_from: "Depósito origen",
         store_to: "Depósito destino",
         stock: "Cantidad",
         amount: "Cantidad",
@@ -107,7 +107,7 @@ const operations = {
         // Error messages
         invalid_url_params: "Error de formulario",
         product_amount_error: "Cantidad de producto incorrecta",
-        store_error: "Selección de deopósitos incorrecta",
+        store_error: "Selección de depósitos incorrecta",
         operation_error: "Error de operación",
         return_amount_error: "Cantidad de envases incorrecta",
 

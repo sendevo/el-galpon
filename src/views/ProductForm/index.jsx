@@ -234,14 +234,16 @@ const View = () => {
                                     value={productData.expirable}
                                     onChange={handleInputChange}/>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Switch 
-                                    labelFalse={t("not_returnable")}
-                                    labelTrue={t("returnable")}
-                                    name="returnable"
-                                    value={productData.returnable}
-                                    onChange={handleInputChange}/>
-                            </Grid>
+                            {!productData.presentations.every(p => p.bulk) && 
+                                <Grid item xs={12}>
+                                    <Switch 
+                                        labelFalse={t("not_returnable")}
+                                        labelTrue={t("returnable")}
+                                        name="returnable"
+                                        value={productData.returnable}
+                                        onChange={handleInputChange}/>
+                                </Grid>
+                            }
                         </Grid>
                     </Paper>
                 </Grid>

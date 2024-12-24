@@ -114,64 +114,64 @@ export const UNITS = {
             abbr: "u"
         },
         kilogram: {
-            name: "Kilogramo",
+            name: "Kilogramo/s",
             abbr: "kg"
         },
         liter: {
-            name: "Litro",
+            name: "Litro/s",
             abbr: "l"
         },
         milimeter: {
-            name: "Mililitro",
+            name: "Mililitro/s",
             abbr: "ml"
         },
         gram: {
-            name: "Gramo",
+            name: "Gramo/s",
             abbr: "g"
         },
         ton: {
-            name: "Tonelada",
+            name: "Tonelada/s",
             abbr: "tn"
         },
         meter: {
-            name: "Metro",
+            name: "Metro/s",
             abbr: "m"
         },
         pack: {
-            name: "Paquete",
+            name: "Paquete/s",
             abbr: "paq"
         },
         box: {
-            name: "Caja",
-            abbr: "caja"
+            name: "Caja/s",
+            abbr: "caja/s"
         },
         bag: {
-            name: "Bolsa",
-            abbr: "bolsa"
+            name: "Bolsa/s",
+            abbr: "bolsa/s"
         },
         bottle: {
-            name: "Botella",
+            name: "Botella/s",
             abbr: "bot"
         },
         can: {
-            name: "Lata",
-            abbr: "lata"
+            name: "Lata/s",
+            abbr: "lata/s"
         },
         drum: {
             name: "Tambor",
             abbr: "tambor"
         },
         pallet: {
-            name: "Pallet",
-            abbr: "pallet"
+            name: "Pallet/s",
+            abbr: "pallet/s"
         },
         seeds: {
-            name: "Semilla",
+            name: "Semilla/s",
             abbr: "sem"
         },
         other: {
-            name: "Otro",
-            abbr: "otro"
+            name: "Otro/s",
+            abbr: "otro/s"
         }
     },
     en: {

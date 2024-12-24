@@ -330,7 +330,7 @@ Vista de productos
 
 Vista de formulario de productos  
 [x] Formato y cálculo de presentaciones.  
-[ ] CUando el producto es retornable, no puede ser venta a granel.
+[x] CUando el producto es retornable, no puede ser venta a granel.
 
 Vista de stock  
 [x] Ordenar alfabeticamente por defecto  
@@ -357,9 +357,8 @@ Formulario de compra/movimiento/devolucion
 [x] Campo para indicar fecha de vencimiento  
 [x] Adaptar campos segun la operacion.  
 [ ] Validacion de datos de formulario:  
-    [ ] Campos obligatorios.  
+    [x] Campos obligatorios.  
     [ ] Validez de los datos.  
-    [ ] Comparar con stock disponible o envases.  
 [ ] Registrar operacion en la DB  
 
 Filtrado de tablas
