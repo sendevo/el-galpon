@@ -1,10 +1,12 @@
-const YEAR = 1000 * 60 * 60 * 24 * 365;
-const MONTH = 1000 * 60 * 60 * 24 * 30;
-const DAY = 1000 * 60 * 60 * 24;
+import {
+    ALERT_TYPES,
+    YEAR,
+    MONTH,
+    DAY
+} from "../constants";
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const getId = (table, name) => table.find(r => r.name === name)?.id || null;
-
 
 const maxPeriod = 200 * DAY; // 200 days
 const getRandomFutureDate = () => new Date(Date.now() + Math.random() * maxPeriod).getTime();
@@ -642,35 +644,35 @@ const alerts = [
         id: generateId(),
         item_id: getItemId("Trigo", "Silo I"),
         timestamp: timeAgo(2*DAY),
-        type: "STOCK",
+        alert_type: ALERT_TYPES.LOW_STOCK,
         seen: true
     },
     {
         id: generateId(),
         item_id: getItemId("Urea granulada", "Silo IV"),
         timestamp: timeAgo(3*DAY),
-        type: "STOCK",
+        alert_type: ALERT_TYPES.LOW_STOCK,
         seen: true
     },
     {
         id: generateId(),
         item_id: getItemId("2,4D", "Galpón"),
         timestamp: Date.now(),
-        type: "EXPIRATION",
+        alert_type: "EXPIRATION",
         seen: false
     },
     {
         id: generateId(),
         item_id: getItemId("Glifosato", "Galpón"),
         timestamp: timeAgo(3.4*MONTH),
-        type: "EXPIRATION",
+        alert_type: ALERT_TYPES.EXPIRATION,
         seen: false
     },
     {
         id: generateId(),
         item_id: getItemId("Glifosato", "Galpón"),
         timestamp: timeAgo(5*MONTH),
-        type: "STOCK",
+        alert_type: ALERT_TYPES.LOW_STOCK,
         seen: true
     }
 ];

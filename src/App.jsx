@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { 
     BrowserRouter, 
     Routes, 
@@ -14,12 +14,13 @@ import { useDatabase } from "./context/Database";
 import UIUtilsProvider from './context/UIFeedback';
 import DatabaseProvider from "./context/Database";
 import { initReactI18next } from 'react-i18next';
-import translations from './model/translations';
 import ErrorBoundary from './components/ErrorBoundary';
 import Home from "./views/Home";
 import views from "./views";
 import theme, { globalStyles } from "./themes";
 import { EXPIRATION_LIMIT_DAYS, ALERT_TYPES } from "./model/constants";
+import { DB_TEST_MODE } from "./model/DB";
+import translations from './model/translations';
 
 
 i18next.use(initReactI18next).init({
@@ -29,106 +30,88 @@ i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false }
 });
 
+const searchForAlerts = items => {
+    const now = Date.now();
+    const lowStockItems = items.filter(i => i.stock < i.min_stock);
+    const expiredItems = items.filter(i => {
+        const ed = moment(i.expiration_date);
+        return ed.diff(now, "days") < 0;
+    });
+    const nearExpirationItems = items.filter(i => {
+        const ed = moment(i.expiration_date);
+        const days = ed.diff(now, "days");
+        return days < EXPIRATION_LIMIT_DAYS;
+    });
+    return { // Values of attributes of ALERT_TYPES may be numbers, but this should work anyway
+        [ALERT_TYPES.LOW_STOCK]: lowStockItems, 
+        [ALERT_TYPES.EXPIRED]: expiredItems, 
+        [ALERT_TYPES.NEAR_EXPIRATION]: nearExpirationItems 
+    };
+};
 
-const Core = () => {
+
+const AppCore = () => {
 
     const db = useDatabase();
+    const confirm = useConfirm();
+    const [dbReady, setDBReady] = useState(!DB_TEST_MODE);
 
-//    const confirm = useConfirm();
     useEffect(() => {
-        db.query("items")
-            .then(items => {
-
-                // Search for items with low stock
-                const lowStockItems = items.filter(i => i.stock < i.min_stock);
-
-                const now = Date.now();
-
-                // Search for items with expired date
-                const expiredItems = items.filter(i => {
-                    const ed = moment(i.expiration_date);
-                    return ed.diff(now, "days") < 0;
+        if (DB_TEST_MODE) {    
+            confirm(
+                "Versión de prueba",
+                "Está ejecutando una versión demostrativa, los datos son de prueba y se restablecerán al recargar la aplicación",
+                () => {
+                    db.loadTestData()
+                        .then(() => setDBReady(true))
+                        .catch(console.error);
+                },
+                () => {},
+                "Aceptar",
+                "" 
+            );
+        }else{
+            db.query("items")
+                .then(items => {
+                    const toCheckItems = searchForAlerts(items);
+                    const newAlerts = [];
+                    const now = Date.now();
+                    db.query("alerts")
+                        .then(alerts => { // For each alert in db, check if the item in stock still has the alert
+                            Object.keys(toCheckItems).forEach(k => { // k = LOW_STOCK, EXPIRED, NEAR_EXPIRATION
+                                toCheckItems[k].forEach(i => { // i = item to search in the list of alerts
+                                    if (!alerts.find(a => a.item_id === i.id && a.alert_type === ALERT_TYPES[k])) {
+                                        newAlerts.push({
+                                            alert_type: ALERT_TYPES[k],
+                                            message: "", // TODO: Add message. for example `El producto ${i.productData.name} tiene poco stock`
+                                            item_id: i.id,
+                                            timestamp: now,
+                                            seen: false
+                                        });
+                                    }
+                                });
+                            });
+                            console.log("New alerts", newAlerts);
+                        });
                 });
-
-                // Search for items with near expiration date
-                const nearExpirationItems = items.filter(i => {
-                    const ed = moment(i.expiration_date);
-                    const days = ed.diff(now, "days");
-                    return days < EXPIRATION_LIMIT_DAYS;
-                });
-                
-                db.query("alerts")
-                    .then(alerts => {
-                        const newAlerts = [];
-                        lowStockItems.forEach(i => {
-                            if (!alerts.find(a => a.item_id === i.id && a.type === "low_stock")) {
-                                newAlerts.push({
-                                    type: ALERT_TYPES.LOW_STOCK,
-                                    message: `El producto ${i.productData.name} tiene poco stock`,
-                                    item_id: i.id,
-                                    timestamp: now,
-                                    seen: false
-                                });
-                            }
-                        });
-
-                        expiredItems.forEach(i => {
-                            if (!alerts.find(a => a.item_id === i.id && a.type === "expired")) {
-                                newAlerts.push({
-                                    type: ALERT_TYPES.EXPIRED,
-                                    message: `El producto ${i.productData.name} ha expirado`,
-                                    item_id: i.id,
-                                    timestamp: now,
-                                    seen: false
-                                });
-                            }
-                        });
-
-                        nearExpirationItems.forEach(i => {
-                            if (!alerts.find(a => a.item_id === i.id && a.type === "near_expiration")) {
-                                newAlerts.push({
-                                    type: ALERT_TYPES.NEAR_EXPIRATION,
-                                    message: `El producto ${i.productData.name} está por vencer`,
-                                    item_id: i.id,
-                                    timestamp: now,
-                                    seen: false
-                                });
-                            }
-                        });
-
-                        console.log(newAlerts);
-                    })
-                    .catch(console.error);
-            });
-
-        /*
-        confirm(
-            "Versión de prueba",
-            "Está ejecutando una versión demostrativa, los datos son de prueba y se restablecerán al recargar la aplicación",
-            () => {
-                localStorage.clear();
-            },
-            () => {},
-            "Aceptar",
-            "" 
-        );
-        */
+        }
     }, []);
 
     return (
-        <BrowserRouter>
-            <ErrorBoundary>
-                <Routes>
-                    <Route index element={<Home/>} />
-                    {
-                        views.map((v,k) => (
-                            <Route key={k} path={v.path} element={v.component} />
-                        ))        
-                    }
-                    <Route path="*" element={<Navigate replace to="/" />} />
-                </Routes>
-            </ErrorBoundary>
-        </BrowserRouter>
+        dbReady &&
+            <BrowserRouter>
+                <ErrorBoundary>
+                    <Routes>
+                        <Route index element={<Home/>} />
+                        {
+                            views.map((v,k) => (
+                                <Route key={k} path={v.path} element={v.component} />
+                            ))        
+                        }
+                        <Route path="*" element={<Navigate replace to="/" />} />
+                    </Routes>
+                </ErrorBoundary>
+            </BrowserRouter>
     );
 };
 
@@ -138,7 +121,7 @@ const App = () => (
         <GlobalStyles styles={globalStyles}/>
         <DatabaseProvider>
             <UIUtilsProvider>
-                <Core />                
+                <AppCore />                
             </UIUtilsProvider>
         </DatabaseProvider>
     </ThemeProvider>

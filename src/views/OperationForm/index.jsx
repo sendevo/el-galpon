@@ -97,7 +97,7 @@ const View = () => {
         setFormData({
             ...formData,
             products: prevProducts
-        });   
+        });
     };
 
     const handleObservationsChange = value => {

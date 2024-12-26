@@ -221,7 +221,7 @@ Las alertas no se pueden eliminar, solo desaparecen cuando la condicion que las 
     id: 0,
     item_id: 0,
     timestamp: 0,
-    type: "", // keywords: NEAR_EXPIRATION, EXPIRED, LOW_STOCK, OTHER -> Ver translations
+    alert_type: "", // keywords: NEAR_EXPIRATION, EXPIRED, LOW_STOCK, OTHER -> Ver translations
     ref: "",
     message: "" || null,
     seen: false
@@ -326,6 +326,7 @@ Vista de depositos
 [x] Ajustar codigo de colores. Para boton stock usar negro  
 [x] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo  
 [x] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado  
+[ ] Componentes de lista vacia (copiar la de stock)
 
 Vista de productos  
 [x] Ordenar alfabeticamente por defecto  
@@ -360,12 +361,13 @@ Formulario de compra/movimiento/devolucion
 [x] Campo para indicar fecha de vencimiento  
 [ ] Campo para habilitar alerta de vencimiento
 [x] Adaptar campos segun la operacion.  
-[ ] Validacion de datos de formulario:  
+[x] Validacion de datos de formulario:  
     [x] Campos obligatorios.  
     [x] Validez de los datos.  
 [ ] Registrar operacion en la DB  
 
 Vista de alertas
+[ ] Componente para lista vacía (copiar la de stock)
 [ ] Mover consulta y logica de alertas al modelo de DB
 
 Filtrado de tablas

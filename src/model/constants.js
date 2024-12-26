@@ -51,6 +51,10 @@ export const ALERT_TYPES = { // Inmutable (migrate DB if changed)
 export const EXPIRATION_LIMIT_DAYS = 15;
 
 // Moment configuration for spanish
+export const YEAR = 1000 * 60 * 60 * 24 * 365;
+export const MONTH = 1000 * 60 * 60 * 24 * 30;
+export const DAY = 1000 * 60 * 60 * 24;
+
 export const MONTHS = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 const MONTHS_SHORT = ["Ene.", "Feb.", "Mar", "Abr.", "May", "Jun.", "Jul.", "Ago.", "Sept.", "Oct.", "Nov.", "Dic."];
 const WEEK_DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];

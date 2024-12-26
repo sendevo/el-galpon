@@ -11,15 +11,19 @@ const DatabaseProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const onDBReady = db => {
-            setDatabase(db);
-            setLoading(false);
-        };
-        new LocalDatabase(onDBReady);
+        const db = new LocalDatabase();
+        db.init()
+            .then(() => {
+                setDatabase(db);
+                setLoading(false);
+            })
+            .catch(console.error);
     }, []);
         
     return (
-        loading ? <Preloader /> :
+        loading ? 
+            <Preloader /> 
+            :
             <DatabaseContext.Provider value={database}>
                 {children}
             </DatabaseContext.Provider>
