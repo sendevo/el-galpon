@@ -15,7 +15,7 @@
             }
         },
         "items": {
-            "attributes": ["product_id", "store_id", "stock", "empty_packs", "presentation_index", "expiration_date"],
+            "attributes": ["product_id", "store_id", "stock", "empty_packs", "presentation_index", "expiration_date", "min_stock"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true
@@ -53,7 +53,7 @@
             ]
         },
         "alerts":{
-            "attributes": ["timestamp", "type", "message", "ref", "seen", "link"],
+            "attributes": ["item_id", "timestamp", "alert_type", "message", "ref", "seen"],
             "options": {
                 "keyPath": "id",
                 "autoIncrement": true

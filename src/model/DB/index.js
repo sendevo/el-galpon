@@ -1,4 +1,8 @@
-import { ERROR_CODES } from "../constants";
+import { 
+    ERROR_CODES,
+    ALERT_TYPES,
+    EXPIRATION_LIMIT_DAYS 
+} from "../constants";
 import { 
     levenshteinDistance, 
     queryString2Filters,
@@ -7,7 +11,7 @@ import {
 } from "../utils";
 import moment from "moment";
 import i18n from "i18next";
-import { MOMENT_LOCALE } from "../constants";
+import { MOMENT_LOCALE, DEFAULT_LOCALE } from "../constants";
 import schemas from "./schemas.json";
 import migrateDB from "./migrations";
 import testData from "./testData";
@@ -59,7 +63,7 @@ export default class LocalDatabase {
                         .catch(console.error);
                 }else{ // Load data 
                     console.log("Loading data...");
-                    const locale = localStorage.getItem("locale") || "es";
+                    const locale = localStorage.getItem("locale") || "es"; // Default locale is spanish
                     this.updateLocale(locale);
                     tables.forEach(table => {
                         const data = localStorage.getItem(table);
@@ -68,23 +72,24 @@ export default class LocalDatabase {
                     console.log("Data loaded.");
                     resolve();
                 }
-            }else{ // Clear database
+            }else{ // Clear database and initialize tables
                 console.log("Empty database, creating tables...");
                 localStorage.setItem("version", JSON.stringify(DB_VERSION));
                 tables.forEach(table => {
                     this._db[table] = [];
                     localStorage.setItem(table, "");
                 });
+                this.updateLocale(DEFAULT_LOCALE);
+                console.log("Tables created.");
                 resolve();
             }
         });
     }
 
-    loadTestData(){
+    loadTestData(){ // Warning: This will clear all data in the database
         return new Promise((resolve, reject) => {
-            this._db = testData;
             localStorage.clear();
-            localStorage.setItem("version", JSON.stringify(DB_VERSION));
+            this._db = testData;
             tables.forEach(table => {
                 localStorage.setItem(table, JSON.stringify(this._db[table]));
             });
@@ -97,6 +102,57 @@ export default class LocalDatabase {
         moment.updateLocale(locale, MOMENT_LOCALE[locale]);
         i18n.changeLanguage(locale);
         localStorage.setItem("locale", locale);
+    }
+
+    updateAlerts() {
+        return new Promise((resolve, reject) => {
+            const items = this._db.items;
+            const alerts = this._db.alerts;
+
+            const now = Date.now();
+
+            const lowStockItems = items.filter(i => i.stock < i.min_stock);
+
+            const expiredItems = items.filter(i => {
+                const ed = moment(i.expiration_date);
+                return ed.diff(now, "days") < 0;
+            });
+
+            const nearExpirationItems = items.filter(i => {
+                const ed = moment(i.expiration_date);
+                const days = ed.diff(now, "days");
+                return days < EXPIRATION_LIMIT_DAYS;
+            });
+
+            const newAlerts = [];
+
+            const toCheckItems = { // Values of attributes of ALERT_TYPES may be numbers, but this should work anyway
+                [ALERT_TYPES.LOW_STOCK]: lowStockItems, 
+                [ALERT_TYPES.EXPIRED]: expiredItems, 
+                [ALERT_TYPES.NEAR_EXPIRATION]: nearExpirationItems 
+            };
+
+            Object.keys(toCheckItems).forEach(k => { // k = LOW_STOCK, EXPIRED, NEAR_EXPIRATION
+                toCheckItems[k].forEach(i => { // i = item to search in the list of alerts
+                    if (!alerts.find(a => a.item_id === i.id && a.alert_type === ALERT_TYPES[k])) {
+                        newAlerts.push({
+                            alert_type: ALERT_TYPES[k],
+                            message: "", // TODO: Add message. for example `El producto ${i.productData.name} tiene poco stock`
+                            item_id: i.id,
+                            timestamp: now,
+                            seen: false
+                        });
+                    }
+                });
+            });
+
+            if (newAlerts.length > 0) {
+                this._db.alerts = [...alerts, ...newAlerts];
+                localStorage.setItem("alerts", JSON.stringify(this._db.alerts));
+            }
+
+            resolve();
+        });
     }
 
     insert(table, data) {

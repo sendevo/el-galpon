@@ -1,9 +1,9 @@
 import {
     ALERT_TYPES,
-    YEAR,
     MONTH,
     DAY
 } from "../constants";
+import schemas from "./schemas.json";
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const getId = (table, name) => table.find(r => r.name === name)?.id || null;
@@ -691,7 +691,8 @@ const unvisitedViews = [ // Used for introduction messages
 ];
 
 const testData = {
-    version: 0,
+    version: schemas.length - 1,
+    locale: "es",
     products,
     stores,
     items,

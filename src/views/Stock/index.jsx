@@ -122,16 +122,9 @@ const View = () => {
                         items={items} 
                         setItems={setItems}
                         columns={tableColumns}/>
-
-                    {/*
-                    <OperationsBlock
-                        enabledOperations={enabledOperations}
-                        onOperation={handleOperation}
-                        onExport={handleExport}/>
-                    */}
                 </Box>
                 :
-                <EmptyList message={t("emptyList")}/>
+                <EmptyList message={!emptyPacksView ? t("empty_list") : t("empty_pack_list")}/>
             }
             
             {emptyPacksView ? 

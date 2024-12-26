@@ -6,27 +6,33 @@ import {
     DialogTitle,
     Button
 } from '@mui/material';
+import { useTranslation } from "react-i18next";
 
-const Confirm = ({open, title, message, onConfirm, onCancel, okLabel, cancelLabel}) => (
-    <Dialog        
-        BackdropProps={{sx:{backdropFilter: "blur(2px)"}}}
-        open={open}
-        onClose={onCancel}>
-        <DialogTitle>
-            {title}
-        </DialogTitle>
-        <DialogContent>
-            <DialogContentText>
-                {message}
-            </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={onCancel}>
-                {cancelLabel !== undefined && cancelLabel !== null ? cancelLabel : "Cancelar"}
-            </Button>
-            <Button onClick={onConfirm} autoFocus>{okLabel || "Aceptar"}</Button>
-        </DialogActions>
-    </Dialog>
-);
+const Confirm = ({open, title, message, onConfirm, onCancel, okLabel, cancelLabel}) => {
+    const { t } = useTranslation("ui");
+
+    return (
+        <Dialog        
+            BackdropProps={{sx:{backdropFilter: "blur(2px)"}}}
+            sx={{zIndex: '9999'}}
+            open={open}
+            onClose={onCancel}>
+            <DialogTitle>
+                {title}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    {message}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onCancel}>
+                    {cancelLabel !== undefined && cancelLabel !== null ? cancelLabel : t("cancel")}
+                </Button>
+                <Button onClick={onConfirm} autoFocus>{okLabel || t("ok")}</Button>
+            </DialogActions>
+        </Dialog>
+    );
+};
 
 export default Confirm;

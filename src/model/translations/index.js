@@ -1,3 +1,4 @@
+import ui from "./ui";
 import home from "./home";
 import itemList from "./itemsList";
 import storesList from "./storesList";
@@ -20,6 +21,9 @@ import actionsBlock from "./actionsBlock";
 // {t('')}
 
 const dictionaries = {
+    // Common
+    ui,
+    
     // Primary views
     home, 
     itemList,

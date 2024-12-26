@@ -1,9 +1,5 @@
 import moment from "moment";
-import {
-    DEBUG_MODE,
-    AVAILABLE_DEBUG_MODES,
-    MONTHS
-} from "../model/constants.js";
+import { MONTHS } from "../model/constants.js";
 
 export const compare = (value1, value2, operator) => {
     switch (operator) {

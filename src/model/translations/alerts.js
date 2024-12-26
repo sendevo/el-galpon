@@ -1,6 +1,7 @@
 const alerts = {
     en: {
         title: "Notifications and alerts",
+        empty_alert_list: "No alerts",
         EXPIRATION: "Expiration",
         STOCK: "Low stock",
         OTHER: "Other",
@@ -16,6 +17,7 @@ const alerts = {
     },
     es: {
         title: "Notificaciones y alertas",
+        empty_alert_list: "No hay alertas",
         EXPIRATION: "Vencimientos",
         STOCK: "Stock bajo",
         OTHER: "Otros",

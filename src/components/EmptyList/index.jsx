@@ -6,7 +6,7 @@ import {
 import { componentsStyles } from "../../themes";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 
-const EmptyListSection = ({message}) => (
+const EmptyList = ({message}) => (
     <Box
         component={Paper} 
         sx={{
@@ -34,4 +34,4 @@ const EmptyListSection = ({message}) => (
     
 );
 
-export default EmptyListSection;
+export default EmptyList;

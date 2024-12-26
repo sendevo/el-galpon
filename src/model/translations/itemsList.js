@@ -2,7 +2,6 @@ import { UNITS_ABBRS } from "../constants";
 
 const itemList = {
     en: {
-        emptyPacks: "Empty packs",
         selected: "Selected products",
         buy: "Buy",
         spend: "Spend",
@@ -14,7 +13,8 @@ const itemList = {
         presentation: "Presentation",
         location: "Location",
         stock: "Stock",
-        emptyList: "Items list is empty",
+        empty_list: "Items list is empty",
+        empty_pack_list: "Packs list is empty",
         empty_packs: "Empty packs",
         store_id: "Location",
         product_id: "Product",
@@ -35,7 +35,6 @@ const itemList = {
         ...UNITS_ABBRS.en
     },
     es: {
-        emptyPacks: "Envases vacíos",
         selected: "Productos seleccionados",
         buy: "Comprar",
         spend: "Usar",
@@ -47,7 +46,8 @@ const itemList = {
         presentation: "Presentación",
         location: "Ubicación",
         stock: "Insumos",
-        emptyList: "La lista de insumos está vacía",
+        empty_list: "La lista de insumos está vacía",
+        empty_pack_list: "La lista de envases está vacía",
         empty_packs: "Envases vacíos",
         store_id: "Ubicación",
         product_id: "Producto",

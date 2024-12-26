@@ -63,7 +63,7 @@ const OperationsBlock = ({enabledOperations, onOperation, onExport}) => {
             }
             { enabledOperations.MOVE_PACKS && enabledOperations.RETURN_PACKS &&
                 <Grid container direction={"column"}>
-                    <Typography sx={{fontWeight:"bold", mb:1, mt:1}}>{t('emptyPacks')}</Typography>
+                    <Typography sx={{fontWeight:"bold", mb:1, mt:1}}>{t('empty_packs')}</Typography>
                     <Grid 
                         container 
                         direction="row"

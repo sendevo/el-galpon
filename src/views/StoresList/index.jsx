@@ -15,8 +15,8 @@ import useConfirm from "../../hooks/useConfirm";
 import StoresTable from "./storesTable";
 import MainView from "../../components/MainView";
 import { Search } from "../../components/Inputs";
+import EmptyList from "../../components/EmptyList";
 import { componentsStyles } from "../../themes";
-import iconEmpty from "../../assets/icons/empty_folder.png";
 
 
 const View = () => {
@@ -172,19 +172,18 @@ const View = () => {
                     </Paper>
                 </Box>
                 :
-                <Box 
-                    display={"flex"} 
-                    flexDirection={"column"} 
-                    alignItems={"center"}
-                    sx={{mt: "50%"}}>
-                    <img src={iconEmpty} height="100px" alt="Sin datos" />
-                    <Typography variant="h5" fontWeight={"bold"}>{t("no_stores_yet")}</Typography>
-                    <Button 
-                        sx={{mt: 2}}
-                        variant="contained"
-                        onClick={handleNew}>
-                        {t("create_new")}
-                    </Button>
+                <Box sx={{p: 1}}>    
+                    <EmptyList message={t('empty_list')} />
+                    <Paper sx={{...componentsStyles.paper, mt:2}}>
+                        <Button 
+                            size="small"
+                            fullWidth
+                            color="success"
+                            variant="contained"
+                            onClick={handleNew}>
+                                {t("create_new")}
+                        </Button>
+                    </Paper>
                 </Box>
             }
         </MainView>

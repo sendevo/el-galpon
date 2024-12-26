@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { List } from "@mui/material";
 import MainView from "../../components/MainView";
+import EmptyList from "../../components/EmptyList";
 import Alert from "./alert";
 import { useDatabase } from "../../context/Database";
 
@@ -49,15 +50,19 @@ const View = () => {
 
     return(
         <MainView title={t('title')}>
-            <List>
-                {sortedAlerts.map((alert, index) => (
-                    <Alert key={index} 
-                        alert={alert} 
-                        onOpen={() => onOpen(index)}
-                        onRead={() => onRead(index, !alert.seen)} 
-                        onDelete={() => onDelete(index)} />
-                ))}
-            </List>            
+            {alerts.length > 0 ?
+                <List>
+                    {sortedAlerts.map((alert, index) => (
+                        <Alert key={index} 
+                            alert={alert} 
+                            onOpen={() => onOpen(index)}
+                            onRead={() => onRead(index, !alert.seen)} 
+                            onDelete={() => onDelete(index)} />
+                    ))}
+                </List>  
+                :          
+                <EmptyList message={t('empty_alert_list')} />
+            }
         </MainView>
     );
 };

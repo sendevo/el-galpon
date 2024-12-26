@@ -1,6 +1,7 @@
 const storesList = {
     en: {
         title: "Stores",
+        empty_list: "Stores list is empty",
         name: "Name",
         location: "Location",
         comments: "Comments",
@@ -26,6 +27,7 @@ const storesList = {
     },
     es: {
         title: "Depósitos",
+        empty_list: "La lista de depósitos está vacía",
         name: "Nombre",
         location: "Ubicación",
         comments: "Comentarios",
