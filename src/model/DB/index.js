@@ -1,6 +1,5 @@
-import { OPERATION_TYPES, ERROR_CODES } from "../constants";
+import { ERROR_CODES } from "../constants";
 import { 
-    debug, 
     levenshteinDistance, 
     queryString2Filters,
     compare, 
@@ -40,7 +39,7 @@ export default class LocalDatabase {
             if(version){ // With data
                 const versionCode = parseInt(version);
                 if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
-                    debug("Database version changed, migrating data...");
+                    console.log("Database version changed, migrating data...");
                     const oldSchema = schemas[versionCode];
                     Object.keys(oldSchema).forEach(table => {
                         const data = localStorage.getItem(table);
@@ -54,23 +53,23 @@ export default class LocalDatabase {
                             tables.forEach(table => {
                                 localStorage.setItem(table, JSON.stringify(this._db[table]));
                             });
-                            debug("Migration completed.");
+                            console.log("Migration completed.");
                             resolve();
                         })
                         .catch(console.error);
                 }else{ // Load data 
-                    debug("Loading data...");
+                    console.log("Loading data...");
                     const locale = localStorage.getItem("locale") || "es";
                     this.updateLocale(locale);
                     tables.forEach(table => {
                         const data = localStorage.getItem(table);
                         this._db[table] = data ? JSON.parse(data) : [];
                     });
-                    debug("Data loaded.");
+                    console.log("Data loaded.");
                     resolve();
                 }
             }else{ // Clear database
-                debug("Empty database, creating tables...");
+                console.log("Empty database, creating tables...");
                 localStorage.setItem("version", JSON.stringify(DB_VERSION));
                 tables.forEach(table => {
                     this._db[table] = [];
@@ -89,7 +88,7 @@ export default class LocalDatabase {
             tables.forEach(table => {
                 localStorage.setItem(table, JSON.stringify(this._db[table]));
             });
-            debug("Test data loaded.");
+            console.log("Test data loaded.");
             resolve();
         });
     }
@@ -105,15 +104,15 @@ export default class LocalDatabase {
             if(isValidTable(table)){
                 const index = this._db[table].findIndex(r => r.id === data.id);
                 if(index < 0){ // If not found, its a new row
-                    debug("Adding item to "+table);
+                    console.log("Adding item to "+table);
                     data.id = generateUUID();
                     this._db[table].push(data);
                 }else{ // If found, update row data
-                    debug("Editing item in "+table);
+                    console.log("Editing item in "+table);
                     this._db[table][index] = data;
                 }
                 localStorage.setItem(table, JSON.stringify(this._db[table]));
-                debug(data);
+                console.log(data);
                 resolve(data.id);
             }else{
                 reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});

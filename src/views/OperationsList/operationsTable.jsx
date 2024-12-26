@@ -55,7 +55,7 @@ const OperationsTable = ({ operations }) => {
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
-                debug(error, "error");
+                console.error(error);
             });
     
         const storesIds = [...new Set([...storesFromIds, ...storesToIds])];
@@ -69,7 +69,7 @@ const OperationsTable = ({ operations }) => {
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
-                debug(error, "error");
+                console.error(error);
             });
     }, []);
 

@@ -5,11 +5,6 @@ export const VERSION_VALUE = "1.0.0";
 export const BUILD_DATE = 1729202895351; // 17-10-2024 19:08 hs
 
 // Debugging
-export const DEBUG_MODE = true;
-
-export const AVAILABLE_DEBUG_MODES = ["log", "error", "info", "warn", "table"];
-
-if (DEBUG_MODE) console.log(`Debug mode on. Available functions: ${AVAILABLE_DEBUG_MODES.join(", ")}`);
 
 export const ERROR_CODES = {
     NOT_IMPLEMENTED: 0,

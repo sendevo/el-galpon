@@ -236,7 +236,7 @@ Luego de clonar repo, instalar dependencias:
 $ npm install
 ```
 
-Correr versión web para debug
+Correr versión web para desarrollo
 ```bash
 $ npm run dev
 ```
@@ -334,7 +334,7 @@ Vista de productos
 
 Vista de formulario de productos  
 [x] Formato y cálculo de presentaciones.  
-[x] CUando el producto es retornable, no puede ser venta a granel.
+[x] CUando el producto es retornable, no puede ser venta a granel.  
 
 Vista de stock  
 [x] Ordenar alfabeticamente por defecto  
@@ -359,18 +359,18 @@ Formulario de compra/movimiento/devolucion
 [x] Indicar fecha de vencimiento  
 [x] Campos para configurar alarma de stock bajo  
 [x] Campo para indicar fecha de vencimiento  
-[ ] Campo para habilitar alerta de vencimiento
+[ ] Campo para habilitar alerta de vencimiento.  
 [x] Adaptar campos segun la operacion.  
 [x] Validacion de datos de formulario:  
     [x] Campos obligatorios.  
     [x] Validez de los datos.  
 [ ] Registrar operacion en la DB  
 
-Vista de alertas
-[ ] Componente para lista vacía (copiar la de stock)
-[ ] Mover consulta y logica de alertas al modelo de DB
+Vista de alertas  
+[ ] Componente para lista vacía (copiar la de stock)  
+[ ] Mover consulta y logica de alertas al modelo de DB  
 
-Filtrado de tablas
+Filtrado de tablas  
 [ ] Selector de categoria tapa el teclado  
 [x] Quitar campos fecha de - hasta  
 [ ] Aplicar filtrados para las tablas  

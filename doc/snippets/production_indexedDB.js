@@ -1,5 +1,5 @@
-import { DB_NAME, DB_VERSION, OPERATION_TYPES } from "../constants";
-import { debug, levenshteinDistance } from "../utils";
+import { DB_NAME, DB_VERSION } from "../constants";
+import { levenshteinDistance } from "../utils";
 import schema from "./schema.json";
 
 export const isValidQuery = query => [
@@ -37,17 +37,17 @@ export default class LocalDatabase {
         this.onReady = []; // List of callbacks
         request.onsuccess = event => {
             this._db = event.target.result;
-            this._db.onerror = err => debug(err, "error");
+            this._db.onerror = err => console.error(err);
             this.onReady.forEach(callback => callback());
             this.onReady = [];
-            debug("DB initialized");
+            console.log("DB initialized");
         };
 
-        request.onerror = event => debug(event.target.error, "error");
+        request.onerror = event => console.log(event.target.error, "error");
     }
 
     _performTransaction(callback) { // Check if DB is initialized
-        debug(`DB callback stack len: ${this.onReady.length}`);
+        console.log(`DB callback stack len: ${this.onReady.length}`);
         if (this._db)
             callback();
         else // Save callback to execute it after DB opens successfully

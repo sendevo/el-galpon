@@ -7,7 +7,6 @@ import EmptyList from "../../components/EmptyList";
 import OperationsTable from "./operationsTable";
 import { useDatabase } from "../../context/Database";
 import useToast from "../../hooks/useToast";
-import { debug } from "../../model/utils";
 
 
 const View = () => {
@@ -24,7 +23,7 @@ const View = () => {
             })
             .catch(error => {
                 toast(t('errorLoading'), "error");
-                debug(error, "error");
+                console.error(error);
             });
     }, []);
 

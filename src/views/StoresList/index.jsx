@@ -16,7 +16,6 @@ import StoresTable from "./storesTable";
 import MainView from "../../components/MainView";
 import { Search } from "../../components/Inputs";
 import { componentsStyles } from "../../themes";
-import { debug } from "../../model/utils";
 import iconEmpty from "../../assets/icons/empty_folder.png";
 
 
@@ -41,7 +40,7 @@ const View = () => {
             })
             .catch(error => {
                 toast(t("error_loading", "error"));
-                debug(error, "error");
+                console.error(error);
             });
     }, []);
 
@@ -55,7 +54,7 @@ const View = () => {
             const storeId = stores[index].id;
             navigate(`/store-form?id=${storeId}`);
         }else{
-            debug("Multpiple selection for edit", "error");
+            console.log("Multpiple selection for edit");
             unSelectAll();
         }
     };
@@ -66,7 +65,7 @@ const View = () => {
             const storeId = stores[index].id;;
             navigate(`/stock?store_id:eq:${storeId}`);
         }else{
-            debug("Multpiple selection for edit", "error");
+            console.error("Multpiple selection for edit");
             unSelectAll();
         }
     };
@@ -98,9 +97,8 @@ const View = () => {
                             error.type === ERROR_CODES.DB.WITH_ITEMS ? 
                                     t("cannot_delete_with_stock")
                                     :
-                                    t("error_delete")
-                                    , "error");
-                        debug(error, "error");
+                                    t("error_delete"), "error");
+                            console.error(error);
                     });
             }
         );

@@ -16,7 +16,6 @@ import {
     Input
 } from "../../components/Inputs";
 import { 
-    debug,
     latLng2GoogleMap,
     googleMap2LatLng,
     dms2LatLng
@@ -83,20 +82,19 @@ const View = () => {
 
     const handleSubmit = () => {
         if(Boolean(formData.name)){ // Mandatory field
-            debug(formData);
             db.insert("stores",formData)
                 .then(id => {
                     if(formData.id){ // Editing
                         toast(t("updated_data"), "success", 2000);
                     }else{ // Create new
-                        debug("Item id = " + id);
+                        console.log("Item id = " + id);
                         toast(t("store_create"), "success", 2000);
                     }
                     navigate(-1);
                 })
                 .catch(console.error);
         }else{
-            debug("Complete all fields", "error");
+            console.error("Complete all fields");
             toast(t("complete_mandatory_fields"), "error");
         }
     };

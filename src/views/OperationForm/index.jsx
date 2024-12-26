@@ -21,7 +21,6 @@ import {
     getURLParams, 
     getProductData 
 } from "./helpers";
-import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
 import observationsIcon from "../../assets/icons/observations.png";
 
@@ -66,14 +65,14 @@ const View = () => {
                             })
                             .catch(console.error);
                     }else{
-                        debug("Invalid table", "error");
+                        console.error("Invalid table");
                         toast(t("invalid_url_params"), "error");
                         navigate(-1);
                     }
                 })
                 .catch(console.error);
         }else{
-            debug("Invalid operation", "error");
+            console.error("Invalid operation");
             toast(t("invalid_url_params"), "error");
             navigate(-1);
         }

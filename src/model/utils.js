@@ -161,10 +161,3 @@ export const levenshteinDistance = (str1, str2) => {
 
     return dp[m][n];
 };
-
-export const debug = (message, type = "log") => {
-    if (DEBUG_MODE){
-        if (AVAILABLE_DEBUG_MODES.includes(type))
-            console[type](message);
-    }
-};

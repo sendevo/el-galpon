@@ -5,7 +5,6 @@ import {
     Typography,
     Fab,
     Divider,
-    Button,
     IconButton
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -20,7 +19,6 @@ import {
 } from "../../components/Inputs";
 import PresentationInput from "./presentationInput";
 import DetailsForm from "./detailsForm";
-import { debug } from "../../model/utils";
 import { componentsStyles } from "../../themes";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
 
@@ -76,7 +74,7 @@ const View = () => {
                         setInmutablePresentation(product.presentations.length);
                         setProductData(product);
                     }else{
-                        debug("Error in query data: more than one product", "error");
+                        console.log("Error in query data: more than one product", "error");
                     }
                 })
                 .catch(console.error);
@@ -147,10 +145,10 @@ const View = () => {
         db.insert("products", productData)
             .then(()=>{
                 if(productData.id){ // Editing
-                    debug("Product data updated successfully");
+                    console.log("Product data updated successfully");
                     toast(t("updated_data"), "success", 2000);
                 }else{ // Create new
-                    debug("New product created successfully");
+                    console.log("New product created successfully");
                     toast(t("new_product_created"), "success", 2000);
                 }
                 navigate(-1);

@@ -17,7 +17,6 @@ import MainView from "../../components/MainView";
 import SearchForm from "../../components/SearchForm";
 import EmptyList from "../../components/EmptyList";
 import { componentsStyles } from "../../themes";
-import { debug } from "../../model/utils";
 
 
 const View = () => {
@@ -42,7 +41,7 @@ const View = () => {
             })
             .catch(error => {
                 toast(t("error_loading"), "error");
-                debug(error, "error");
+                console.error(error);
             });
     }, []);
 
@@ -61,7 +60,7 @@ const View = () => {
             const productId = data[index].id;
             navigate(`/product-form?id=${productId}`);
         }else{
-            debug("Multpiple selection for edit", "error");
+            console.log("Multiple selection for edit");
             unSelectAll();
         }
     };
@@ -87,7 +86,7 @@ const View = () => {
                             })
                             .catch(error => {
                                 toast(t("error_delete"), "error");
-                                debug(error, "error");
+                                console.error(error);
                             });
                     })
                     .catch(error => {
@@ -95,8 +94,7 @@ const View = () => {
                         error.type === ERROR_CODES.DB.WITH_ITEMS ? 
                                 t("cannot_delete_with_stock")
                                 :
-                                t("error_delete")
-                                , "error");
+                                t("error_delete"), "error");
                         console.error(error);
             }       );
             }
