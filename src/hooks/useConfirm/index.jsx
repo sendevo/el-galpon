@@ -7,27 +7,23 @@ const useConfirm = () => {
     return (
         title, 
         message, 
-        onConfirm = ()=>{}, 
-        onCancel = ()=>{}, 
-        okLabel = "Aceptar", 
-        cancelLabel = "Cancelar") => {
+        onConfirm, 
+        onCancel, 
+        okLabel, 
+        cancelLabel) => {
         dispatch({
             type: 'SHOW_CONFIRM',
             payload: {            
                 title,
                 message,
-                onConfirm: ()=>{
-                    onConfirm();
+                onConfirm: () => {
+                    if(typeof onConfirm === "function")
+                        onConfirm();
                     dispatch({
                         type: 'HIDE_CONFIRM'
                     });
                 },
-                onCancel: ()=>{
-                    onCancel();
-                    dispatch({
-                        type: 'HIDE_CONFIRM'
-                    });
-                },
+                onCancel,
                 okLabel,
                 cancelLabel
             }

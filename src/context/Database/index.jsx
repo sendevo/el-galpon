@@ -5,6 +5,7 @@ import {
     useState 
 } from "react";
 import { Box } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import LocalDatabase, { DB_TEST_MODE } from "../../model/DB";
 import Preloader from "../../components/Preloader";
 import useConfirm from "../../hooks/useConfirm";
@@ -30,6 +31,8 @@ const preloaderStyle = {
 
 const DatabaseProvider = ({children}) => {
 
+    const { t } = useTranslation("ui");
+
     const [database, setDatabase] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -39,34 +42,19 @@ const DatabaseProvider = ({children}) => {
         const db = new LocalDatabase();
         db.init()
             .then(() => {
-                if (DB_TEST_MODE) {    
-                    confirm(
-                        "Versión de prueba",
-                        "Está ejecutando una versión demostrativa, los datos son de prueba y se restablecerán al recargar la aplicación",
-                        () => {
-                            db.loadTestData()
-                                .then(() => {
-                                    setDatabase(db);
-                                    setLoading(false);
-                                })
-                                .catch(console.error);
-                        },
-                        () => {},
-                        "Aceptar",
-                        "" 
-                    );
-                }else{
-                    setDatabase(db);
-                    setLoading(false);
-                }
-            })
-            .catch(console.error);
+                setDatabase(db);
+                setLoading(false);
+            });
+        confirm(
+            t("db_test_mode_title"), 
+            t("db_test_mode_message")
+        );   
     }, []);
         
     return (
         loading ? 
             <Box sx={preloaderStyle}>
-                    <Preloader /> 
+                <Preloader /> 
             </Box>
             :
             database && 

@@ -34,54 +34,64 @@ export default class LocalDatabase {
 
     init(){
         return new Promise((resolve, reject) => {
-            // Get data from localStorage
-            // Check if migration is needed
-            // If needed, migrate data
-            // Else load all database to memory
-            this._db = {};
-            const version = localStorage.getItem("version");
-            if(version){ // With data
-                const versionCode = parseInt(version);
-                if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
-                    console.log("Database version changed, migrating data...");
-                    const oldSchema = schemas[versionCode];
-                    Object.keys(oldSchema).forEach(table => {
-                        const data = localStorage.getItem(table);
-                        this._db[table] = data ? JSON.parse(data) : [];
-                    });
-                    migrateDB(versionCode, DB_VERSION, this._db)
-                        .then(newData => {
-                            this._db = newData;
-                            localStorage.clear();
-                            localStorage.setItem("version", JSON.stringify(DB_VERSION));
-                            tables.forEach(table => {
-                                localStorage.setItem(table, JSON.stringify(this._db[table]));
-                            });
-                            console.log("Migration completed.");
-                            resolve();
-                        })
-                        .catch(console.error);
-                }else{ // Load data 
-                    console.log("Loading data...");
-                    const locale = localStorage.getItem("locale") || "es"; // Default locale is spanish
-                    this.updateLocale(locale);
+            if(DB_TEST_MODE){ // Load test data
+                console.log("Loading test data...");
+                this.loadTestData()
+                    .then(() => {
+                        console.log("Test data loaded.");
+                        resolve();
+                    })
+                    .catch(console.error);
+            }else{
+                // Get data from localStorage
+                // Check if migration is needed
+                // If needed, migrate data
+                // Else load all database to memory (this._db)
+                this._db = {};
+                const version = localStorage.getItem("version");
+                if(version){ // With data
+                    const versionCode = parseInt(version);
+                    if(versionCode !== DB_VERSION){ // Migration required -> get old data, migrate, save
+                        console.log("Database version changed, migrating data...");
+                        const oldSchema = schemas[versionCode];
+                        Object.keys(oldSchema).forEach(table => {
+                            const data = localStorage.getItem(table);
+                            this._db[table] = data ? JSON.parse(data) : [];
+                        });
+                        migrateDB(versionCode, DB_VERSION, this._db)
+                            .then(newData => {
+                                this._db = newData;
+                                localStorage.clear();
+                                localStorage.setItem("version", JSON.stringify(DB_VERSION));
+                                tables.forEach(table => {
+                                    localStorage.setItem(table, JSON.stringify(this._db[table]));
+                                });
+                                console.log("Migration completed.");
+                                resolve();
+                            })
+                            .catch(console.error);
+                    }else{ // Load data 
+                        console.log("Loading data...");
+                        const locale = localStorage.getItem("locale") || "es"; // Default locale is spanish
+                        this.updateLocale(locale);
+                        tables.forEach(table => {
+                            const data = localStorage.getItem(table);
+                            this._db[table] = data ? JSON.parse(data) : [];
+                        });
+                        console.log("Data loaded.");
+                        resolve();
+                    }
+                }else{ // Clear database and initialize tables
+                    console.log("Empty database, creating tables...");
+                    localStorage.setItem("version", JSON.stringify(DB_VERSION));
                     tables.forEach(table => {
-                        const data = localStorage.getItem(table);
-                        this._db[table] = data ? JSON.parse(data) : [];
+                        this._db[table] = [];
+                        localStorage.setItem(table, "");
                     });
-                    console.log("Data loaded.");
+                    this.updateLocale(DEFAULT_LOCALE);
+                    console.log("Tables created.");
                     resolve();
                 }
-            }else{ // Clear database and initialize tables
-                console.log("Empty database, creating tables...");
-                localStorage.setItem("version", JSON.stringify(DB_VERSION));
-                tables.forEach(table => {
-                    this._db[table] = [];
-                    localStorage.setItem(table, "");
-                });
-                this.updateLocale(DEFAULT_LOCALE);
-                console.log("Tables created.");
-                resolve();
             }
         });
     }
