@@ -36,12 +36,14 @@ export default class LocalDatabase {
         return new Promise((resolve, reject) => {
             if(DB_TEST_MODE){ // Load test data
                 console.log("Loading test data...");
-                this.loadTestData()
-                    .then(() => {
-                        console.log("Test data loaded.");
-                        resolve();
-                    })
-                    .catch(console.error);
+                localStorage.clear();
+                this._db = testData;
+                tables.forEach(table => {
+                    localStorage.setItem(table, JSON.stringify(this._db[table]));
+                });
+                localStorage.setItem("version", testData.version);
+                localStorage.setItem("locale", testData.locale);
+                resolve();
             }else{
                 // Get data from localStorage
                 // Check if migration is needed
@@ -93,18 +95,6 @@ export default class LocalDatabase {
                     resolve();
                 }
             }
-        });
-    }
-
-    loadTestData(){ // Warning: This will clear all data in the database
-        return new Promise((resolve, reject) => {
-            localStorage.clear();
-            this._db = testData;
-            tables.forEach(table => {
-                localStorage.setItem(table, JSON.stringify(this._db[table]));
-            });
-            console.log("Test data loaded.");
-            resolve();
         });
     }
 

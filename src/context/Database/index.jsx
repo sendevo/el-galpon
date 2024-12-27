@@ -40,15 +40,18 @@ const DatabaseProvider = ({children}) => {
 
     useEffect(() => {
         const db = new LocalDatabase();
+        
         db.init()
             .then(() => {
                 setDatabase(db);
                 setLoading(false);
             });
-        confirm(
-            t("db_test_mode_title"), 
-            t("db_test_mode_message")
-        );   
+        
+        if (DB_TEST_MODE)
+            confirm(
+                t("db_test_mode_title"), 
+                t("db_test_mode_message")
+            );   
     }, []);
         
     return (

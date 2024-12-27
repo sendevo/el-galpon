@@ -375,6 +375,7 @@ const items = [
         product_id: getId(products, "Glifosato"),
         store_id: getId(stores, "Galpón"),
         stock: 120,
+        min_stock: 0,
         empty_packs: 10,
         presentation_index: 0,
         expiration_date: timeAgo(-5*DAY)
@@ -384,6 +385,7 @@ const items = [
         product_id: getId(products, "Glifosato"),
         store_id: getId(stores, "Agronomia"),
         stock: 480,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -393,6 +395,7 @@ const items = [
         product_id: getId(products, "Dicamba"),
         store_id: getId(stores, "Galpón"),
         stock: 0,
+        min_stock: 0,
         empty_packs: 5,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -402,6 +405,7 @@ const items = [
         product_id: getId(products, "Dicamba"),
         store_id: getId(stores, "Agronomia"),
         stock: 400,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -411,6 +415,7 @@ const items = [
         product_id: getId(products, "Urea granulada"),
         store_id: getId(stores, "Silo IV"),
         stock: 5.5,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -420,6 +425,7 @@ const items = [
         product_id: getId(products, "Urea granulada"),
         store_id: getId(stores, "Silo III"),
         stock: 2,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -429,6 +435,7 @@ const items = [
         product_id: getId(products, "Urea granulada"),
         store_id: getId(stores, "Acopiador"),
         stock: 2.5,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -438,6 +445,7 @@ const items = [
         product_id: getId(products, "Maíz"),
         store_id: getId(stores, "Agronomia"),
         stock: 360000,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -447,6 +455,7 @@ const items = [
         product_id: getId(products, "Trigo"),
         store_id: getId(stores, "Acopiador"),
         stock: 2,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -456,6 +465,7 @@ const items = [
         product_id: getId(products, "2,4D"),
         store_id: getId(stores, "Galpón"),
         stock: 40,
+        min_stock: 0,
         empty_packs: 5,
         presentation_index: 0,
         expiration_date: timeAgo(-10*DAY)
@@ -465,6 +475,7 @@ const items = [
         product_id: getId(products, "2,4D"),
         store_id: getId(stores, "Agronomia"),
         stock: 65,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
@@ -474,6 +485,7 @@ const items = [
         product_id: getId(products, "Trigo"),
         store_id: getId(stores, "Silo I"),
         stock: 5,
+        min_stock: 0,
         empty_packs: 0,
         presentation_index: 0,
         expiration_date: getRandomFutureDate()
