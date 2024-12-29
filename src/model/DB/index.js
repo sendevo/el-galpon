@@ -146,9 +146,7 @@ export default class LocalDatabase {
                     }
                 });
             });
-
-            console.log("New alerts", newAlerts);
-
+            
             if (newAlerts.length > 0) {
                 this._db.alerts = [...alerts, ...newAlerts];
                 localStorage.setItem("alerts", JSON.stringify(this._db.alerts));
@@ -171,7 +169,6 @@ export default class LocalDatabase {
                     this._db[table][index] = data;
                 }
                 localStorage.setItem(table, JSON.stringify(this._db[table]));
-                console.log(data);
                 resolve(data.id);
             }else{
                 reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});

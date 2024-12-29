@@ -8,7 +8,7 @@ import schemas from "./schemas.json";
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const getId = (table, name) => table.find(r => r.name === name)?.id || null;
 
-const maxPeriod = 200 * DAY; // 200 days
+const maxPeriod = 60 * DAY;
 const getRandomFutureDate = () => new Date(Date.now() + Math.random() * maxPeriod).getTime();
 const getRandomPastDate = () => new Date(Date.now() - Math.random() * maxPeriod).getTime();
 
@@ -374,11 +374,11 @@ const items = [
         id: generateId(),
         product_id: getId(products, "Glifosato"),
         store_id: getId(stores, "Galpón"),
-        stock: 120,
-        min_stock: 0,
+        stock: 60,
+        min_stock: 90,
         empty_packs: 10,
         presentation_index: 0,
-        expiration_date: timeAgo(-5*DAY)
+        expiration_date: timeAgo(-10*DAY)
     },
     {
         id: generateId(),
@@ -465,10 +465,10 @@ const items = [
         product_id: getId(products, "2,4D"),
         store_id: getId(stores, "Galpón"),
         stock: 40,
-        min_stock: 0,
+        min_stock: 80,
         empty_packs: 5,
         presentation_index: 0,
-        expiration_date: timeAgo(-10*DAY)
+        expiration_date: timeAgo(-15*DAY)
     },
     {
         id: generateId(),
@@ -651,7 +651,9 @@ const operations = [
     }
 ];
 
+
 const alerts = [
+    /*
     {
         id: generateId(),
         item_id: getItemId("Trigo", "Silo I"),
@@ -687,7 +689,9 @@ const alerts = [
         alert_type: "LOW_STOCK",
         seen: true
     }
+    */
 ];
+
 
 const unvisitedViews = [ // Used for introduction messages
     "about",

@@ -52,7 +52,7 @@ const View = () => {
             .catch(console.error);
     };
     
-    const onDelete = () => {
+    const onDelete = index => {
         const id = alerts[index].id;
         db.delete("alerts", id)
             .then(() => db.query("alerts"))

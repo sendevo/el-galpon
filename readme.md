@@ -376,4 +376,5 @@ Filtrado de tablas
 [ ] Aplicar filtrados para las tablas  
 
 General
-[ ] Importar/Exportar base de datos en formato .json y .xlsx  
+[ ] Importar y exportar items en formato xlsx(handleExport de itemList).  
+[ ] Importar/Exportar base de datos completa en formato .json (para debugging).  
