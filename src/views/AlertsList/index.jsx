@@ -19,13 +19,25 @@ const View = () => {
       
     useEffect(() => {
         db.query("alerts")
-            .then(setAlerts)
+            .then(alrs => {
+                db.query("items", alrs.map(alert => alert.item_id))
+                    .then(items => {
+                        const al = alrs.map(alert => {
+                            const item = items.find(item => item.id === alert.item_id);
+                            return {
+                                ...alert,
+                                itemName: item.productData.name
+                            };
+                        });
+                        setAlerts(al);
+                    });
+            })
             .catch(console.error);
      }, []);
 
     const onOpen = index => {
         onRead(index, true);
-        const link = "stock?id:eq:" + alerts[index].item_id;
+        const link = "/stock?id:eq:" + alerts[index].item_id;
         //console.log(link);
         navigate(link);
     };

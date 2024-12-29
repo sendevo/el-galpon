@@ -43,8 +43,11 @@ const DatabaseProvider = ({children}) => {
         
         db.init()
             .then(() => {
-                setDatabase(db);
-                setLoading(false);
+                db.updateAlerts()
+                    .then(() => {
+                        setDatabase(db);
+                        setLoading(false);
+                    });
             });
         
         if (DB_TEST_MODE)

@@ -42,7 +42,7 @@ export default class LocalDatabase {
                     localStorage.setItem(table, JSON.stringify(this._db[table]));
                 });
                 localStorage.setItem("version", testData.version);
-                localStorage.setItem("locale", testData.locale);
+                this.updateLocale(testData.locale);
                 resolve();
             }else{
                 // Get data from localStorage
@@ -126,17 +126,18 @@ export default class LocalDatabase {
 
             const newAlerts = [];
 
-            const toCheckItems = { // Values of attributes of ALERT_TYPES may be numbers, but this should work anyway
-                [ALERT_TYPES.LOW_STOCK]: lowStockItems, 
-                [ALERT_TYPES.EXPIRED]: expiredItems, 
-                [ALERT_TYPES.NEAR_EXPIRATION]: nearExpirationItems 
+            const filteredItems = {
+                "LOW_STOCK": lowStockItems, 
+                "EXPIRED": expiredItems, 
+                "NEAR_EXPIRATION": nearExpirationItems 
             };
 
-            Object.keys(toCheckItems).forEach(k => { // k = LOW_STOCK, EXPIRED, NEAR_EXPIRATION
-                toCheckItems[k].forEach(i => { // i = item to search in the list of alerts
-                    if (!alerts.find(a => a.item_id === i.id && a.alert_type === ALERT_TYPES[k])) {
+            Object.keys(filteredItems).forEach(k => { // k = LOW_STOCK, EXPIRED, NEAR_EXPIRATION
+                filteredItems[k].forEach(i => { // i = item to search in the list of alerts
+                    if (!alerts.find(a => a.item_id === i.id && a.alert_type === k)) {
                         newAlerts.push({
-                            alert_type: ALERT_TYPES[k],
+                            id: generateUUID(),
+                            alert_type: k,
                             message: "", // TODO: Add message. for example `El producto ${i.productData.name} tiene poco stock`
                             item_id: i.id,
                             timestamp: now,
@@ -145,6 +146,8 @@ export default class LocalDatabase {
                     }
                 });
             });
+
+            console.log("New alerts", newAlerts);
 
             if (newAlerts.length > 0) {
                 this._db.alerts = [...alerts, ...newAlerts];

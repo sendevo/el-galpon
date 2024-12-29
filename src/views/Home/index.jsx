@@ -99,7 +99,7 @@ const View = () => {
     const { t } = useTranslation('home');
 
     useEffect(() => {
-        db.query("alerts")
+        db?.query("alerts")
             .then(alerts => {
                 const alertCount = alerts.filter(a => a.seen === false).length;
                 setNotifications(alertCount);

@@ -26,7 +26,8 @@ export const OPERATION_TYPES = { // Inmutable (migrate DB if changed)
     RETURN_PACKS: 6
 };
 
-export const OPERATION_TYPES_NAMES = { // Example of use: OPERATION_TYPES_NAMES[OPERATION_TYPES.BUY]
+export const OPERATION_TYPES_NAMES = { // Example of use: OPERATION_TYPES_NAMES[BUY]. 
+    // Keywords must be in dictionary
     UNDEFINED: "undef",
     BUY: "buy",
     MOVE_STOCK: "move_stock",
@@ -43,7 +44,15 @@ export const ALERT_TYPES = { // Inmutable (migrate DB if changed)
     EXPIRED: 3,
     NEAR_EXPIRATION: 4
 };
+export const ALERT_TYPES_NAMES = { // Example of use: ALERT_TYPES_NAMES[ALERT_TYPES.LOW_STOCK].
+    OTHER: "other",
+    LOW_STOCK: "low_stock",
+    EXPIRED: "expired",
+    NEAR_EXPIRATION: "near_expiration"
+};
 export const EXPIRATION_LIMIT_DAYS = 15;
+export const validAlertType = type => Object.keys(ALERT_TYPES).includes(type);
+
 
 // Moment configuration for spanish
 export const YEAR = 1000 * 60 * 60 * 24 * 365;

@@ -326,7 +326,7 @@ Vista de depositos
 [x] Ajustar codigo de colores. Para boton stock usar negro  
 [x] Que el boton de stock ocupe toda la linea superior y las 3 operaciones abajo  
 [x] Deshabilitar el boton de "crear" cuando hay un deposito seleccionado  
-[ ] Componentes de lista vacia (copiar la de stock)
+[x] Componentes de lista vacia (copiar la de stock)
 
 Vista de productos  
 [x] Ordenar alfabeticamente por defecto  
@@ -367,10 +367,13 @@ Formulario de compra/movimiento/devolucion
 [ ] Registrar operacion en la DB  
 
 Vista de alertas  
-[ ] Componente para lista vacía (copiar la de stock)  
-[ ] Mover consulta y logica de alertas al modelo de DB  
+[x] Componente para lista vacía (copiar la de stock)  
+[x] Mover consulta y logica de alertas al modelo de DB  
 
 Filtrado de tablas  
 [ ] Selector de categoria tapa el teclado  
 [x] Quitar campos fecha de - hasta  
 [ ] Aplicar filtrados para las tablas  
+
+General
+[ ] Importar/Exportar base de datos en formato .json y .xlsx  

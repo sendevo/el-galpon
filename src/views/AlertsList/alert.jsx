@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import ContextMenu from "../../components/ContextMenu";
+import { ALERT_TYPES, ALERT_TYPES_NAMES } from "../../model/constants";
 import { 
     FaBell, 
     FaEllipsisV,
@@ -32,7 +33,7 @@ const titleContainerStyle = {
 
 const titleStyle = {
     fontWeight:"bold",
-    fontSize: "18px",
+    fontSize: "16px",
     lineHeight: "1"
 }
 
@@ -54,6 +55,19 @@ const Alert = ({alert, onOpen, onRead, onDelete}) => {
 
     const { t } = useTranslation("alerts");
 
+    const getAlertMessage = (alert) => {
+        switch(alert.alert_type){
+            case "LOW_STOCK":
+                return t("the_product") + alert.itemName + t("has_low_stock");
+            case "EXPIRED":
+                return t("the_product") + alert.itemName + t("is_expired");
+            case "NEAR_EXPIRATION":
+                return t("the_product") + alert.itemName + t("is_near_expiration");
+            default:
+                return "";
+        }      
+    };
+
     return(
         <ListItem 
             alignItems="flex-start"
@@ -68,13 +82,13 @@ const Alert = ({alert, onOpen, onRead, onDelete}) => {
                 onClick={onOpen}
                 primary={
                     <Grid container spacing={1}>
-                        <Grid item xs={10}>
+                        <Grid item xs={11}>
                             <Grid container alignItems={"center"} spacing={2} justifyContent="space-between">
                                 <Grid 
                                     item
                                     sx={titleContainerStyle}>
                                     <Typography sx={titleStyle}>
-                                        {t(alert.type)}
+                                        {t(ALERT_TYPES_NAMES[alert.alert_type])}
                                     </Typography>
                                 </Grid>
                                 <Grid 
@@ -86,7 +100,7 @@ const Alert = ({alert, onOpen, onRead, onDelete}) => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={2} justifyContent="flex-end" display="flex">
+                        <Grid item xs={1} justifyContent="flex-end" display="flex">
                             <FaEllipsisV onClick={e => {
                                 setMenuAnchorEl(e.currentTarget);
                                 e.stopPropagation();
@@ -94,7 +108,7 @@ const Alert = ({alert, onOpen, onRead, onDelete}) => {
                         </Grid>
                     </Grid>
                 } 
-                secondary={alert.message}/>
+                secondary={alert.message ? alert.message : getAlertMessage(alert)}/>
             <ContextMenu
                 anchorEl={menuAnchorEl} 
                 onClose={()=>setMenuAnchorEl(null)}

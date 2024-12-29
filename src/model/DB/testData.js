@@ -656,35 +656,35 @@ const alerts = [
         id: generateId(),
         item_id: getItemId("Trigo", "Silo I"),
         timestamp: timeAgo(2*DAY),
-        alert_type: ALERT_TYPES.LOW_STOCK,
+        alert_type: "LOW_STOCK",
         seen: true
     },
     {
         id: generateId(),
         item_id: getItemId("Urea granulada", "Silo IV"),
         timestamp: timeAgo(3*DAY),
-        alert_type: ALERT_TYPES.LOW_STOCK,
+        alert_type: "LOW_STOCK",
         seen: true
     },
     {
         id: generateId(),
         item_id: getItemId("2,4D", "Galpón"),
         timestamp: Date.now(),
-        alert_type: "EXPIRATION",
+        alert_type: "EXPIRED",
         seen: false
     },
     {
         id: generateId(),
         item_id: getItemId("Glifosato", "Galpón"),
         timestamp: timeAgo(3.4*MONTH),
-        alert_type: ALERT_TYPES.EXPIRATION,
+        alert_type: "EXPIRED",
         seen: false
     },
     {
         id: generateId(),
         item_id: getItemId("Glifosato", "Galpón"),
         timestamp: timeAgo(5*MONTH),
-        alert_type: ALERT_TYPES.LOW_STOCK,
+        alert_type: "LOW_STOCK",
         seen: true
     }
 ];
