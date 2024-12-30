@@ -148,23 +148,15 @@ const View = () => {
 
     const handleSubmit = () => { /* Set operation data and add to DB*/
 
-        console.log("Submitting operation data", formData);
-        toast("Operación finalizada", "success", 2000);
-        setTimeout(() => {
-            toast("(Datos no registrados)", "info", 2000);
-            setModalOpen(false);
-            navigate("/operations-list");
-        }, 2000);
-        
+        console.log("Submitting operation data", formData.products);
 
-        /*
-        db.handleOperation(formData.operation, formData.products)
+        db.handleOperation(operation, formData.products)
             .then(() => {
                 toast(t("operation_saved"), "success", 2000);
-                navigate(-1);
+                setModalOpen(false);
+                navigate("/operations-list");
             })
             .catch(console.error);
-        */
     };
 
     return (

@@ -45,7 +45,7 @@ const View = () => {
     const onRead = (index, value, callback) => {
         const alert = alerts[index];
         alert.seen = value;
-        db.insert("alerts", alert)
+        db.insert("alerts", [alert])
             .then(() => db.query("alerts"))
             .then(setAlerts)
             .then(() => callback && callback())

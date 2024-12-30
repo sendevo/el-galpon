@@ -82,7 +82,7 @@ const View = () => {
 
     const handleSubmit = () => {
         if(Boolean(formData.name)){ // Mandatory field
-            db.insert("stores",formData)
+            db.insert("stores", [formData])
                 .then(id => {
                     if(formData.id){ // Editing
                         toast(t("updated_data"), "success", 2000);

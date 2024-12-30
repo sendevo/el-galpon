@@ -158,18 +158,23 @@ export default class LocalDatabase {
 
     insert(table, data) {
         return new Promise((resolve, reject) => {
+            const ids = []; // Return ids of inserted or updated rows
             if(isValidTable(table)){
-                const index = this._db[table].findIndex(r => r.id === data.id);
-                if(index < 0){ // If not found, its a new row
-                    console.log("Adding item to "+table);
-                    data.id = generateUUID();
-                    this._db[table].push(data);
-                }else{ // If found, update row data
-                    console.log("Editing item in "+table);
-                    this._db[table][index] = data;
-                }
+                data.forEach(row => {
+                    const idx = this._db[table].findIndex(r => r.id === row.id);
+                    if(idx < 0){ // If not found, its a new row
+                        console.log("Adding item to "+table);
+                        row.id = generateUUID();
+                        this._db[table].push(row);
+                        ids.push(row.id);
+                    }else{ // If found, update row data
+                        console.log("Editing item in "+table);
+                        this._db[table][idx] = row;
+                        ids.push(row.id);
+                    }
+                });
                 localStorage.setItem(table, JSON.stringify(this._db[table]));
-                resolve(data.id);
+                resolve(ids);
             }else{
                 reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});
             }
@@ -237,6 +242,15 @@ export default class LocalDatabase {
             this._db[table] = itemsLeft;
             localStorage.setItem(table, JSON.stringify(itemsLeft));
             resolve();
+        });
+    }
+
+    handleOperation(operation, products) {
+        return new Promise((resolve, reject) => {
+            console.log(operation);
+            console.log(products);
+            const ids = []; // Return ids of inserted or updated operations
+            resolve(ids);
         });
     }
 

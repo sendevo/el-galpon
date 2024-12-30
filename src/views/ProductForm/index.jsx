@@ -142,7 +142,7 @@ const View = () => {
             return;
         }
 
-        db.insert("products", productData)
+        db.insert("products", [productData])
             .then(()=>{
                 if(productData.id){ // Editing
                     console.log("Product data updated successfully");

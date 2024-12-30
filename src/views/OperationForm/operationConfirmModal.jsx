@@ -42,7 +42,7 @@ const ProductBlock = ({product, operation}) => {
             <Typography>
                 <b>{t("presentation")}:</b> {presentation.pack_size} {t(presentation.unit)} {presentation.bulk && "("+t("bulk")+")"}
             </Typography>
-            {product.fromStoreName && 
+            {product.fromStoreName && operation !=="BUY" && 
                 <Typography>
                     <b>{t("store_from")}:</b> {product.fromStoreName}
                 </Typography>
