@@ -150,7 +150,7 @@ const View = () => {
 
         console.log("Submitting operation data", formData.products);
 
-        db.handleOperation(operation, formData.products)
+        db.handleOperation(operation, formData.products, formData.obs)
             .then(() => {
                 toast(t("operation_saved"), "success", 2000);
                 setModalOpen(false);

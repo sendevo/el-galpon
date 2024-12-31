@@ -68,6 +68,7 @@ const getProductData = (table,data) => {
     // form block (in case of more than one).
 
     /* Required fields to make the ProductBlock component work are:
+    |   - item_id (for items)
         - product_id
         - name
         - presentations
@@ -82,27 +83,32 @@ const getProductData = (table,data) => {
     */
 
     switch(table){
-        case "items":
+        case "items": // Items are already in a store
             return data.map(it => ({
-                ...it, // {id, product_id, store_id, stock, empty_packs, presentation_index, expiration_date, min_stock}
-                presentations: it.productData.presentations,
-                returnable: it.productData.returnable,
-                expirable: it.productData.expirable,
-                name: it.productData.name,
-                toStoreId: "",
+                item_id: it.id,
+                product_id: it.product_id,
                 fromStoreId: it.store_id,
                 fromStoreName: it.storeData.name,
+                toStoreId: "",
+                name: it.productData.name,
+                min_stock: it.min_stock,
+                presentations: it.productData.presentations,
+                presentation_index: it.presentation_index,
+                returnable: it.productData.returnable,
+                expirable: it.productData.expirable,
                 amount: ""
             }));
-        case "products":
+        case "products": // Buy new products
             return data.map(p => ({
-                ...p, // {id, name, presentations, returnable, expirable}
                 product_id: p.id,
-                expiration_date: Date.now(),
-                toStoreId: "",
                 fromStoreId: "",
-                amount: "",
+                toStoreId: "",
+                name: p.name,
+                presentations: p.presentations,
                 presentation_index: 0,
+                returnable: p.returnable,
+                expirable: p.expirable,
+                amount: "",
                 min_stock: 0
             }));
         default:

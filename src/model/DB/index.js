@@ -245,12 +245,41 @@ export default class LocalDatabase {
         });
     }
 
-    handleOperation(operation, products) {
+    handleOperation(operation, products, observations) {
         return new Promise((resolve, reject) => {
             console.log(operation);
             console.log(products);
-            const ids = []; // Return ids of inserted or updated operations
-            resolve(ids);
+
+            // TODO: validation and computations of new stock
+
+            const items = products.map(p => ({
+
+            }));
+
+            const operationData = {
+                id: generateUUID(),
+                type: operation,
+                timestamp: Date.now(),
+                items_data: products.map(p => ({
+                    product_id: p.product_id,
+                    store_from_id: p.fromStoreId,
+                    store_to_id: p.toStoreId,
+                    price: p.price,
+                    amount: p.amount,
+                    presentation_index: p.presentation_index
+                })),
+                observations
+            };
+
+            /*
+            this.insert("operations", [operationData])
+                .then(id => {
+                    this.insert("items", items)
+                        .then(resolve)
+                        .catch(reject);
+                })
+                .catch(reject);
+            */
         });
     }
 
