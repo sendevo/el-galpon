@@ -502,8 +502,7 @@ const operations = [
             store_from_id: getId(stores, "Agronomia"),
             store_to_id: getId(stores, "Galpón"),
             price: 0,
-            stock_amount: 1,
-            pack_amount: 10,
+            amount: 1,
             presentation_index: 0
         }],
         observations: ""
@@ -517,8 +516,7 @@ const operations = [
             store_from_id: null,
             store_to_id: getId(stores, "Galpón"),
             price: 0,
-            stock_amount: 80,
-            pack_amount: 2,
+            amount: 120,
             presentation_index: 0
         },
         {
@@ -526,8 +524,7 @@ const operations = [
             store_from_id: null,
             store_to_id: getId(stores, "Galpón"),
             price: 0,
-            stock_amount: 40,
-            pack_amount: 2,
+            amount: 80,
             presentation_index: 0
         }],
         observations: ""
@@ -541,8 +538,7 @@ const operations = [
             store_from_id: null,
             store_to_id: getId(stores, "Silo IV"),
             price: 0,
-            stock_amount: 2,
-            pack_amount: 0,
+            amount: 2,
             presentation_index: 0
         }],
         observations: ""
@@ -556,7 +552,7 @@ const operations = [
             store_from_id: getId(stores, "Agronomia"),
             store_to_id: null,
             price: 0,
-            stock_amount: 350,
+            amount: 350,
             pack_amount: 0,
             presentation_index: 0
         }],
@@ -571,8 +567,7 @@ const operations = [
             store_from_id: getId(stores, "Galpón"),
             store_to_id: null,
             price: 0,
-            stock_amount: 0,
-            pack_amount: 10,
+            amount: 5,
             presentation_index: 0
         },
         {
@@ -580,8 +575,7 @@ const operations = [
             store_from_id: getId(stores, "Galpón"),
             store_to_id: null,
             price: 0,
-            stock_amount: 0,
-            pack_amount: 5,
+            amount: 2,
             presentation_index: 0
         },
         {
@@ -589,7 +583,7 @@ const operations = [
             store_from_id: getId(stores, "Galpón"),
             store_to_id: null,
             price: 0,
-            stock_amount: 0,
+            amount: 5,
             pack_amount: 5,
             presentation_index: 0
         }],
@@ -604,8 +598,7 @@ const operations = [
             store_from_id: null,
             store_to_id: getId(stores, "Silo I"),
             price: 0,
-            stock_amount: 5.5,
-            pack_amount: 0,
+            amount: 5.5,
             presentation_index: 1
         }],
         observations: ""
@@ -619,8 +612,7 @@ const operations = [
             store_from_id: getId(stores, "Silo I"),
             store_to_id: null,
             price: 0,
-            stock_amount: 5.5,
-            pack_amount: 0,
+            amount: 5.5,
             presentation_index: 1
         }],
         observations: "Sembrado en lote 3"
@@ -634,8 +626,7 @@ const operations = [
             store_from_id: getId(stores, "Galpón"),
             store_to_id: null,
             price: 0,
-            stock_amount: 0,
-            pack_amount: 2,
+            amount: 2,
             presentation_index: 0
         },
         {
@@ -643,8 +634,7 @@ const operations = [
             store_from_id: getId(stores, "Galpón"),
             store_to_id: null,
             price: 0,
-            stock_amount: 0,
-            pack_amount: 10,
+            amount: 10,
             presentation_index: 0
         }],
         observations: ""

@@ -362,16 +362,16 @@ Formulario de compra/movimiento/devolucion
 [x] Validacion de datos de formulario:  
     [x] Campos obligatorios.  
     [x] Validez de los datos.  
-[ ] Registrar operacion en la DB  
-    [ ] Conversion de unidades al comprar con distintas presentaciones.  
+[x] Registrar operacion en la DB  
+[ ] Conversion de unidades al comprar con distintas presentaciones.  
 
 Vista de alertas  
 [x] Componente para lista vacía (copiar la de stock)  
 [x] Mover consulta y logica de alertas al modelo de DB  
 
 Filtrado de tablas  
-[ ] Selector de categoria tapa el teclado  
 [x] Quitar campos fecha de - hasta  
+[ ] Selector de categoria tapa el teclado  
 [ ] Aplicar filtrados para las tablas  
 
 General

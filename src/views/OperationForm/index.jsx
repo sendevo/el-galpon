@@ -170,7 +170,7 @@ const View = () => {
                     .then(() => {
                         toast(t("operation_saved"), "success", 2000);
                         setModalOpen(false);
-                        navigate("/operations-list");
+                        navigate("/stock");
                     })
                     .catch(console.error);
             })

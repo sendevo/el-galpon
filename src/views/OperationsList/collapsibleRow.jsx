@@ -12,9 +12,15 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { useTranslation } from 'react-i18next';
-import { OPERATION_TYPES_NAMES, OPERATION_TYPES } from '../../model/constants';
+import { OPERATION_TYPES_NAMES } from '../../model/constants';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
+
+const collapseTableHeaderStyle = {
+    fontSize:"12px", 
+    fontWeight:"bold",
+    textAlign: "left"
+};
 
 const CollapsibleRow = props => {
 
@@ -23,16 +29,20 @@ const CollapsibleRow = props => {
     const [open, setOpen] = useState(false);
     const { t } = useTranslation('operations');
 
-    const getStock = (item, operationType) => { // Duplicate from src/views/Stock/itemsTable.jsx
+    const getStock = item => { // Duplicate from src/views/Stock/itemsTable.jsx
         const pIndex = item.presentation_index;
         const product = products[item.product_id];
         const presentation = product.presentations[pIndex];
-        const packOperation = (operationType === OPERATION_TYPES.RETURN_PACKS || OPERATION_TYPES.MOVE_PACKS);
-        const amount = packOperation ? item.pack_amount : item.stock_amount;
-        const suffix = packOperation ? ` × ${presentation.pack_size} ${t(presentation.unit)}` : t(presentation.unit);
-        const amountText = `${amount} ${suffix}`;
+        const amountText =  `${item.amount} ${operation.type === "RETURN_PACKS" ? t("packs") : t(presentation.unit)}`;
         return amountText;
     };
+
+    const getPresentation = item => {
+        const pIndex = item.presentation_index;
+        const product = products[item.product_id];
+        const presentation = product.presentations[pIndex];
+        return presentation.bulk ? t("bulk") : `${presentation.pack_size} ${t(presentation.unit)}`;
+    }
 
     return (
         <>
@@ -56,26 +66,31 @@ const CollapsibleRow = props => {
                             <Typography fontSize={"15px"} fontWeight={"bold"}>
                                 {t("details")}
                             </Typography>
-                            <Table size="small" fontSize="11px">
+                            <Table size="small">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell align="right">
-                                            <Typography fontSize={"12px"} fontWeight={"bold"}>
+                                            <Typography sx={collapseTableHeaderStyle}>
                                                 {t("product")}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography fontSize={"12px"} fontWeight={"bold"}>
+                                            <Typography sx={collapseTableHeaderStyle}>
                                                 {t("stock")}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography fontSize={"12px"} fontWeight={"bold"}>
+                                            <Typography sx={collapseTableHeaderStyle}>
+                                                {t("presentation")}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Typography sx={collapseTableHeaderStyle}>
                                                 {t("store_from")}
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography fontSize={"12px"} fontWeight={"bold"}>
+                                            <Typography sx={collapseTableHeaderStyle}>
                                                 {t("store_to")}
                                             </Typography>
                                         </TableCell>
@@ -86,9 +101,10 @@ const CollapsibleRow = props => {
                                         products && storesNames && 
                                         <TableRow key={i}>
                                             <TableCell>{products[item.product_id]?.name}</TableCell>
-                                            <TableCell>{getStock(item, operation.type)}</TableCell>
-                                            <TableCell>{storesNames[item.store_from_id]}</TableCell>
-                                            <TableCell>{storesNames[item.store_to_id]}</TableCell>
+                                            <TableCell sx={{textAlign:"left", minWidth:"150px"}}>{getStock(item)}</TableCell>
+                                            <TableCell sx={{textAlign:"left"}}>{getPresentation(item)}</TableCell>
+                                            <TableCell sx={{textAlign:"left"}}>{storesNames[item.store_from_id] || "-"}</TableCell>
+                                            <TableCell sx={{textAlign:"left"}}>{storesNames[item.store_to_id] || "-"}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
