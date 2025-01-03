@@ -158,41 +158,56 @@ export default class LocalDatabase {
 
     insert(table, data) {
         return new Promise((resolve, reject) => {
-            const ids = []; // Return ids of inserted or updated rows
-            if(isValidTable(table)){
+            if(isValidTable(table) && data.length > 0){
+                const result = {
+                    inserted: [], // New rows
+                    deleted: [], // In cases of duplicated data, some rows are deleted
+                    updated: [] // Edited rows
+                };
                 data.forEach(row => {
-                    const idx = this._db[table].findIndex(r => r.id === row.id); // Or just check if row has id?
-                    if(idx < 0){ // If not found, its a new row
-                        //console.log("Adding row to "+table);
-                        if(table === "items"){ // For items, check stock validity
-                            if(row.stock > 0){
-                                row.id = generateUUID();
-                                this._db[table].push(row);
-                                ids.push(row.id);
-                            }else{
-                                reject({message:"Stock must be greater than 0", type: ERROR_TYPES.INVALID_STOCK});
-                            }
+                    if(table === "items"){ // For items, stock and packs operations may be required
+                        console.log("Updating stock...");
+                        row.id = generateUUID(); // New or updated items get new id
+                        // Check if there are other items with same product and store
+                        const duplicatedIndex = this._db.items.findIndex(it => it.product_id === row.product_id && it.store_id === row.store_id);
+                        if(duplicatedIndex >= 0){ // This means that new stock or packs are added to or removed from the current store
+                            console.log("Duplicated item found.");
+                            row.stock += parseFloat(this._db.items[duplicatedIndex].stock);
+                            row.empty_packs += parseInt(this._db.items[duplicatedIndex].empty_packs);
+                            result.deleted.push(this._db.items[duplicatedIndex].id); // Remove old item
                         }
-                    }else{ // If found, update row data
-                        //console.log("Editing row in "+table);
-                        if(table === "items"){ // For items, check stock
-                            if(row.stock === 0 && empty_packs === 0){ // Delete item
-                                this.delete("items", [row.id])
-                                    .then(resolve)
-                                    .catch(() => {
-                                        reject({message:"Error deleting item.", type: ERROR_TYPES.NOT_FOUND});
-                                    });
-                                return;
-                            } // Else nothing to do (item shouldn't exist in DB)
+                        if(row.stock !== 0 || row.empty_packs !== 0){ // Only add to DB if there is stock or packs
+                            console.log("Adding row to items");
+                            console.log(row);
+                            this._db.items.push(row);
+                            result.inserted.push(row.id);    
                         }
-                        this._db[table][idx] = row;
-                        ids.push(row.id);
+                    }else{ // For other tables, just add row
+                        // Check if row has id
+                        const idx = this._db[table].findIndex(r => r.id === row.id); // Or just check if row has id?
+                        if(idx < 0){ // If not found, its a new row
+                            //console.log("Adding row to "+table);
+                            row.id = generateUUID();
+                            this._db[table].push(row);
+                            result.inserted.push(row.id);
+                        }else{ // If found, update row data
+                            this._db[table][idx] = row;
+                        }
                     }
                 });
-                localStorage.setItem(table, JSON.stringify(this._db[table]));
-                resolve(ids);
+                if(result.deleted.length > 0){
+                    this.delete(table, result.deleted)
+                        .then(() => {
+                            localStorage.setItem(table, JSON.stringify(this._db[table]));
+                            resolve(result);
+                        })
+                        .catch(console.error);
+                    }else{
+                        localStorage.setItem(table, JSON.stringify(this._db[table]));
+                        resolve(result);
+                    }
             }else{
-                reject({message:"Table not valid.", type: ERROR_TYPES.INVALID_TABLE});
+                reject({message:"Table or data not valid.", type: ERROR_TYPES.INVALID_TABLE});
             }
         });
     }

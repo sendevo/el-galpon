@@ -358,12 +358,12 @@ Formulario de compra/movimiento/devolucion
 [x] Indicar fecha de vencimiento  
 [x] Campos para configurar alarma de stock bajo  
 [x] Campo para indicar fecha de vencimiento  
-[ ] Campo para habilitar alerta de vencimiento.  
 [x] Adaptar campos segun la operacion.  
 [x] Validacion de datos de formulario:  
     [x] Campos obligatorios.  
     [x] Validez de los datos.  
 [ ] Registrar operacion en la DB  
+    [ ] Conversion de unidades al comprar con distintas presentaciones.  
 
 Vista de alertas  
 [x] Componente para lista vacía (copiar la de stock)  

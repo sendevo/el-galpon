@@ -63,8 +63,8 @@ const getURLParams = searchParams => {
     };
 };
 
-const getProductData = (table,data) => {
-    // This function returns the products data required for each 
+const getProductData = (table, data) => {
+    // This function returns the products data with the format required for each 
     // form block (in case of more than one).
 
     /* Required fields to make the ProductBlock component work are:
@@ -121,7 +121,6 @@ const getProductData = (table,data) => {
 };
 
 const getOperationData = (products, operation, observations) => ({
-    id: generateUUID(),
     type: operation,
     timestamp: Date.now(),
     items_data: products.map(p => ({
@@ -136,40 +135,44 @@ const getOperationData = (products, operation, observations) => ({
 });
 
 const getItemsData = (products, operation) => {
+    // This function returns the items data with the format required for the database
+    
     const items = products.map(p => {
-        let newStock = p.stock; 
-        let newEmptyPacks = p.empty_packs;
+        let newItemId = p.item_id;
+        let newStock = 0; 
+        let newEmptyPacks = 0;
+        let storeId = p.fromStoreId;
         switch(operation){
-            case "RETURN_PACKS":
-                newEmptyPacks = p.empty_packs - p.amount
-                break;
             case "BUY":
-                newStock = p.stock + p.amount; 
+                newStock = p.amount; 
+                storeId = p.toStoreId;
+                break;
+            case "MOVE_STOCK":
+                newStock = -p.amount;
+                break;
+            case "MOVE_PACKS":
+                newEmptyPacks = -p.amount;
                 break;
             case "SPEND":
-                newStock = p.stock - p.amount;
+                newStock = -p.amount;
                 const presentation = p.presentations[p.presentation_index];
-                if(presentation.bulk){ // Compute new empty packs
-                    newEmptyPacks = p.empty_packs + Math.ceil(p.stock/presentation.pack_size) - Math.ceil(newStock/presentation.pack_size);                    
+                if(p.returnable){ // Compute new empty packs
+                    const currentPacks = Math.ceil(p.stock/presentation.pack_size);
+                    const newPacks = Math.ceil((p.stock-p.amount)/presentation.pack_size);
+                    newEmptyPacks = currentPacks - newPacks;
                 }
                 break;
-            default: // For other operations do not update item
-                return{ 
-                    id: p.item_id,
-                    product_id: p.product_id,
-                    store_id: p.toStoreId,
-                    stock: p.stock,
-                    empty_packs: p.empty_packs,
-                    presentation_index: p.presentation_index,
-                    expiration_date: p.expiration_date,
-                    min_stock: p.min_stock         
-                }
+            case "RETURN_PACKS":
+                newEmptyPacks = -p.amount
+                break;
+            default: // Not valid operation
+                console.error("Invalid operation");
+                return {};
         }
-    
         return {
-            id: operation === "BUY" ? generateUUID() : p.item_id,
+            id: newItemId,
             product_id: p.product_id,
-            store_id: operation === "SPEND" || operation === "RETURN_PACKS" ? null : p.toStoreId,
+            store_id: storeId,
             stock: newStock,
             empty_packs: newEmptyPacks,
             presentation_index: p.presentation_index,
@@ -177,6 +180,24 @@ const getItemsData = (products, operation) => {
             min_stock: p.min_stock 
         };
     });
+
+    // For the case of move stock and move packs, new items must be pushed to DB.
+    // Total stock and packs in stores are computed in the db.insert method.
+    if(operation === "MOVE_STOCK" || operation === "MOVE_PACKS"){
+        const newItems = products.map(p => {
+            return {
+                id: -1, // To force new row in DB
+                product_id: p.product_id,
+                store_id: p.toStoreId,
+                stock: operation === "MOVE_STOCK" ? p.amount : 0,
+                empty_packs: operation === "MOVE_PACKS" ? p.amount : 0,
+                presentation_index: p.presentation_index,
+                expiration_date: p.expiration_date,
+                min_stock: p.min_stock
+            };
+        });
+        return items.concat(newItems);
+    };
 
     return items;
 }

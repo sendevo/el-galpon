@@ -94,6 +94,13 @@ const View = () => {
 
         if(prop === "min_stock" && value < 0)
             prevProducts[index][prop] = 0;
+
+        if(prop === "amount"){
+            prevProducts[index].amount = parseFloat(value) || 0;
+            if(prevProducts[index].amount < 0){
+                prevProducts[index].amount = 0;
+            }
+        }
         
         setFormData({
             ...formData,
@@ -153,19 +160,10 @@ const View = () => {
         console.log("Submitting operation data", formData.products);
 
         const operationData = getOperationData(formData.products, operation, formData.obs);
-        
-        let itemsData = [];
-        if(operation !== "MOVE_STOCK" && operation !== "MOVE_PACKS"){
-            itemsData = getItemsData(formData.products, operation);
-        }else{
-            // For the case of move stock or move packs, new items may be created
-            // TODO
-        }
+        const itemsData = getItemsData(formData.products, operation);
 
-        console.log("Operation data", operationData);
         console.log("Items data", itemsData);
 
-        /*
         db.insert("operations", [operationData])
             .then(() => {
                 db.insert("items", itemsData)
@@ -177,7 +175,6 @@ const View = () => {
                     .catch(console.error);
             })
             .catch(console.error);
-        */
     };
 
     return (
