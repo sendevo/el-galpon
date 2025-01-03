@@ -19,7 +19,9 @@ import {
     getMissingFields, 
     validateOperation, 
     getURLParams, 
-    getProductData 
+    getProductData,
+    getOperationData,
+    getItemsData
 } from "./helpers";
 import { componentsStyles } from "../../themes";
 import observationsIcon from "../../assets/icons/observations.png";
@@ -150,13 +152,32 @@ const View = () => {
 
         console.log("Submitting operation data", formData.products);
 
-        db.handleOperation(operation, formData.products, formData.obs)
+        const operationData = getOperationData(formData.products, operation, formData.obs);
+        
+        let itemsData = [];
+        if(operation !== "MOVE_STOCK" && operation !== "MOVE_PACKS"){
+            itemsData = getItemsData(formData.products, operation);
+        }else{
+            // For the case of move stock or move packs, new items may be created
+            // TODO
+        }
+
+        console.log("Operation data", operationData);
+        console.log("Items data", itemsData);
+
+        /*
+        db.insert("operations", [operationData])
             .then(() => {
-                toast(t("operation_saved"), "success", 2000);
-                setModalOpen(false);
-                navigate("/operations-list");
+                db.insert("items", itemsData)
+                    .then(() => {
+                        toast(t("operation_saved"), "success", 2000);
+                        setModalOpen(false);
+                        navigate("/operations-list");
+                    })
+                    .catch(console.error);
             })
             .catch(console.error);
+        */
     };
 
     return (

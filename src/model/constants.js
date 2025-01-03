@@ -12,7 +12,8 @@ export const ERROR_CODES = {
         UNKNOWN_OPERATION: 1,
         INVALID_TABLE: 2,
         WITH_ITEMS: 3,
-        NOT_FOUND: 4
+        NOT_FOUND: 4,
+        INVALID_STOCK: 5
     }
 };
 

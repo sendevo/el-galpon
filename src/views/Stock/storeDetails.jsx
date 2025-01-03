@@ -43,6 +43,7 @@ const StoreDetails = ({storeData}) => {
                             }
                             </TableCell>
                     </TableRow>
+                    {/* 
                     <TableRow>
                         <TableCell sx={componentsStyles.headerCell}>{t("created")}</TableCell>
                         <TableCell sx={componentsStyles.tableCell}>{moment(storeData.created).format("DD/MM/YYYY HH:mm")}</TableCell>
@@ -51,6 +52,7 @@ const StoreDetails = ({storeData}) => {
                         <TableCell sx={componentsStyles.headerCell}>{t("modified")}</TableCell>
                         <TableCell sx={componentsStyles.tableCell}>{moment(storeData.modified).format("DD/MM/YYYY HH:mm")}</TableCell>
                     </TableRow>
+                    */}
                 </TableBody>
             </Table>
         </TableContainer>

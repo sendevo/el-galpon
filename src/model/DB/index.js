@@ -161,14 +161,30 @@ export default class LocalDatabase {
             const ids = []; // Return ids of inserted or updated rows
             if(isValidTable(table)){
                 data.forEach(row => {
-                    const idx = this._db[table].findIndex(r => r.id === row.id);
+                    const idx = this._db[table].findIndex(r => r.id === row.id); // Or just check if row has id?
                     if(idx < 0){ // If not found, its a new row
-                        console.log("Adding item to "+table);
-                        row.id = generateUUID();
-                        this._db[table].push(row);
-                        ids.push(row.id);
+                        //console.log("Adding row to "+table);
+                        if(table === "items"){ // For items, check stock validity
+                            if(row.stock > 0){
+                                row.id = generateUUID();
+                                this._db[table].push(row);
+                                ids.push(row.id);
+                            }else{
+                                reject({message:"Stock must be greater than 0", type: ERROR_TYPES.INVALID_STOCK});
+                            }
+                        }
                     }else{ // If found, update row data
-                        console.log("Editing item in "+table);
+                        //console.log("Editing row in "+table);
+                        if(table === "items"){ // For items, check stock
+                            if(row.stock === 0 && empty_packs === 0){ // Delete item
+                                this.delete("items", [row.id])
+                                    .then(resolve)
+                                    .catch(() => {
+                                        reject({message:"Error deleting item.", type: ERROR_TYPES.NOT_FOUND});
+                                    });
+                                return;
+                            } // Else nothing to do (item shouldn't exist in DB)
+                        }
                         this._db[table][idx] = row;
                         ids.push(row.id);
                     }
@@ -242,44 +258,6 @@ export default class LocalDatabase {
             this._db[table] = itemsLeft;
             localStorage.setItem(table, JSON.stringify(itemsLeft));
             resolve();
-        });
-    }
-
-    handleOperation(operation, products, observations) {
-        return new Promise((resolve, reject) => {
-            console.log(operation);
-            console.log(products);
-
-            // TODO: validation and computations of new stock
-
-            const items = products.map(p => ({
-
-            }));
-
-            const operationData = {
-                id: generateUUID(),
-                type: operation,
-                timestamp: Date.now(),
-                items_data: products.map(p => ({
-                    product_id: p.product_id,
-                    store_from_id: p.fromStoreId,
-                    store_to_id: p.toStoreId,
-                    price: p.price,
-                    amount: p.amount,
-                    presentation_index: p.presentation_index
-                })),
-                observations
-            };
-
-            /*
-            this.insert("operations", [operationData])
-                .then(id => {
-                    this.insert("items", items)
-                        .then(resolve)
-                        .catch(reject);
-                })
-                .catch(reject);
-            */
         });
     }
 

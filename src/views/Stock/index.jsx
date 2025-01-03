@@ -31,7 +31,7 @@ const View = () => {
     const selectedItems = items.filter(it => it.selected);
 
     // Default table columns. Some are removed depending of following conditions
-    const tableColumns = ["product_id", "store_id", "stock", "expiration_date"];
+    const tableColumns = ["product_id", "stock", "store_id", "expiration_date"];
 
     // Check if all items have same store_id
     const sameStore = items.length > 0 && items.every(it => it.store_id === items[0].store_id);

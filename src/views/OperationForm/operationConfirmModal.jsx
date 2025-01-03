@@ -52,7 +52,7 @@ const ProductBlock = ({product, operation}) => {
                     <b>{t("store_to")}:</b> {product.toStoreName}
                 </Typography>
             }
-            {product.expirable && 
+            {/*product.expirable && 
                 <Typography>
                     <b>{t("expiration_date")}:</b> {moment(product.expiration).format("DD/MM/YYYY")}
                 </Typography>
@@ -62,7 +62,7 @@ const ProductBlock = ({product, operation}) => {
                 <Typography>
                     <b>{t("stock_limit_alert")}:</b> {product.min_stock} {t(presentation.unit)}
                 </Typography>
-            }
+            */}
         </Box>
     );
 }
